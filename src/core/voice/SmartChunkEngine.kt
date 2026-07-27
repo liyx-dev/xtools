@@ -13,9 +13,10 @@ import com.liyx.xtools.core.models.Chunk
  * 3. If a paragraph is too large, split by sentences.
  * 4. If a sentence is still too large, safely split by length.
  */
-class SmartChunkEngine(
+
+    class SmartChunkEngine(
     private val maxChunkSize: Int = 1500
-) {
+) : ChunkEngine {
 
     fun split(text: String): List<Chunk> {
 
