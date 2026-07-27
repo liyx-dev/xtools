@@ -1,5 +1,7 @@
 package com.liyx.xtools.core.voice
 
+import com.liyx.xtools.core.models.Chunk
+
 /**
  * SmartChunkEngine
  *
@@ -11,15 +13,15 @@ package com.liyx.xtools.core.voice
  * 3. If a paragraph is too large, split by sentences.
  * 4. If a sentence is still too large, safely split by length.
  */
-class ChunkEngine(
+class SmartChunkEngine(
     private val maxChunkSize: Int = 1500
 ) {
 
-    fun split(text: String): List<String> {
+    fun split(text: String): List<Chunk> {
 
         if (text.isBlank()) return emptyList()
 
-        val chunks = mutableListOf<String>()
+        val rawChunks = mutableListOf<String>()
 
         val paragraphs = text
             .trim()
@@ -29,16 +31,27 @@ class ChunkEngine(
 
             if (paragraph.length <= maxChunkSize) {
 
-                chunks.add(paragraph.trim())
+                rawChunks.add(paragraph.trim())
 
             } else {
 
-                splitParagraph(paragraph, chunks)
+                splitParagraph(paragraph, rawChunks)
 
             }
         }
 
-        return chunks
+        return rawChunks.mapIndexed { index, chunkText ->
+
+            Chunk(
+                id = index + 1,
+                order = index + 1,
+                text = chunkText,
+                characterCount = chunkText.length,
+                estimatedDurationMs = estimateDuration(chunkText)
+            )
+
+        }
+
     }
 
     private fun splitParagraph(
@@ -78,12 +91,15 @@ class ChunkEngine(
                     current.append(sentence)
 
                 }
+
             }
+
         }
 
         if (current.isNotEmpty()) {
             chunks.add(current.toString().trim())
         }
+
     }
 
     private fun splitLongSentence(
@@ -103,6 +119,21 @@ class ChunkEngine(
             chunks.add(sentence.substring(start, end).trim())
 
             start = end
+
         }
+
     }
+
+    /**
+     * Rough estimate:
+     * ~15 characters per second.
+     */
+    private fun estimateDuration(text: String): Long {
+
+        val seconds = text.length / 15.0
+
+        return (seconds * 1000).toLong()
+
+    }
+
 }
