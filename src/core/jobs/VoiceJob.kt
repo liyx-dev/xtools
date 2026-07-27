@@ -1,6 +1,7 @@
 package com.liyx.xtools.core.jobs
 
 import com.liyx.xtools.core.models.Chunk
+import com.liyx.xtools.core.models.ChunkStatus
 import com.liyx.xtools.core.models.VoiceJobStatus
 
 /**
@@ -19,7 +20,7 @@ data class VoiceJob(
 
     var progress: Float = 0f,
 
-    var totalCharacters: Int = 0,
+    var totalCharacters: Int = chunks.sumOf { it.characterCount },
 
     var processedCharacters: Int = 0,
 
@@ -34,24 +35,36 @@ data class VoiceJob(
 ) {
 
     /**
-     * Total number of chunks.
+     * Total chunks in this job.
      */
-    fun totalChunks(): Int {
-
-        return chunks.size
-
-    }
+    fun totalChunks(): Int = chunks.size
 
     /**
-     * Completed chunks.
+     * Number of completed chunks.
      */
-    fun completedChunks(): Int {
+    fun completedChunks(): Int =
+        chunks.count { it.status == ChunkStatus.COMPLETED }
 
-        return chunks.count {
-
-            it.status.name == "COMPLETED"
-
+    /**
+     * Remaining chunks.
+     */
+    fun remainingChunks(): Int =
+        chunks.count {
+            it.status == ChunkStatus.PENDING ||
+            it.status == ChunkStatus.PROCESSING
         }
+
+    /**
+     * Recalculate progress.
+     */
+    fun updateProgress() {
+
+        progress =
+            if (chunks.isEmpty()) {
+                0f
+            } else {
+                completedChunks().toFloat() / totalChunks()
+            }
 
     }
 
