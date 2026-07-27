@@ -1,21 +1,39 @@
 package com.liyx.xtools.core.voice
 
+import com.liyx.xtools.core.jobs.VoiceJob
+
 /**
  * QueueEngine
  *
- * Processes text chunks one after another.
+ * Manages VoiceJobs waiting
+ * to be processed.
  */
 class QueueEngine {
 
-    private val queue = mutableListOf<String>()
+    private val queue = mutableListOf<VoiceJob>()
 
-    fun add(chunks: List<String>) {
+    /**
+     * Add a new job.
+     */
+    fun add(job: VoiceJob) {
 
-        queue.addAll(chunks)
+        queue.add(job)
 
     }
 
-    fun next(): String? {
+    /**
+     * Add multiple jobs.
+     */
+    fun addAll(jobs: List<VoiceJob>) {
+
+        queue.addAll(jobs)
+
+    }
+
+    /**
+     * Get the next job.
+     */
+    fun next(): VoiceJob? {
 
         if (queue.isEmpty()) return null
 
@@ -23,15 +41,48 @@ class QueueEngine {
 
     }
 
+    /**
+     * Peek without removing.
+     */
+    fun peek(): VoiceJob? {
+
+        return queue.firstOrNull()
+
+    }
+
+    /**
+     * Remove everything.
+     */
     fun clear() {
 
         queue.clear()
 
     }
 
+    /**
+     * Number of queued jobs.
+     */
     fun size(): Int {
 
         return queue.size
+
+    }
+
+    /**
+     * Is queue empty?
+     */
+    fun isEmpty(): Boolean {
+
+        return queue.isEmpty()
+
+    }
+
+    /**
+     * Current jobs.
+     */
+    fun jobs(): List<VoiceJob> {
+
+        return queue.toList()
 
     }
 
