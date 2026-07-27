@@ -1,0 +1,9 @@
+package com.liyx.xtools.navigation
+
+sealed class Screen(val route: String) {
+
+    data object Home : Screen("home")
+
+    data object VoiceStudio : Screen("voice_studio")
+
+}

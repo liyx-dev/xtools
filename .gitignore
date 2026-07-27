@@ -1,0 +1,22 @@
+# Gradle
+.gradle/
+
+# Build
+build/
+**/build/
+
+# Local SDK
+local.properties
+
+# IntelliJ / Android Studio
+.idea/
+*.iml
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+
+# Kotlin
+.kotlin/
