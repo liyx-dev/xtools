@@ -13,8 +13,8 @@ class VoiceManager(
 
     private val textProcessor: TextProcessor,
 
-    private val chunkEngine: SmartChunkEngine,
 
+private val chunkEngine: ChunkEngine,
     private val queueEngine: QueueEngine
 
 ) {
