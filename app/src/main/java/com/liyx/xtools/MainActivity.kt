@@ -3,6 +3,8 @@ package com.liyx.xtools
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.liyx.xtools.design.XtoolsTheme
+import com.liyx.xtools.navigation.XtoolsNavigation
 
 class MainActivity : ComponentActivity() {
 
@@ -10,7 +12,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            XtoolsApp()
+            XtoolsTheme {
+                XtoolsNavigation()
+            }
         }
     }
 }

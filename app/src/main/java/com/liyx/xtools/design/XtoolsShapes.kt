@@ -1,16 +1,19 @@
 package com.liyx.xtools.design
 
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Shapes
 import androidx.compose.ui.unit.dp
 
-object XtoolsShapes {
+val XtoolsShapes = Shapes(
 
-    val Small = RoundedCornerShape(12.dp)
+    extraSmall = RoundedCornerShape(6.dp),
 
-    val Medium = RoundedCornerShape(18.dp)
+    small = RoundedCornerShape(12.dp),
 
-    val Large = RoundedCornerShape(24.dp)
+    medium = RoundedCornerShape(18.dp),
 
-    val Pill = RoundedCornerShape(100.dp)
+    large = RoundedCornerShape(24.dp),
 
-}
+    extraLarge = RoundedCornerShape(32.dp)
+
+)
