@@ -18,7 +18,7 @@ import com.liyx.xtools.core.models.Chunk
     private val maxChunkSize: Int = 1500
 ) : ChunkEngine {
 
-    fun split(text: String): List<Chunk> {
+   override fun split(text: String): List<Chunk> {
 
         if (text.isBlank()) return emptyList()
 

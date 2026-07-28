@@ -23,7 +23,10 @@ class AppContainer(
         queueEngine = queueEngine
     )
 
+private val audioMerger: AudioMerger =
+    AndroidAudioMerger()
     val voicePipeline = VoicePipeline(
-        voiceEngine = voiceEngine
-    )
+    voiceEngine = voiceEngine,
+    audioMerger = audioMerger
+)
 }
