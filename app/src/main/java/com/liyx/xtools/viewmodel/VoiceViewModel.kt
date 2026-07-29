@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import com.liyx.xtools.core.voice.SmartChunkEngine
 
 class VoiceViewModel(
 
@@ -12,6 +13,7 @@ class VoiceViewModel(
 ) : ViewModel()
  {
 
+private val chunkEngine = SmartChunkEngine()
     private val _uiState = MutableStateFlow(
         VoiceUiState()
     )
@@ -173,11 +175,12 @@ private fun estimateChunks(
 
     if (text.isBlank()) return 0
 
-    val chunkSize = 4500
-
-    return ((text.length + chunkSize - 1) / chunkSize)
+    return chunkEngine
+        .split(text)
+        .size
 
 }
+
 
 fun generateVoice() {
 
