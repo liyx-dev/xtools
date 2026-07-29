@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
 import java.io.File
 import java.util.Locale
 
@@ -25,6 +26,9 @@ class AndroidTtsEngine(
     private var speechPitch = 1.0f
 
     private var selectedVoice: String? = null
+private var generationCompleted = false
+
+private val generationLock = Object()
 
     override fun initialize() {
 
@@ -47,6 +51,41 @@ class AndroidTtsEngine(
             tts?.setSpeechRate(speechRate)
 
             tts?.setPitch(speechPitch)
+tts?.setOnUtteranceProgressListener(
+
+    object : UtteranceProgressListener() {
+
+        override fun onStart(utteranceId: String?) {
+        }
+
+        override fun onDone(utteranceId: String?) {
+
+            synchronized(generationLock) {
+
+                generationCompleted = true
+
+                generationLock.notifyAll()
+
+            }
+
+        }
+
+        @Deprecated("Deprecated in Java")
+        override fun onError(utteranceId: String?) {
+
+            synchronized(generationLock) {
+
+                generationCompleted = true
+
+                generationLock.notifyAll()
+
+            }
+
+        }
+
+    }
+
+)
 
         }
 
@@ -119,39 +158,68 @@ class AndroidTtsEngine(
      */
     override fun generateToFile(
 
-        text: String,
+    text: String,
 
-        outputPath: String
+    outputPath: String
 
-    ): Boolean {
+): Boolean {
 
-        if (!initialized) return false
+    if (!initialized) return false
 
-        val file = File(outputPath)
+    generationCompleted = false
 
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    val file = File(outputPath)
 
-            val result = tts?.synthesizeToFile(
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
 
-                text,
+        return false
 
-                Bundle(),
+    }
 
-                file,
+    val result = tts?.synthesizeToFile(
 
-                "FILE_${System.currentTimeMillis()}"
+        text,
 
-            )
+        Bundle(),
 
-            result == TextToSpeech.SUCCESS
+        file,
 
-        } else {
+        "FILE_${System.currentTimeMillis()}"
 
-            false
+    )
+
+    if (result != TextToSpeech.SUCCESS) {
+
+        return false
+
+    }
+
+    synchronized(generationLock) {
+
+    while (!generationCompleted) {
+
+        try {
+
+            generationLock.wait()
+
+        } catch (e: InterruptedException) {
+
+            Thread.currentThread().interrupt()
+
+            return false
 
         }
 
     }
+
+}
+
+return file.exists()
+
+}
+
+ 
+
 
     override fun stop() {
 
