@@ -272,11 +272,11 @@ item {
 
 item {
 
-    ChunkPreviewCard(
+ChunkPreviewCard(
 
-        chunks = emptyList()
+    chunks = state.chunks
 
-    )
+)
 
 }
             item {

@@ -33,11 +33,19 @@ private val chunkEngine = SmartChunkEngine()
 
     val duration = estimateDuration(text)
 
-    val words = countWords(text)
+    val words = if (text.isBlank()) {
+        0
+    } else {
+        text.trim().split(Regex("\\s+")).size
+    }
 
-    val paragraphs = countParagraphs(text)
+    val paragraphs = if (text.isBlank()) {
+        0
+    } else {
+        text.trim().split(Regex("\\n\\s*\\n")).size
+    }
 
-    val chunks = estimateChunks(text)
+    val chunks = chunkEngine.split(text)
 
     _uiState.value = _uiState.value.copy(
 
@@ -49,12 +57,14 @@ private val chunkEngine = SmartChunkEngine()
 
         paragraphCount = paragraphs,
 
-        estimatedChunks = chunks
+        estimatedChunks = chunks.size,
+
+        chunks = chunks
 
     )
 
 }
-
+        
     fun updateVoice(voice: String) {
 
         _uiState.value = _uiState.value.copy(

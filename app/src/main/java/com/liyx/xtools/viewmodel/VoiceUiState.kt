@@ -1,5 +1,7 @@
 package com.liyx.xtools.viewmodel
 
+import com.liyx.xtools.core.models.Chunk
+
 data class VoiceUiState(
 
     val title: String = "",
@@ -24,12 +26,13 @@ data class VoiceUiState(
 
     val paragraphCount: Int = 0,
 
-    val estimatedChunks: Int = 0
+    val estimatedChunks: Int = 0,
+
+    val chunks: List<Chunk> = emptyList()
 
 ) {
 
     val characterCount: Int
-
         get() = text.length
 
 }
