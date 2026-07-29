@@ -1,109 +1,104 @@
 package com.liyx.xtools.ui
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.GraphicEq
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.liyx.xtools.ui.components.ComingSoonCard
+import com.liyx.xtools.ui.components.FeatureCard
+import com.liyx.xtools.ui.components.HeroSection
+import com.liyx.xtools.ui.components.QuickStatCard
 
 @Composable
 fun HomeScreen(
     onOpenVoiceStudio: () -> Unit
 ) {
 
-    Box(
+    val upcomingFeatures = listOf(
+        "AI Writer",
+        "PDF AI"
+    )
 
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    listOf(
-                        Color(0xFF0F172A),
-                        Color(0xFF111827),
-                        Color.Black
-                    )
-                )
-            )
+    Scaffold { innerPadding ->
 
-    ) {
+        LazyColumn(
 
-        Column(
+            modifier = Modifier.fillMaxSize(),
 
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp)
+            contentPadding = PaddingValues(
+                start = 20.dp,
+                end = 20.dp,
+                top = innerPadding.calculateTopPadding() + 20.dp,
+                bottom = 32.dp
+            ),
+
+            verticalArrangement = Arrangement.spacedBy(20.dp)
 
         ) {
 
-            Spacer(modifier = Modifier.height(24.dp))
+            item {
 
-            Text(
-                "Xtools",
-                style = MaterialTheme.typography.headlineLarge,
-                color = Color.White
-            )
+                HeroSection()
 
-            Text(
-                "AI Productivity Suite",
-                color = Color.LightGray
-            )
+            }
 
-            Spacer(modifier = Modifier.height(40.dp))
+            item {
 
-            Card(
+                FeatureCard(
 
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
+                    title = "Voice Studio",
 
-                        onOpenVoiceStudio()
+                    subtitle = "Generate natural AI voices from text in seconds.",
 
-                    },
+                    icon = Icons.Default.GraphicEq,
 
-                shape = RoundedCornerShape(24.dp)
+                    onClick = onOpenVoiceStudio
 
-            ) {
+                )
 
-                Column(
+            }
 
-                    modifier = Modifier.padding(24.dp)
+            item {
+
+                Row(
+
+                    modifier = Modifier.fillMaxWidth(),
+
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
 
                 ) {
 
-                    Icon(
+                    QuickStatCard(
 
-                        Icons.Default.GraphicEq,
+                        modifier = Modifier.weight(1f),
 
-                        contentDescription = null,
+                        value = "10+",
 
-                        tint = MaterialTheme.colorScheme.primary
-
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Text(
-
-                        "Voice Studio",
-
-                        style = MaterialTheme.typography.titleLarge
+                        label = "AI Tools"
 
                     )
 
-                    Spacer(modifier = Modifier.height(6.dp))
+                    QuickStatCard(
 
-                    Text(
+                        modifier = Modifier.weight(1f),
 
-                        "Generate realistic voices from text."
+                        value = "100K",
+
+                        label = "Characters"
 
                     )
 
@@ -111,68 +106,29 @@ fun HomeScreen(
 
             }
 
-            Spacer(modifier = Modifier.height(36.dp))
+            item {
 
-            Text(
+                Spacer(modifier = Modifier.height(4.dp))
 
-                "Coming Soon",
+                Text(
 
-                color = Color.White,
+                    text = "Available Soon",
 
-                style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleLarge
 
-            )
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            }
 
-            ComingSoonCard("AI Writer")
+            items(upcomingFeatures) { feature ->
 
-            ComingSoonCard("PDF AI")
+                ComingSoonCard(
 
-            ComingSoonCard("Video AI")
+                    title = feature
 
-            ComingSoonCard("Translator")
+                )
 
-        }
-
-    }
-
-}
-
-@Composable
-private fun ComingSoonCard(
-    title: String
-) {
-
-    Card(
-
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 6.dp)
-
-    ) {
-
-        Row(
-
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-
-            verticalAlignment = Alignment.CenterVertically
-
-        ) {
-
-            Icon(
-
-                Icons.Default.Lock,
-
-                contentDescription = null
-
-            )
-
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Text(title)
+            }
 
         }
 
