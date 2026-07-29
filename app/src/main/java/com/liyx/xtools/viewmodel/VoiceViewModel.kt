@@ -177,6 +177,22 @@ private fun processNextJob() {
     CoroutineScope(Dispatchers.IO).launch {
 
         setGenerating(true)
+_uiState.value = _uiState.value.copy(
+
+    currentJobTitle = job.title,
+
+    totalChunks = job.chunks.size,
+
+    currentChunk = 0,
+
+    processedCharacters = 0,
+
+    remainingCharacters = job.rawText.length,
+
+    estimatedRemainingMs = job.estimatedDurationMs
+
+)
+
 
 val success =
 
@@ -194,6 +210,17 @@ if (success != null) {
 
     updateProgress(1f)
 
+_uiState.value = _uiState.value.copy(
+
+    currentChunk = job.chunks.size,
+
+    processedCharacters = job.rawText.length,
+
+    remainingCharacters = 0,
+
+    estimatedRemainingMs = 0L
+
+)
 }
 
 voiceJobQueue.dequeue()

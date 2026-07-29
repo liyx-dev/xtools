@@ -28,7 +28,21 @@ data class VoiceUiState(
 
     val estimatedChunks: Int = 0,
 
-    val chunks: List<Chunk> = emptyList()
+    val chunks: List<Chunk> = emptyList(),
+
+    // ===== Live Production Dashboard =====
+
+    val currentJobTitle: String = "",
+
+    val currentChunk: Int = 0,
+
+    val totalChunks: Int = 0,
+
+    val processedCharacters: Int = 0,
+
+    val remainingCharacters: Int = 0,
+
+    val estimatedRemainingMs: Long = 0L
 
 ) {
 
