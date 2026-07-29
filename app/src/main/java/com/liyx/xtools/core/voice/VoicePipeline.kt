@@ -14,7 +14,9 @@ class VoicePipeline(
 
     private val voiceEngine: VoiceEngine,
 
-    private val audioMerger: AudioMerger
+    private val audioMerger: AudioMerger,
+
+    private val onChunkCompleted: ((VoiceJob) -> Unit)? = null
 
 ) {
 
@@ -86,6 +88,7 @@ class VoicePipeline(
             job.processedCharacters += chunk.characterCount
 
             job.updateProgress()
+onChunkCompleted?.invoke(job)
 
         }
 

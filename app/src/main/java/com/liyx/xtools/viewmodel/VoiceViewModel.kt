@@ -33,6 +33,7 @@ private val audioStorageManager: AudioStorageManager? = null
 
 private val chunkEngine = SmartChunkEngine()
 private val voiceJobQueue = VoiceJobQueue()
+
 private val voicePipeline =
 
     if (
@@ -49,13 +50,33 @@ private val voicePipeline =
 
             audioMerger
 
-        )
+        ) { job ->
+
+            _uiState.value = _uiState.value.copy(
+
+                progress = job.progress,
+
+                currentChunk = job.completedChunks(),
+
+                totalChunks = job.totalChunks(),
+
+                processedCharacters = job.processedCharacters,
+
+                remainingCharacters =
+                    job.totalCharacters - job.processedCharacters
+
+            )
+
+        }
 
     } else {
 
         null
 
     }
+
+
+
 
     private val _uiState = MutableStateFlow(
         VoiceUiState()
