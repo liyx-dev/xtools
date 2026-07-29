@@ -25,6 +25,7 @@ import com.liyx.xtools.ui.components.ScriptEditorCard
 import com.liyx.xtools.ui.components.VoiceHeader
 import com.liyx.xtools.ui.components.VoiceSettingsCard
 import com.liyx.xtools.viewmodel.VoiceViewModel
+import com.liyx.xtools.ui.components.VoiceSelectorCard
 
 @Composable
 fun VoiceStudioScreen(
@@ -112,6 +113,21 @@ fun VoiceStudioScreen(
                 )
 
             }
+item {
+
+    VoiceSelectorCard(
+
+        selectedVoice = state.selectedVoice,
+
+        onVoiceSelected = {
+
+            viewModel.updateVoice(it)
+
+        }
+
+    )
+
+}
 
             item {
 
