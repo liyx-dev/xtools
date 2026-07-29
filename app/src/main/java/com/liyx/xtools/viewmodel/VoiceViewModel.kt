@@ -27,19 +27,31 @@ class VoiceViewModel(
 
     }
 
-    fun updateText(text: String) {
+   fun updateText(text: String) {
 
-        val duration = estimateDuration(text)
+    val duration = estimateDuration(text)
 
-        _uiState.value = _uiState.value.copy(
+    val words = countWords(text)
 
-            text = text,
+    val paragraphs = countParagraphs(text)
 
-            estimatedDurationMs = duration
+    val chunks = estimateChunks(text)
 
-        )
+    _uiState.value = _uiState.value.copy(
 
-    }
+        text = text,
+
+        estimatedDurationMs = duration,
+
+        wordCount = words,
+
+        paragraphCount = paragraphs,
+
+        estimatedChunks = chunks
+
+    )
+
+}
 
     fun updateVoice(voice: String) {
 
@@ -112,6 +124,61 @@ class VoiceViewModel(
         return (minutes * 60_000).toLong()
 
     }
+
+private fun countWords(
+
+    text: String
+
+): Int {
+
+    if (text.isBlank()) return 0
+
+    return text
+
+        .trim()
+
+        .split(Regex("\\s+"))
+
+        .size
+
+}
+
+private fun countParagraphs(
+
+    text: String
+
+): Int {
+
+    if (text.isBlank()) return 0
+
+    return text
+
+        .trim()
+
+        .split(Regex("\\n+"))
+
+        .count {
+
+            it.isNotBlank()
+
+        }
+
+}
+
+private fun estimateChunks(
+
+    text: String
+
+): Int {
+
+    if (text.isBlank()) return 0
+
+    val chunkSize = 4500
+
+    return ((text.length + chunkSize - 1) / chunkSize)
+
+}
+
 fun generateVoice() {
 
     val current = _uiState.value

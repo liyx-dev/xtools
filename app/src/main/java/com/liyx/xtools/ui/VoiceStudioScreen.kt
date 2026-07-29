@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.liyx.xtools.ui.components.ScriptAnalysisCard
 import com.liyx.xtools.design.components.PrimaryButton
 import com.liyx.xtools.design.components.TopBar
 import com.liyx.xtools.ui.components.GenerationPipelineCard
@@ -114,6 +115,24 @@ fun VoiceStudioScreen(
                 )
 
             }
+item {
+
+    ScriptAnalysisCard(
+
+        characterCount = state.characterCount,
+
+        estimatedDuration = state.estimatedDurationMs,
+
+        chunkCount = state.estimatedChunks,
+
+        wordCount = state.wordCount,
+
+        paragraphCount = state.paragraphCount
+
+    )
+
+}
+
 item {
 
     VoiceSelectorCard(

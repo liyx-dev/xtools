@@ -8,9 +8,9 @@ data class VoiceUiState(
 
     val selectedVoice: String = "Default",
 
-    val speed: Float = 1.0f,
+    val speed: Float = 1f,
 
-    val pitch: Float = 1.0f,
+    val pitch: Float = 1f,
 
     val progress: Float = 0f,
 
@@ -18,7 +18,13 @@ data class VoiceUiState(
 
     val queueSize: Int = 0,
 
-    val estimatedDurationMs: Long = 0L
+    val estimatedDurationMs: Long = 0L,
+
+    val wordCount: Int = 0,
+
+    val paragraphCount: Int = 0,
+
+    val estimatedChunks: Int = 0
 
 ) {
 
