@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import com.liyx.xtools.core.voice.AudioMerger
 import com.liyx.xtools.core.voice.VoiceEngine
 import com.liyx.xtools.core.voice.VoicePipeline
+import com.liyx.xtools.core.storage.AudioStorageManager
 
 class VoiceViewModel(
 
@@ -22,7 +23,9 @@ class VoiceViewModel(
 
     private val voiceEngine: VoiceEngine? = null,
 
-    private val audioMerger: AudioMerger? = null
+   private val audioMerger: AudioMerger? = null, 
+
+private val audioStorageManager: AudioStorageManager? = null
 
 ) : ViewModel()
 
@@ -179,11 +182,13 @@ val success =
 
     voicePipeline?.process(
 
-        job,
+    job,
 
-        "/tmp"
+    audioStorageManager
+        ?.getOutputDirectory(job.title)
+        ?: "/tmp"
 
-    )
+)
 
 if (success != null) {
 
