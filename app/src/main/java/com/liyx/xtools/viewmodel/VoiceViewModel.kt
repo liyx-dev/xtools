@@ -179,17 +179,18 @@ private fun processNextJob() {
         setGenerating(true)
 _uiState.value = _uiState.value.copy(
 
+
     currentJobTitle = job.title,
 
-    totalChunks = job.chunks.size,
+totalChunks = job.totalChunks(),
 
-    currentChunk = 0,
+currentChunk = 0,
 
-    processedCharacters = 0,
+processedCharacters = job.processedCharacters,
 
-    remainingCharacters = job.rawText.length,
+remainingCharacters = job.totalCharacters,
 
-    estimatedRemainingMs = job.estimatedDurationMs
+estimatedRemainingMs = 0L
 
 )
 
@@ -212,13 +213,14 @@ if (success != null) {
 
 _uiState.value = _uiState.value.copy(
 
-    currentChunk = job.chunks.size,
 
-    processedCharacters = job.rawText.length,
+    currentChunk = job.completedChunks(),
 
-    remainingCharacters = 0,
+processedCharacters = job.totalCharacters,
 
-    estimatedRemainingMs = 0L
+remainingCharacters = 0,
+
+estimatedRemainingMs = 0L
 
 )
 }
