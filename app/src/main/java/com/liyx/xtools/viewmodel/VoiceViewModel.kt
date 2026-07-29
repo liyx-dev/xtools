@@ -12,15 +12,48 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+import com.liyx.xtools.core.voice.AudioMerger
+import com.liyx.xtools.core.voice.VoiceEngine
+import com.liyx.xtools.core.voice.VoicePipeline
+
 class VoiceViewModel(
 
-    private val voiceManager: com.liyx.xtools.core.voice.VoiceManager? = null
+    private val voiceManager: com.liyx.xtools.core.voice.VoiceManager? = null,
+
+    private val voiceEngine: VoiceEngine? = null,
+
+    private val audioMerger: AudioMerger? = null
 
 ) : ViewModel()
+
  {
 
 private val chunkEngine = SmartChunkEngine()
 private val voiceJobQueue = VoiceJobQueue()
+private val voicePipeline =
+
+    if (
+
+        voiceEngine != null &&
+
+        audioMerger != null
+
+    ) {
+
+        VoicePipeline(
+
+            voiceEngine,
+
+            audioMerger
+
+        )
+
+    } else {
+
+        null
+
+    }
+
     private val _uiState = MutableStateFlow(
         VoiceUiState()
     )
@@ -142,23 +175,32 @@ private fun processNextJob() {
 
         setGenerating(true)
 
-        /*
-         * Phase 7B:
-         * Actual VoicePipeline processing
-         * will be connected here.
-         */
+val success =
 
-        updateProgress(1f)
+    voicePipeline?.process(
 
-        voiceJobQueue.dequeue()
+        job,
 
-        voiceJobQueue.finishProcessing()
+        "/tmp"
 
-        updateQueueSize()
+    )
 
-        setGenerating(false)
+if (success != null) {
 
-        processNextJob()
+    updateProgress(1f)
+
+}
+
+voiceJobQueue.dequeue()
+
+voiceJobQueue.finishProcessing()
+
+updateQueueSize()
+
+setGenerating(false)
+
+processNextJob()
+
 
     }
 
