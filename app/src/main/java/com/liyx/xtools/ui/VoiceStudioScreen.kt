@@ -1,16 +1,31 @@
 package com.liyx.xtools.ui
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.liyx.xtools.design.components.PrimaryButton
+import com.liyx.xtools.design.components.TopBar
+import com.liyx.xtools.ui.components.GenerationStatusCard
+import com.liyx.xtools.ui.components.ProjectTitleCard
+import com.liyx.xtools.ui.components.QuickStatCard
+import com.liyx.xtools.ui.components.ScriptEditorCard
+import com.liyx.xtools.ui.components.VoiceHeader
+import com.liyx.xtools.ui.components.VoiceSettingsCard
 import com.liyx.xtools.viewmodel.VoiceViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VoiceStudioScreen(
 
@@ -26,13 +41,15 @@ fun VoiceStudioScreen(
 
         topBar = {
 
-            TopAppBar(
+            TopBar(
 
-                title = {
+                title = "Voice Studio",
 
-                    Text("Voice Studio")
+                subtitle = "Professional AI Voice Generator",
 
-                }
+                showBack = true,
+
+                onBack = onBack
 
             )
 
@@ -40,139 +57,195 @@ fun VoiceStudioScreen(
 
     ) { padding ->
 
-        Column(
+        LazyColumn(
+
+            state = rememberLazyListState(),
 
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
-                .padding(20.dp)
-                .verticalScroll(rememberScrollState())
+                .padding(padding),
+
+            contentPadding = PaddingValues(20.dp),
+
+            verticalArrangement = Arrangement.spacedBy(20.dp)
 
         ) {
 
-            OutlinedTextField(
+            item {
 
-                value = state.title,
-
-                onValueChange = {
-
-                    viewModel.updateTitle(it)
-
-                },
-
-                label = {
-
-                    Text("Project Title")
-
-                },
-
-                modifier = Modifier.fillMaxWidth()
-
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedTextField(
-
-                value = state.text,
-
-                onValueChange = {
-
-                    viewModel.updateText(it)
-
-                },
-
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(220.dp),
-
-                label = {
-
-                    Text("Enter text")
-
-                }
-
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                "Characters: ${state.characterCount}"
-            )
-
-            Text(
-                "Estimated Duration: ${state.estimatedDurationMs / 1000}s"
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Text("Speech Speed")
-
-            Slider(
-
-                value = state.speed,
-
-                onValueChange = {
-
-                    viewModel.updateSpeed(it)
-
-                },
-
-                valueRange = 0.5f..2f
-
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text("Pitch")
-
-            Slider(
-
-                value = state.pitch,
-
-                onValueChange = {
-
-                    viewModel.updatePitch(it)
-
-                },
-
-                valueRange = 0.5f..2f
-
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-          Button(
-
-    onClick = {
-
-        viewModel.generateVoice()
-
-                },
-
-                modifier = Modifier.fillMaxWidth()
-
-            ) {
-
-                Text("Generate Voice")
+                VoiceHeader()
 
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            item {
 
-            if (state.isGenerating) {
+                ProjectTitleCard(
 
-                LinearProgressIndicator(
+                    title = state.title,
 
-                    progress = { state.progress },
+                    onTitleChanged = {
 
-                    modifier = Modifier.fillMaxWidth()
+                        viewModel.updateTitle(it)
+
+                    }
+
+                )
+
+            }
+
+            item {
+
+                ScriptEditorCard(
+
+                    text = state.text,
+
+                    characterCount = state.characterCount,
+
+                    estimatedDuration = state.estimatedDurationMs,
+
+                    onTextChanged = {
+
+                        viewModel.updateText(it)
+
+                    }
+
+                )
+
+            }
+
+            item {
+
+                Row(
+
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+
+                ) {
+
+                    QuickStatCard(
+
+                        modifier = Modifier.weight(1f),
+
+                        value = state.characterCount.toString(),
+
+                        label = "Characters"
+
+                    )
+
+                    QuickStatCard(
+
+                        modifier = Modifier.weight(1f),
+
+                        value = formatDuration(state.estimatedDurationMs),
+
+                        label = "Estimated Audio"
+
+                    )
+
+                }
+
+            }
+
+            item {
+
+                VoiceSettingsCard(
+
+                    speed = state.speed,
+
+                    pitch = state.pitch,
+
+                    selectedVoice = state.selectedVoice,
+
+                    onSpeedChanged = {
+
+                        viewModel.updateSpeed(it)
+
+                    },
+
+                    onPitchChanged = {
+
+                        viewModel.updatePitch(it)
+
+                    }
+
+                )
+
+            }
+
+            item {
+
+                PrimaryButton(
+
+                    text = if (state.isGenerating)
+                        "Generating..."
+                    else
+                        "Generate Voice",
+
+                    onClick = {
+
+                        viewModel.generateVoice()
+
+                    },
+
+                    enabled = state.text.isNotBlank(),
+
+                    loading = state.isGenerating
+
+                )
+
+            }
+
+            item {
+
+                GenerationStatusCard(
+
+                    generating = state.isGenerating,
+
+                    progress = state.progress
+
+                )
+
+            }
+
+            item {
+
+                Spacer(
+
+                    modifier = Modifier.height(20.dp)
 
                 )
 
             }
 
         }
+
+    }
+
+}
+
+private fun formatDuration(
+
+    duration: Long
+
+): String {
+
+    val totalSeconds = duration / 1000
+
+    val hours = totalSeconds / 3600
+
+    val minutes = (totalSeconds % 3600) / 60
+
+    val seconds = totalSeconds % 60
+
+    return when {
+
+        hours > 0 ->
+            "${hours}h ${minutes}m"
+
+        minutes > 0 ->
+            "${minutes}m ${seconds}s"
+
+        else ->
+            "${seconds}s"
 
     }
 
