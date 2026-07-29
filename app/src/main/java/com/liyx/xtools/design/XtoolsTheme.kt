@@ -5,29 +5,36 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 
 private val DarkColors = darkColorScheme(
 
-    primary = Color(0xFF3B82F6),
+    primary = XtoolsColors.Primary,
 
-    secondary = Color(0xFF8B5CF6),
+    secondary = XtoolsColors.Secondary,
 
-    tertiary = Color(0xFF06B6D4),
+    tertiary = XtoolsColors.Accent,
 
-    background = Color(0xFF0B1120),
+    background = XtoolsColors.Background,
 
-    surface = Color(0xFF111827)
+    surface = XtoolsColors.Surface,
+
+    error = XtoolsColors.Error
 
 )
 
 private val LightColors = lightColorScheme(
 
-    primary = Color(0xFF2563EB),
+    primary = XtoolsColors.Primary,
 
-    secondary = Color(0xFF7C3AED),
+    secondary = XtoolsColors.Secondary,
 
-    tertiary = Color(0xFF0891B2)
+    tertiary = XtoolsColors.Accent,
+
+    background = XtoolsColors.Background,
+
+    surface = XtoolsColors.Surface,
+
+    error = XtoolsColors.Error
 
 )
 
@@ -42,7 +49,10 @@ fun XtoolsTheme(
 
     MaterialTheme(
 
-        colorScheme = if (darkTheme) DarkColors else LightColors,
+        colorScheme = if (darkTheme)
+            DarkColors
+        else
+            LightColors,
 
         typography = XtoolsTypography,
 
