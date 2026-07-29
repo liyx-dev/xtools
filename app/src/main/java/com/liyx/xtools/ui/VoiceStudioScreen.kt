@@ -18,7 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.liyx.xtools.design.components.PrimaryButton
 import com.liyx.xtools.design.components.TopBar
-import com.liyx.xtools.ui.components.GenerationStatusCard
+import com.liyx.xtools.ui.components.GenerationPipelineCard
+
 import com.liyx.xtools.ui.components.ProjectTitleCard
 import com.liyx.xtools.ui.components.QuickStatCard
 import com.liyx.xtools.ui.components.ScriptEditorCard
@@ -212,13 +213,19 @@ item {
 
             item {
 
-                GenerationStatusCard(
+               GenerationPipelineCard(
 
-                    generating = state.isGenerating,
+    generating = state.isGenerating,
 
-                    progress = state.progress
+    progress = state.progress,
 
-                )
+    currentVoice = state.selectedVoice,
+
+    characterCount = state.characterCount,
+
+    estimatedDuration = state.estimatedDurationMs
+
+)
 
             }
 
