@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import com.liyx.xtools.core.voice.SmartChunkEngine
+import com.liyx.xtools.core.queue.VoiceJobQueue
 
 class VoiceViewModel(
 
@@ -14,6 +15,7 @@ class VoiceViewModel(
  {
 
 private val chunkEngine = SmartChunkEngine()
+private val voiceJobQueue = VoiceJobQueue()
     private val _uiState = MutableStateFlow(
         VoiceUiState()
     )
@@ -115,6 +117,14 @@ private val chunkEngine = SmartChunkEngine()
 
     }
 
+private fun updateQueueSize() {
+
+    _uiState.value = _uiState.value.copy(
+        queueSize = voiceJobQueue.size()
+    )
+
+}
+
     private fun estimateDuration(
 
         text: String
@@ -198,9 +208,7 @@ fun generateVoice() {
 
     if (current.text.isBlank()) return
 
-    setGenerating(true)
-
-    voiceManager?.createJob(
+    val job = voiceManager?.createJob(
 
         title = current.title.ifBlank {
 
@@ -212,6 +220,18 @@ fun generateVoice() {
 
     )
 
+    if (job != null) {
+
+        voiceJobQueue.enqueue(job)
+
+        updateQueueSize()
+
+        setGenerating(true)
+
+    }
+
 }
+
+ 
 
 }
