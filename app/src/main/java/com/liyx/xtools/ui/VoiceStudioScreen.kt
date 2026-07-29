@@ -21,6 +21,7 @@ import com.liyx.xtools.design.components.PrimaryButton
 import com.liyx.xtools.design.components.TopBar
 import com.liyx.xtools.ui.components.GenerationPipelineCard
 import com.liyx.xtools.ui.components.GenerationDashboardCard
+import com.liyx.xtools.ui.components.ChunkPreviewCard
 
 import com.liyx.xtools.ui.components.ProjectTitleCard
 import com.liyx.xtools.ui.components.QuickStatCard
@@ -269,6 +270,15 @@ item {
 
 }
 
+item {
+
+    ChunkPreviewCard(
+
+        chunks = emptyList()
+
+    )
+
+}
             item {
 
                 Spacer(
