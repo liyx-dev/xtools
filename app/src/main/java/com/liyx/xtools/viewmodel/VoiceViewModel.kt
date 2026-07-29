@@ -7,6 +7,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import com.liyx.xtools.core.voice.SmartChunkEngine
 import com.liyx.xtools.core.queue.VoiceJobQueue
 
+import com.liyx.xtools.core.jobs.VoiceJob
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 class VoiceViewModel(
 
     private val voiceManager: com.liyx.xtools.core.voice.VoiceManager? = null
@@ -125,6 +130,40 @@ private fun updateQueueSize() {
 
 }
 
+private fun processNextJob() {
+
+    if (voiceJobQueue.isProcessing()) return
+
+    val job = voiceJobQueue.peek() ?: return
+
+    voiceJobQueue.startProcessing()
+
+    CoroutineScope(Dispatchers.IO).launch {
+
+        setGenerating(true)
+
+        /*
+         * Phase 7B:
+         * Actual VoicePipeline processing
+         * will be connected here.
+         */
+
+        updateProgress(1f)
+
+        voiceJobQueue.dequeue()
+
+        voiceJobQueue.finishProcessing()
+
+        updateQueueSize()
+
+        setGenerating(false)
+
+        processNextJob()
+
+    }
+
+}
+
     private fun estimateDuration(
 
         text: String
@@ -146,6 +185,8 @@ private fun updateQueueSize() {
         return (minutes * 60_000).toLong()
 
     }
+
+
 
 private fun countWords(
 
@@ -224,9 +265,9 @@ fun generateVoice() {
 
         voiceJobQueue.enqueue(job)
 
-        updateQueueSize()
+updateQueueSize()
 
-        setGenerating(true)
+processNextJob()
 
     }
 

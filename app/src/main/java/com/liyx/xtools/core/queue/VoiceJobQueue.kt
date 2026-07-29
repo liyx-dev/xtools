@@ -9,11 +9,17 @@ class VoiceJobQueue {
 
     private val jobs = mutableListOf<VoiceJob>()
 
+    /**
+     * Prevents multiple jobs
+     * from processing simultaneously.
+     */
+    private var processing = false
+
     private val _queue =
         MutableStateFlow<List<VoiceJob>>(emptyList())
 
-    val queue: StateFlow<List<VoiceJob>>
-        = _queue.asStateFlow()
+    val queue: StateFlow<List<VoiceJob>> =
+        _queue.asStateFlow()
 
     fun enqueue(job: VoiceJob) {
 
@@ -52,6 +58,26 @@ class VoiceJobQueue {
         jobs.clear()
 
         _queue.value = emptyList()
+
+        processing = false
+
+    }
+
+    fun isProcessing(): Boolean {
+
+        return processing
+
+    }
+
+    fun startProcessing() {
+
+        processing = true
+
+    }
+
+    fun finishProcessing() {
+
+        processing = false
 
     }
 
