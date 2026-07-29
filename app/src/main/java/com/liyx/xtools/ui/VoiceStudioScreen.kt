@@ -20,6 +20,7 @@ import com.liyx.xtools.ui.components.ScriptAnalysisCard
 import com.liyx.xtools.design.components.PrimaryButton
 import com.liyx.xtools.design.components.TopBar
 import com.liyx.xtools.ui.components.GenerationPipelineCard
+import com.liyx.xtools.ui.components.GenerationDashboardCard
 
 import com.liyx.xtools.ui.components.ProjectTitleCard
 import com.liyx.xtools.ui.components.QuickStatCard
@@ -247,6 +248,26 @@ item {
 )
 
             }
+
+item {
+
+    GenerationDashboardCard(
+
+        progress = state.progress,
+
+        processedChunks = 0,
+
+        totalChunks = state.estimatedChunks,
+
+        processedCharacters = 0,
+
+        totalCharacters = state.characterCount,
+
+        generating = state.isGenerating
+
+    )
+
+}
 
             item {
 
