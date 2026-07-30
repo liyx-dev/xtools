@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import com.liyx.xtools.core.voice.SmartChunkEngine
-import com.liyx.xtools.core.queue.VoiceJobQueue
+
 
 import com.liyx.xtools.core.jobs.VoiceJob
 import kotlinx.coroutines.CoroutineScope
@@ -32,7 +32,7 @@ private val audioStorageManager: AudioStorageManager? = null
  {
 
 private val chunkEngine = SmartChunkEngine()
-private val voiceJobQueue = VoiceJobQueue()
+
 
 private val voicePipeline =
 
@@ -189,106 +189,8 @@ private fun debug(message: String) {
 
     }
 
-private fun updateQueueSize() {
-
-    _uiState.value = _uiState.value.copy(
-        queueSize = voiceJobQueue.size()
-    )
-
-}
-
-private fun processNextJob() {
-debug("Checking queue")
-
-    if (voiceJobQueue.isProcessing()) return
-
-    val job = voiceJobQueue.peek()
-
-if (job == null) {
-
-    debug("Queue is empty")
-
-    return
-
-}
-
-debug("Job found in queue")
-
-    voiceJobQueue.startProcessing()
-
-    CoroutineScope(Dispatchers.IO).launch {
-
-        setGenerating(true)
-_uiState.value = _uiState.value.copy(
 
 
-    currentJobTitle = job.title,
-
-totalChunks = job.totalChunks(),
-
-currentChunk = 0,
-
-processedCharacters = job.processedCharacters,
-
-remainingCharacters = job.totalCharacters,
-
-estimatedRemainingMs = 0L
-
-)
-
-debug("Starting voice pipeline")
-val success =
-
-    voicePipeline?.process(
-
-    job,
-
-    audioStorageManager
-        ?.getOutputDirectory(job.title)
-        ?: "/tmp"
-
-)
-
-if (success != null) {
-
-    debug("Voice generation completed")
-
-    updateProgress(1f)
-
-_uiState.value = _uiState.value.copy(
-
-
-    currentChunk = job.completedChunks(),
-
-processedCharacters = job.totalCharacters,
-
-remainingCharacters = 0,
-
-estimatedRemainingMs = 0L
-
-)
-}
-
-else {
-
-    debug("Voice pipeline returned NULL")
-
-}
-
-voiceJobQueue.dequeue()
-
-voiceJobQueue.finishProcessing()
-
-updateQueueSize()
-
-setGenerating(false)
-
-processNextJob()
-
-
-    }
-
-}
 
     private fun estimateDuration(
 
@@ -371,43 +273,103 @@ private fun estimateChunks(
 
 fun generateVoice() {
 
-    debug("Generate button pressed")
-
     val current = _uiState.value
 
-    if (current.text.isBlank()) {
+    if (current.text.isBlank()) return
 
-    debug("No text entered")
+    setGenerating(true)
 
-    return
+    CoroutineScope(Dispatchers.IO).launch {
+
+        val job = voiceManager?.createJob(
+
+            title = current.title.ifBlank {
+                "Untitled Project"
+            },
+
+            rawText = current.text
+
+        )
+
+        if (job == null) {
+
+            setGenerating(false)
+
+            return@launch
+
+        }
+
+        _uiState.value = _uiState.value.copy(
+
+            currentJobTitle = job.title,
+
+            totalChunks = job.totalChunks(),
+
+            currentChunk = 0,
+
+            processedCharacters = 0,
+
+            remainingCharacters = job.totalCharacters,
+
+            progress = 0f
+
+        )
+
+        val outputDirectory =
+
+    audioStorageManager?.getOutputDirectory(
+        job.title
+    )
+
+if (outputDirectory == null) {
+
+    setGenerating(false)
+
+    return@launch
 
 }
-debug("Creating voice job")
 
-    val job = voiceManager?.createJob(
+val result =
 
-        title = current.title.ifBlank {
+    voicePipeline?.process(
 
-            "Untitled Project"
+        job,
 
-        },
-
-        rawText = current.text
+        outputDirectory
 
     )
 
-    if (job != null) {
-debug("Job created successfully")
+        if (result != null) {
 
-        voiceJobQueue.enqueue(job)
+            _uiState.value = _uiState.value.copy(
 
-updateQueueSize()
+                generatedAudio = result,
 
-processNextJob()
+                canPlay = true,
+
+                canShare = true,
+
+                canExport = true,
+
+                progress = 1f,
+
+                currentChunk = job.totalChunks(),
+
+                processedCharacters = job.totalCharacters,
+
+                remainingCharacters = 0
+
+            )
+
+        }
+
+        setGenerating(false)
 
     }
 
 }
+
+     
 
  
 
