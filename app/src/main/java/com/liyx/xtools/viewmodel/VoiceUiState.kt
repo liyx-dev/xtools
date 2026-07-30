@@ -8,17 +8,33 @@ data class VoiceUiState(
 
     val text: String = "",
 
+    // ===== Provider =====
+
+    val selectedProvider: String = "android",
+
+    val availableProviders: List<String> = emptyList(),
+
+    // ===== Voice =====
+
     val selectedVoice: String = "Default",
+
+    val availableVoices: List<String> = emptyList(),
+
+    // ===== Voice Controls =====
 
     val speed: Float = 1f,
 
     val pitch: Float = 1f,
+
+    // ===== Generation =====
 
     val progress: Float = 0f,
 
     val isGenerating: Boolean = false,
 
     val queueSize: Int = 0,
+
+    // ===== Statistics =====
 
     val estimatedDurationMs: Long = 0L,
 
@@ -42,7 +58,23 @@ data class VoiceUiState(
 
     val remainingCharacters: Int = 0,
 
-    val estimatedRemainingMs: Long = 0L
+    val estimatedRemainingMs: Long = 0L,
+
+    // ===== Output =====
+
+    val generatedAudio: String? = null,
+
+    val canPlay: Boolean = false,
+
+    val canShare: Boolean = false,
+
+    val canExport: Boolean = false,
+
+    // ===== Provider Status =====
+
+    val providerReady: Boolean = true,
+
+    val providerStatus: String = ""
 
 ) {
 

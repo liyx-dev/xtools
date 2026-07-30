@@ -24,7 +24,6 @@ class AppContainer(
     /*
      * Voice Providers
      */
-
     private val providerRegistry = VoiceProviderRegistry(
 
         listOf(
@@ -48,23 +47,17 @@ class AppContainer(
     /*
      * Current Voice Engine
      */
+    private val voiceEngine: VoiceEngine =
 
-    private val voiceEngine: VoiceEngine = when (
+        providerManager
+            .getCurrentProvider()
+            ?.engine
 
-        val provider = providerManager.getCurrentProvider()
+            ?: AndroidVoiceProvider(context).engine
 
-    ) {
-
-        is AndroidVoiceProvider -> provider.engine
-
-        is PiperVoiceProvider -> provider.engine
-
-        is KokoroVoiceProvider -> provider.engine
-
-        else -> AndroidVoiceProvider(context).engine
-
-    }
-
+    /*
+     * Voice Manager
+     */
     val voiceManager = VoiceManager(
 
         textProcessor = textProcessor,
@@ -75,9 +68,16 @@ class AppContainer(
 
     )
 
-    private val audioMerger: AudioMerger =
-        AndroidAudioMerger()
+    /*
+     * Audio Merger
+     */
+    val audioMerger: AudioMerger =
+    AndroidAudioMerger()
 
+
+    /*
+     * Voice Pipeline
+     */
     val voicePipeline = VoicePipeline(
 
         voiceEngine = voiceEngine,

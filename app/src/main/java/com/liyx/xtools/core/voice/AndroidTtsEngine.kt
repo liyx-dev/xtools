@@ -51,6 +51,18 @@ private val generationLock = Object()
             tts?.setSpeechRate(speechRate)
 
             tts?.setPitch(speechPitch)
+selectedVoice?.let { voiceName ->
+
+    tts?.voices
+        ?.firstOrNull { it.name == voiceName }
+        ?.let {
+
+            tts?.voice = it
+
+        }
+
+}
+
 tts?.setOnUtteranceProgressListener(
 
     object : UtteranceProgressListener() {

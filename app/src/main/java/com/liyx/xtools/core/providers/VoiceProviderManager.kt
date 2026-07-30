@@ -1,5 +1,7 @@
 package com.liyx.xtools.core.providers
 
+import com.liyx.xtools.core.voice.VoiceEngine
+
 class VoiceProviderManager(
 
     private val registry: VoiceProviderRegistry
@@ -12,33 +14,32 @@ class VoiceProviderManager(
 
         id: String
 
-    ) {
+    ): Boolean {
 
-        if (
+        val provider = registry.getProvider(id)
+            ?: return false
 
-            registry.getProvider(id) != null
+        currentProviderId = provider.id
 
-        ) {
-
-            currentProviderId = id
-
-        }
+        return true
 
     }
 
     fun getCurrentProvider(): VoiceProvider? {
 
-        return registry.getProvider(
-
-            currentProviderId
-
-        )
+        return registry.getProvider(currentProviderId)
 
     }
 
     fun getCurrentProviderId(): String {
 
         return currentProviderId
+
+    }
+
+    fun getCurrentEngine(): VoiceEngine? {
+
+        return getCurrentProvider()?.engine
 
     }
 
