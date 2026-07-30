@@ -7,6 +7,7 @@ import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import java.io.File
 import java.util.Locale
+import com.liyx.xtools.core.utils.DebugLogger
 
 /**
  * Android implementation of VoiceEngine.
@@ -35,16 +36,27 @@ private val generationLock = Object()
         if (tts == null) {
 
             tts = TextToSpeech(context, this)
-
+DebugLogger.log(
+    context,
+    "initialize() called"
+)
         }
 
     }
 
     override fun onInit(status: Int) {
 
-        if (status == TextToSpeech.SUCCESS) {
+DebugLogger.log(
+    context,
+    "onInit status = $status"
+) 
+       if (status == TextToSpeech.SUCCESS) {
 
-            initialized = true
+DebugLogger.log(
+    context,
+    "TTS initialized successfully"
+) 
+           initialized = true
 
             tts?.language = Locale.getDefault()
 
@@ -67,11 +79,22 @@ tts?.setOnUtteranceProgressListener(
 
     object : UtteranceProgressListener() {
 
-        override fun onStart(utteranceId: String?) {
-        }
+override fun onStart(
+    utteranceId: String?
+) {
+
+    DebugLogger.log(
+        context,
+        "onStart()"
+    )
+
+}        
 
         override fun onDone(utteranceId: String?) {
-
+DebugLogger.log(
+    context,
+    "onDone()"
+)
             synchronized(generationLock) {
 
                 generationCompleted = true
@@ -83,7 +106,12 @@ tts?.setOnUtteranceProgressListener(
         }
 
         @Deprecated("Deprecated in Java")
-        override fun onError(utteranceId: String?) {
+ 
+       override fun onError(utteranceId: String?) {
+DebugLogger.log(
+    context,
+    "onError()"
+)
 
             synchronized(generationLock) {
 
@@ -175,6 +203,10 @@ generationLock.notifyAll()
     text: String,
     outputPath: String
 ): Boolean {
+DebugLogger.log(
+    context,
+    "generateToFile() called"
+)
 
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
         return false
@@ -196,7 +228,12 @@ generationLock.notifyAll()
         }
 
         if (!initialized) {
-            return false
+            DebugLogger.log(
+    context,
+    "Output file not created"
+)
+
+return false
         }
 
     }
@@ -210,6 +247,10 @@ generationLock.notifyAll()
     if (file.exists()) {
         file.delete()
     }
+DebugLogger.log(
+    context,
+    "Calling synthesizeToFile..."
+)
 
     val result = tts?.synthesizeToFile(
 
@@ -223,6 +264,10 @@ generationLock.notifyAll()
 
     )
 
+DebugLogger.log(
+    context,
+    "synthesizeToFile result = $result"
+)
     if (result != TextToSpeech.SUCCESS) {
         return false
     }

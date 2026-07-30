@@ -35,6 +35,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.liyx.xtools.AppContainer
 import com.liyx.xtools.viewmodel.VoiceViewModelFactory
 import androidx.compose.material3.Text
+import com.liyx.xtools.core.utils.DebugLogger
+
+import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun VoiceStudioScreen(
@@ -46,6 +50,12 @@ fun VoiceStudioScreen(
 )
 
  {
+
+val context = LocalContext.current
+
+var debugLog by remember {
+    mutableStateOf(DebugLogger.read(context))
+}
 
 val viewModel: VoiceViewModel = viewModel(
 
@@ -279,6 +289,8 @@ item {
 
 }
 
+
+
 item {
 
     GenerationDashboardCard(
@@ -296,6 +308,74 @@ item {
         generating = state.isGenerating
 
     )
+
+}
+
+Card(
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(16.dp)
+) {
+
+    Column(
+        modifier = Modifier.padding(16.dp)
+    ) {
+
+        Text(
+            text = "Developer Debug Console"
+        )
+
+        Spacer(
+            modifier = Modifier.height(8.dp)
+        )
+
+        Text(
+            text = debugLog
+        )
+
+        Spacer(
+            modifier = Modifier.height(12.dp)
+        )
+
+        Row {
+
+            Button(
+                onClick = {
+                    debugLog = DebugLogger.read(context)
+                }
+            ) {
+                Text("Refresh")
+            }
+
+            Spacer(
+                modifier = Modifier.width(12.dp)
+            )
+
+            Button(
+                onClick = {
+
+                    val clipboard =
+                        context.getSystemService(
+                            android.content.Context.CLIPBOARD_SERVICE
+                        ) as android.content.ClipboardManager
+
+                    clipboard.setPrimaryClip(
+                        android.content.ClipData.newPlainText(
+                            "Xtools Debug",
+                            debugLog
+                        )
+                    )
+
+                }
+            ) {
+
+                Text("Copy Log")
+
+            }
+
+        }
+
+    }
 
 }
 
@@ -323,6 +403,8 @@ ChunkPreviewCard(
     }
 
 }
+
+
 
 private fun formatDuration(
 
