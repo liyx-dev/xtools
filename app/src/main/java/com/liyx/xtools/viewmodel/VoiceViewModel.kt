@@ -85,6 +85,16 @@ private val voicePipeline =
     val uiState: StateFlow<VoiceUiState> =
         _uiState.asStateFlow()
 
+private fun debug(message: String) {
+
+    _uiState.value = _uiState.value.copy(
+
+        debugMessage = message
+
+    )
+
+}
+
     fun updateTitle(title: String) {
 
         _uiState.value = _uiState.value.copy(
@@ -188,10 +198,21 @@ private fun updateQueueSize() {
 }
 
 private fun processNextJob() {
+debug("Checking queue")
 
     if (voiceJobQueue.isProcessing()) return
 
-    val job = voiceJobQueue.peek() ?: return
+    val job = voiceJobQueue.peek()
+
+if (job == null) {
+
+    debug("Queue is empty")
+
+    return
+
+}
+
+debug("Job found in queue")
 
     voiceJobQueue.startProcessing()
 
@@ -215,7 +236,7 @@ estimatedRemainingMs = 0L
 
 )
 
-
+debug("Starting voice pipeline")
 val success =
 
     voicePipeline?.process(
@@ -229,6 +250,8 @@ val success =
 )
 
 if (success != null) {
+
+    debug("Voice generation completed")
 
     updateProgress(1f)
 
@@ -244,6 +267,12 @@ remainingCharacters = 0,
 estimatedRemainingMs = 0L
 
 )
+}
+
+else {
+
+    debug("Voice pipeline returned NULL")
+
 }
 
 voiceJobQueue.dequeue()
@@ -342,9 +371,18 @@ private fun estimateChunks(
 
 fun generateVoice() {
 
+    debug("Generate button pressed")
+
     val current = _uiState.value
 
-    if (current.text.isBlank()) return
+    if (current.text.isBlank()) {
+
+    debug("No text entered")
+
+    return
+
+}
+debug("Creating voice job")
 
     val job = voiceManager?.createJob(
 
@@ -359,6 +397,7 @@ fun generateVoice() {
     )
 
     if (job != null) {
+debug("Job created successfully")
 
         voiceJobQueue.enqueue(job)
 

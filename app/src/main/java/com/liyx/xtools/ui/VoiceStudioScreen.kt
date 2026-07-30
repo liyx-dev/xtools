@@ -34,6 +34,7 @@ import com.liyx.xtools.ui.components.VoiceSelectorCard
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.liyx.xtools.AppContainer
 import com.liyx.xtools.viewmodel.VoiceViewModelFactory
+import androidx.compose.material3.Text
 
 @Composable
 fun VoiceStudioScreen(
@@ -265,6 +266,18 @@ item {
 )
 
             }
+
+item {
+
+    Text(
+
+        text = "Debug: ${state.debugMessage}",
+
+        modifier = Modifier.padding(8.dp)
+
+    )
+
+}
 
 item {
 

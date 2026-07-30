@@ -37,8 +37,9 @@ data class VoiceUiState(
     // ===== Statistics =====
 
     val estimatedDurationMs: Long = 0L,
+val debugMessage: String = "Idle",
 
-    val wordCount: Int = 0,
+val wordCount: Int = 0,
 
     val paragraphCount: Int = 0,
 
