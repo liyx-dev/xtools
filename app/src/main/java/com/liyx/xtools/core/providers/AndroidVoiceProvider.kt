@@ -15,7 +15,7 @@ class AndroidVoiceProvider(
 
     override val isOffline = true
 
-    val engine = AndroidTtsEngine(context)
+    override val engine = AndroidTtsEngine(context)
 
     init {
 

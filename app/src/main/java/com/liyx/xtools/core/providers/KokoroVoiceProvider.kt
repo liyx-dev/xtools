@@ -10,7 +10,7 @@ class KokoroVoiceProvider : VoiceProvider {
 
     override val isOffline = true
 
-    val engine = KokoroEngine()
+    override val engine = KokoroEngine()
 
     override fun isAvailable(): Boolean {
 
