@@ -1,12 +1,13 @@
 package com.liyx.xtools.core.voice
 
+import com.liyx.xtools.core.providers.PiperBinaryDetector
 import com.liyx.xtools.core.providers.PiperCommandBuilder
+import com.liyx.xtools.core.providers.PiperModelDetector
 import com.liyx.xtools.core.providers.PiperModelManager
 import com.liyx.xtools.core.providers.PiperProcessRunner
 import com.liyx.xtools.core.providers.PiperRuntime
-import com.liyx.xtools.core.providers.PiperRuntimeValidator
-
 import com.liyx.xtools.core.providers.PiperRuntimeManager
+import com.liyx.xtools.core.providers.PiperRuntimeValidator
 
 class PiperEngine(
 
@@ -15,37 +16,44 @@ class PiperEngine(
         modelsDirectory = "",
         cacheDirectory = "",
         tempDirectory = ""
-    ),
-
-    private val validator: PiperRuntimeValidator =
-        PiperRuntimeValidator(runtime),
-
-    private val commandBuilder: PiperCommandBuilder =
-        PiperCommandBuilder(runtime),
-
-    private val processRunner: PiperProcessRunner =
-        PiperProcessRunner(),
-
-    private val modelManager: PiperModelManager =
-        PiperModelManager()
+    )
 
 ) : VoiceEngine {
 
     private val runtimeManager =
         PiperRuntimeManager(runtime)
 
+    private val binaryDetector =
+        PiperBinaryDetector(runtime)
+
+    private val modelDetector =
+        PiperModelDetector(runtime)
+
+    private val validator =
+        PiperRuntimeValidator(
+            runtimeManager,
+            binaryDetector,
+            modelDetector
+        )
+
+    private val commandBuilder =
+        PiperCommandBuilder(runtime)
+
+    private val processRunner =
+        PiperProcessRunner()
+
+    private val modelManager =
+        PiperModelManager()
+
     private var selectedVoice: String? = null
 
     private var speed = 1f
 
+    override fun initialize() {
 
+        runtimeManager.prepareRuntime()
 
-   override fun initialize() {
-
-    runtimeManager.prepareRuntime()
-
-}
-
+    }
 
     override fun getAvailableVoices(): List<String> {
 
@@ -68,11 +76,15 @@ class PiperEngine(
     }
 
     override fun setPitch(pitch: Float) {
-        // Piper models generally don't support pitch adjustment.
+
+        // Piper models generally ignore pitch.
+
     }
 
     override fun generate(text: String) {
-        // Xtools uses generateToFile().
+
+        // Xtools uses generateToFile()
+
     }
 
     override fun generateToFile(
@@ -83,24 +95,23 @@ class PiperEngine(
 
     ): Boolean {
 
-runtimeManager.prepareRuntime()
+        runtimeManager.prepareRuntime()
+
         val model =
 
-    selectedVoice
-        ?.let {
+            selectedVoice
+                ?.let {
 
-            modelManager.getModelById(it)
+                    modelManager.getModelById(it)
+                        ?: modelManager.getModelByName(it)
 
-                ?: modelManager.getModelByName(it)
+                }
 
-        }
+                ?: modelManager
+                    .downloadedModels()
+                    .firstOrNull()
 
-        ?: modelManager
-            .downloadedModels()
-            .firstOrNull()
-
-        ?: return false
-
+                ?: return false
 
         if (!validator.validate(model)) {
 
@@ -112,8 +123,6 @@ runtimeManager.prepareRuntime()
 
             model,
 
-            text,
-
             outputPath
 
         )
@@ -123,11 +132,15 @@ runtimeManager.prepareRuntime()
     }
 
     override fun stop() {
-        // Will support process cancellation later.
+
+        // Process cancellation will be added later.
+
     }
 
     override fun release() {
+
         // Nothing to release yet.
+
     }
 
 }
