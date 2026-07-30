@@ -11,12 +11,17 @@ class AndroidVoiceProvider(
 
     override val id = "android"
 
-    override val displayName =
-        "Android Text-to-Speech"
+    override val displayName = "System"
 
     override val isOffline = true
 
     val engine = AndroidTtsEngine(context)
+
+    init {
+
+        engine.initialize()
+
+    }
 
     override fun isAvailable(): Boolean {
 

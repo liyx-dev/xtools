@@ -6,19 +6,39 @@ class VoiceProviderManager(
 
 ) {
 
-    private var currentProviderId: String? = null
+    private var currentProviderId = "android"
 
-    fun setCurrentProvider(id: String) {
+    fun setCurrentProvider(
 
-        currentProviderId = id
+        id: String
+
+    ) {
+
+        if (
+
+            registry.getProvider(id) != null
+
+        ) {
+
+            currentProviderId = id
+
+        }
 
     }
 
     fun getCurrentProvider(): VoiceProvider? {
 
+        return registry.getProvider(
+
+            currentProviderId
+
+        )
+
+    }
+
+    fun getCurrentProviderId(): String {
+
         return currentProviderId
-            ?.let { registry.getProvider(it) }
-            ?: registry.availableProviders().firstOrNull()
 
     }
 

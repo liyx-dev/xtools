@@ -8,25 +8,31 @@ data class PiperModel(
 
     val language: String,
 
+    val downloadUrl: String,
+
     val downloaded: Boolean
 
 )
+
+
 
 class PiperModelManager {
 
     private val models = listOf(
 
-        PiperModel(
+       PiperModel(
 
-            id = "en_US-lessac-medium",
+    id = "en_US-lessac-medium",
 
-            name = "English (Lessac)",
+    name = "English (Lessac)",
 
-            language = "English",
+    language = "English",
 
-            downloaded = false
+    downloadUrl = "",
 
-        )
+    downloaded = false
+
+)
 
     )
 
@@ -41,6 +47,44 @@ class PiperModelManager {
         return models.filter {
 
             it.downloaded
+
+        }
+
+    }
+
+fun downloadableModels(): List<PiperModel> {
+
+    return models.filter {
+
+        it.downloadUrl.isNotBlank()
+
+    }
+
+}
+
+    fun getModelById(
+
+        id: String
+
+    ): PiperModel? {
+
+        return models.firstOrNull {
+
+            it.id == id
+
+        }
+
+    }
+
+    fun getModelByName(
+
+        name: String
+
+    ): PiperModel? {
+
+        return models.firstOrNull {
+
+            it.name == name
 
         }
 

@@ -1,46 +1,130 @@
 package com.liyx.xtools.core.voice
 
-class PiperEngine : VoiceEngine {
+import com.liyx.xtools.core.providers.PiperCommandBuilder
+import com.liyx.xtools.core.providers.PiperModelManager
+import com.liyx.xtools.core.providers.PiperProcessRunner
+import com.liyx.xtools.core.providers.PiperRuntime
+import com.liyx.xtools.core.providers.PiperRuntimeValidator
 
-    override fun initialize() {
-        // TODO: Initialize Piper runtime
-    }
+import com.liyx.xtools.core.providers.PiperRuntimeManager
+class PiperEngine(
+
+   private val runtime: PiperRuntime = PiperRuntime(
+    binaryPath = "",
+    modelsDirectory = "",
+    cacheDirectory = "",
+    tempDirectory = ""
+),
+private val runtimeManager =
+    PiperRuntimeManager(runtime)
+
+    private val validator: PiperRuntimeValidator =
+        PiperRuntimeValidator(runtime),
+
+    private val commandBuilder: PiperCommandBuilder =
+        PiperCommandBuilder(runtime),
+
+    private val processRunner: PiperProcessRunner =
+        PiperProcessRunner(),
+
+    private val modelManager: PiperModelManager =
+        PiperModelManager()
+
+) : VoiceEngine {
+
+    private var selectedVoice: String? = null
+
+    private var speed = 1f
+
+
+   override fun initialize() {
+
+    runtimeManager.prepareRuntime()
+
+}
+
 
     override fun getAvailableVoices(): List<String> {
-        return emptyList()
+
+        return modelManager
+            .downloadedModels()
+            .map { it.name }
+
     }
 
     override fun setVoice(voice: String) {
-        // TODO
+
+        selectedVoice = voice
+
     }
 
     override fun setSpeed(speed: Float) {
-        // TODO
+
+        this.speed = speed
+
     }
 
     override fun setPitch(pitch: Float) {
-        // Piper may ignore pitch depending on model.
+        // Piper models generally don't support pitch adjustment.
     }
 
     override fun generate(text: String) {
-        // TODO
+        // Xtools uses generateToFile().
     }
 
     override fun generateToFile(
+
         text: String,
+
         outputPath: String
+
     ): Boolean {
 
-        return false
+runtimeManager.prepareRuntime()
+        val model =
+
+    selectedVoice
+        ?.let {
+
+            modelManager.getModelById(it)
+
+                ?: modelManager.getModelByName(it)
+
+        }
+
+        ?: modelManager
+            .downloadedModels()
+            .firstOrNull()
+
+        ?: return false
+
+
+        if (!validator.validate(model)) {
+
+            return false
+
+        }
+
+        val command = commandBuilder.build(
+
+            model,
+
+            text,
+
+            outputPath
+
+        )
+
+        return processRunner.run(command)
 
     }
 
     override fun stop() {
-        // TODO
+        // Will support process cancellation later.
     }
 
     override fun release() {
-        // TODO
+        // Nothing to release yet.
     }
 
 }

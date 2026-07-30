@@ -8,17 +8,39 @@ class PiperRuntimeManager(
 
 ) {
 
-    fun binaryExists(): Boolean {
+    fun binaryFile(): File =
+        File(runtime.binaryPath)
 
-        return File(runtime.binaryPath).exists()
+    fun modelsDirectory(): File =
+        File(runtime.modelsDirectory)
+
+    fun cacheDirectory(): File =
+        File(runtime.cacheDirectory)
+
+    fun tempDirectory(): File =
+        File(runtime.tempDirectory)
+
+    fun prepareRuntime() {
+
+        modelsDirectory().mkdirs()
+
+        cacheDirectory().mkdirs()
+
+        tempDirectory().mkdirs()
 
     }
 
-    fun modelsDirectoryExists(): Boolean {
+    fun binaryExists(): Boolean =
+        binaryFile().exists()
 
-        return File(runtime.modelsDirectory).exists()
+    fun modelsDirectoryExists(): Boolean =
+        modelsDirectory().exists()
 
-    }
+    fun cacheDirectoryExists(): Boolean =
+        cacheDirectory().exists()
+
+    fun tempDirectoryExists(): Boolean =
+        tempDirectory().exists()
 
     fun isInstalled(): Boolean {
 
