@@ -74,6 +74,11 @@ class AppContainer(
     val audioMerger: AudioMerger =
     AndroidAudioMerger()
 
+val audioStorageManager =
+
+    com.liyx.xtools.core.storage.AudioStorageManager(
+        context
+    )
 
     /*
      * Voice Pipeline

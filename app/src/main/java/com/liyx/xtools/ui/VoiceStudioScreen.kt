@@ -31,16 +31,32 @@ import com.liyx.xtools.ui.components.VoiceSettingsCard
 import com.liyx.xtools.viewmodel.VoiceViewModel
 import com.liyx.xtools.ui.components.VoiceSelectorCard
 
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.liyx.xtools.AppContainer
+import com.liyx.xtools.viewmodel.VoiceViewModelFactory
+
 @Composable
 fun VoiceStudioScreen(
 
-    onBack: () -> Unit,
+    appContainer: AppContainer,
 
-    viewModel: VoiceViewModel = viewModel()
+    onBack: () -> Unit
 
-) {
+)
 
-    val state by viewModel.uiState.collectAsState()
+ {
+
+val viewModel: VoiceViewModel = viewModel(
+
+    factory = VoiceViewModelFactory(
+
+        appContainer
+
+    )
+
+)
+
+val state by viewModel.uiState.collectAsState()
 
     Scaffold(
 
