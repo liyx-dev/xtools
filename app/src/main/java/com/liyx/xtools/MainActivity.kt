@@ -8,12 +8,18 @@ import com.liyx.xtools.navigation.XtoolsNavigation
 
 class MainActivity : ComponentActivity() {
 
+    private lateinit var appContainer: AppContainer
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        appContainer = AppContainer(applicationContext)
+
         setContent {
             XtoolsTheme {
-                XtoolsNavigation()
+                XtoolsNavigation(
+                    appContainer = appContainer
+                )
             }
         }
     }
