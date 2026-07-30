@@ -7,16 +7,15 @@ import com.liyx.xtools.core.providers.PiperRuntime
 import com.liyx.xtools.core.providers.PiperRuntimeValidator
 
 import com.liyx.xtools.core.providers.PiperRuntimeManager
+
 class PiperEngine(
 
-   private val runtime: PiperRuntime = PiperRuntime(
-    binaryPath = "",
-    modelsDirectory = "",
-    cacheDirectory = "",
-    tempDirectory = ""
-),
-private val runtimeManager =
-    PiperRuntimeManager(runtime)
+    private val runtime: PiperRuntime = PiperRuntime(
+        binaryPath = "",
+        modelsDirectory = "",
+        cacheDirectory = "",
+        tempDirectory = ""
+    ),
 
     private val validator: PiperRuntimeValidator =
         PiperRuntimeValidator(runtime),
@@ -32,9 +31,13 @@ private val runtimeManager =
 
 ) : VoiceEngine {
 
+    private val runtimeManager =
+        PiperRuntimeManager(runtime)
+
     private var selectedVoice: String? = null
 
     private var speed = 1f
+
 
 
    override fun initialize() {
