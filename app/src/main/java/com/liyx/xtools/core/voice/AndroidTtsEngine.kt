@@ -89,7 +89,9 @@ tts?.setOnUtteranceProgressListener(
 
                 generationCompleted = true
 
-                generationLock.notifyAll()
+tts?.stop()
+
+generationLock.notifyAll()
 
             }
 
@@ -168,24 +170,45 @@ tts?.setOnUtteranceProgressListener(
     /**
      * Generate speech to an audio file.
      */
+
     override fun generateToFile(
-
     text: String,
-
     outputPath: String
-
 ): Boolean {
 
-    if (!initialized) return false
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        return false
+    }
+
+    if (!initialized) {
+
+        val start = System.currentTimeMillis()
+
+        while (!initialized &&
+            System.currentTimeMillis() - start < 5000
+        ) {
+
+            try {
+                Thread.sleep(100)
+            } catch (_: InterruptedException) {
+            }
+
+        }
+
+        if (!initialized) {
+            return false
+        }
+
+    }
 
     generationCompleted = false
 
     val file = File(outputPath)
 
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+    file.parentFile?.mkdirs()
 
-        return false
-
+    if (file.exists()) {
+        file.delete()
     }
 
     val result = tts?.synthesizeToFile(
@@ -201,34 +224,43 @@ tts?.setOnUtteranceProgressListener(
     )
 
     if (result != TextToSpeech.SUCCESS) {
-
         return false
-
     }
 
     synchronized(generationLock) {
 
-    while (!generationCompleted) {
+        while (!generationCompleted) {
 
-        try {
+            try {
 
-            generationLock.wait()
+                generationLock.wait()
 
-        } catch (e: InterruptedException) {
+            } catch (e: InterruptedException) {
 
-            Thread.currentThread().interrupt()
+                Thread.currentThread().interrupt()
 
-            return false
+                return false
+
+            }
 
         }
 
     }
 
+    // Give Android a short moment to flush the file.
+    repeat(20) {
+
+        if (file.exists() && file.length() > 0L) {
+            return true
+        }
+
+        Thread.sleep(100)
+
+    }
+
+    return false
 }
 
-return file.exists()
-
-}
 
  
 
