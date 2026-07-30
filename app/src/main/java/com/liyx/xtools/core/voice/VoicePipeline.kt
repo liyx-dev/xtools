@@ -1,5 +1,6 @@
 package com.liyx.xtools.core.voice
 
+import java.io.File
 import com.liyx.xtools.core.jobs.VoiceJob
 import com.liyx.xtools.core.models.ChunkStatus
 import com.liyx.xtools.core.models.VoiceJobStatus
@@ -16,9 +17,15 @@ class VoicePipeline(
 
     private val audioMerger: AudioMerger,
 
-    private val onChunkCompleted: ((VoiceJob) -> Unit)? = null
+    private val onChunkCompleted: ((VoiceJob) -> Unit)? = null,
+
+    private val logger: ((String) -> Unit)? = null
 
 ) {
+
+    private fun log(message: String) {
+        logger?.invoke(message)
+    }
 
     /**
      * Process one VoiceJob.
@@ -26,7 +33,7 @@ class VoicePipeline(
      * @param outputDirectory Folder where chunk audio
      * files and final audio will be written.
      *
-     * @return Path to the merged audio file,
+     * @return Path to merged audio,
      * or null if generation failed.
      */
     fun process(
@@ -37,7 +44,13 @@ class VoicePipeline(
 
     ): String? {
 
+        log("VoicePipeline started")
+        log("Project = ${job.title}")
+        log("Chunks = ${job.totalChunks()}")
+
         if (job.chunks.isEmpty()) {
+
+            log("Job contains no chunks")
 
             job.status = VoiceJobStatus.FAILED
 
@@ -46,18 +59,23 @@ class VoicePipeline(
         }
 
         job.status = VoiceJobStatus.PROCESSING
-
         job.startedAt = System.currentTimeMillis()
 
         val generatedFiles = mutableListOf<String>()
 
         job.chunks.forEachIndexed { index, chunk ->
 
+            log("Processing chunk ${index + 1}/${job.totalChunks()}")
+
             chunk.status = ChunkStatus.PROCESSING
 
             val chunkFile =
-
                 "$outputDirectory/chunk_${index + 1}.wav"
+
+            log("Output file:")
+            log(chunkFile)
+
+            log("Calling generateToFile()")
 
             val success = voiceEngine.generateToFile(
 
@@ -67,7 +85,11 @@ class VoicePipeline(
 
             )
 
+            log("generateToFile returned = $success")
+
             if (!success) {
+
+                log("Chunk generation FAILED")
 
                 chunk.status = ChunkStatus.FAILED
 
@@ -79,22 +101,28 @@ class VoicePipeline(
 
             }
 
-            chunk.status = ChunkStatus.COMPLETED
+            val file = File(chunkFile)
 
+            log("Chunk file exists = ${file.exists()}")
+            log("Chunk size = ${file.length()} bytes")
+
+            chunk.status = ChunkStatus.COMPLETED
             chunk.audioFile = chunkFile
 
             generatedFiles.add(chunkFile)
 
             job.processedCharacters += chunk.characterCount
-
             job.updateProgress()
-onChunkCompleted?.invoke(job)
 
+            onChunkCompleted?.invoke(job)
+
+            log("Chunk ${index + 1} completed")
         }
 
         val outputFile =
-
             "$outputDirectory/${job.title}.wav"
+
+        log("Starting audio merge")
 
         val merged = audioMerger.merge(
 
@@ -104,23 +132,30 @@ onChunkCompleted?.invoke(job)
 
         )
 
+        log("Merge result = $merged")
+
         if (!merged) {
 
-            job.status = VoiceJobStatus.FAILED
+            log("Audio merge FAILED")
 
+            job.status = VoiceJobStatus.FAILED
             job.finishedAt = System.currentTimeMillis()
 
             return null
 
         }
 
+        val mergedFile = File(outputFile)
+
+        log("Merged file exists = ${mergedFile.exists()}")
+        log("Merged size = ${mergedFile.length()} bytes")
+
         job.outputFile = outputFile
-
         job.progress = 1f
-
         job.status = VoiceJobStatus.COMPLETED
-
         job.finishedAt = System.currentTimeMillis()
+
+        log("VoicePipeline completed successfully")
 
         return outputFile
 
