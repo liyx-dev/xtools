@@ -6,6 +6,7 @@ import com.liyx.xtools.core.providers.KokoroVoiceProvider
 import com.liyx.xtools.core.providers.PiperVoiceProvider
 import com.liyx.xtools.core.providers.VoiceProviderManager
 import com.liyx.xtools.core.providers.VoiceProviderRegistry
+import com.liyx.xtools.core.storage.AudioStorageManager
 import com.liyx.xtools.core.voice.*
 
 class AppContainer(
@@ -14,6 +15,9 @@ class AppContainer(
 
 ) {
 
+    /*
+     * Core engines
+     */
     private val textProcessor = TextProcessor()
 
     private val chunkEngine: ChunkEngine =
@@ -56,29 +60,16 @@ class AppContainer(
             ?: AndroidVoiceProvider(context).engine
 
     /*
-     * Voice Manager
-     */
-    val voiceManager = VoiceManager(
-
-        textProcessor = textProcessor,
-
-        chunkEngine = chunkEngine,
-
-        queueEngine = queueEngine
-
-    )
-
-    /*
      * Audio Merger
      */
     val audioMerger: AudioMerger =
-    AndroidAudioMerger()
+        AndroidAudioMerger()
 
-val audioStorageManager =
-
-    com.liyx.xtools.core.storage.AudioStorageManager(
-        context
-    )
+    /*
+     * Audio Storage
+     */
+    val audioStorageManager =
+        AudioStorageManager(context)
 
     /*
      * Voice Pipeline
@@ -88,6 +79,23 @@ val audioStorageManager =
         voiceEngine = voiceEngine,
 
         audioMerger = audioMerger
+
+    )
+
+    /*
+     * Voice Manager
+     */
+    val voiceManager = VoiceManager(
+
+        textProcessor = textProcessor,
+
+        chunkEngine = chunkEngine,
+
+        queueEngine = queueEngine,
+
+        voicePipeline = voicePipeline,
+
+        audioStorageManager = audioStorageManager
 
     )
 

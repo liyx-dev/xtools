@@ -1,26 +1,60 @@
 package com.liyx.xtools.core.voice
 
 import com.liyx.xtools.core.jobs.VoiceJob
+import com.liyx.xtools.core.storage.AudioStorageManager
 import java.util.UUID
 
 /**
  * VoiceManager
  *
- * Main entry point for all
- * voice generation requests.
+ * Central coordinator for all voice generation.
+ *
+ * Step 1:
+ * - Owns queue
+ * - Owns processing state
+ * - Owns callbacks
+ *
+ * Actual processing will be added in Step 2.
  */
 class VoiceManager(
 
     private val textProcessor: TextProcessor,
 
+    private val chunkEngine: ChunkEngine,
 
-private val chunkEngine: ChunkEngine,
-    private val queueEngine: QueueEngine
+    private val queueEngine: QueueEngine,
+
+    private val voicePipeline: VoicePipeline,
+
+    private val audioStorageManager: AudioStorageManager
 
 ) {
 
     /**
-     * Creates a new voice generation job.
+     * Prevent multiple jobs
+     * from running simultaneously.
+     */
+    private var processing = false
+
+    /**
+     * Currently processing job.
+     */
+    private var currentJob: VoiceJob? = null
+
+    /**
+     * UI callbacks.
+     */
+    var onJobStarted: ((VoiceJob) -> Unit)? = null
+
+    var onJobProgress: ((VoiceJob) -> Unit)? = null
+
+    var onJobCompleted: ((VoiceJob, String) -> Unit)? = null
+
+    var onJobFailed: ((VoiceJob) -> Unit)? = null
+
+    /**
+     * Creates a new voice job
+     * and adds it to the queue.
      */
     fun createJob(
 
@@ -51,8 +85,7 @@ private val chunkEngine: ChunkEngine,
     }
 
     /**
-     * Returns the next job waiting
-     * in the queue.
+     * Returns the next queued job.
      */
     fun nextJob(): VoiceJob? {
 
@@ -61,7 +94,16 @@ private val chunkEngine: ChunkEngine,
     }
 
     /**
-     * Current queue size.
+     * Peek current queued job.
+     */
+    fun peekJob(): VoiceJob? {
+
+        return queueEngine.peek()
+
+    }
+
+    /**
+     * Queue size.
      */
     fun queueSize(): Int {
 
@@ -70,12 +112,56 @@ private val chunkEngine: ChunkEngine,
     }
 
     /**
-     * Clear all waiting jobs.
+     * Returns true while
+     * a generation is running.
+     */
+    fun isProcessing(): Boolean {
+
+        return processing
+
+    }
+
+    /**
+     * Internal processing flag.
+     */
+    fun setProcessing(
+
+        value: Boolean
+
+    ) {
+
+        processing = value
+
+    }
+
+    /**
+     * Current active job.
+     */
+    fun currentJob(): VoiceJob? {
+
+        return currentJob
+
+    }
+
+    /**
+     * Set current active job.
+     */
+    fun setCurrentJob(
+
+        job: VoiceJob?
+
+    ) {
+
+        currentJob = job
+
+    }
+
+    /**
+     * Remove all waiting jobs.
      */
     fun clearQueue() {
 
         queueEngine.clear()
 
     }
-
 }
