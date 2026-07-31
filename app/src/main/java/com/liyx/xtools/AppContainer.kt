@@ -8,6 +8,8 @@ import com.liyx.xtools.core.providers.VoiceProviderManager
 import com.liyx.xtools.core.providers.VoiceProviderRegistry
 import com.liyx.xtools.core.storage.AudioStorageManager
 import com.liyx.xtools.core.voice.*
+import com.liyx.xtools.core.player.AudioPlayer
+import com.liyx.xtools.core.player.AudioLibraryManager
 
 class AppContainer(
 
@@ -70,8 +72,14 @@ class AppContainer(
      */
     val audioStorageManager =
         AudioStorageManager(context)
+/*
+ * Audio Player
+ */
+val audioPlayer = AudioPlayer(context)
 
-    /*
+val audioLibraryManager = AudioLibraryManager()
+ 
+   /*
      * Voice Pipeline
      */
     val voicePipeline = VoicePipeline(

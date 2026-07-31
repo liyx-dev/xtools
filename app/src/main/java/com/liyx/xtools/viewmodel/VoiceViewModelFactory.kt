@@ -41,8 +41,13 @@ class VoiceViewModelFactory(
                     appContainer.audioMerger,
 
                 audioStorageManager =
+    appContainer.audioStorageManager,
 
-                    appContainer.audioStorageManager
+audioPlayer =
+        appContainer.audioPlayer,
+
+    audioLibraryManager =
+        appContainer.audioLibraryManager
 
             ) as T
 

@@ -43,6 +43,7 @@ import com.liyx.xtools.core.utils.DebugLogger
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
+import com.liyx.xtools.ui.components.GeneratedAudioCard
 
 @Composable
 fun VoiceStudioScreen(
@@ -200,6 +201,52 @@ fun VoiceStudioScreen(
                     generating = state.isGenerating
                 )
             }
+
+item {
+
+    GeneratedAudioCard(
+
+        audioPath = state.generatedAudio,
+
+        canPlay = state.canPlay,
+
+        canShare = state.canShare,
+
+        canExport = state.canExport,
+
+        onPlay = {
+
+            viewModel.playGeneratedAudio()
+
+        },
+
+        onPause = {
+
+            viewModel.pauseAudio()
+
+        },
+
+        onStop = {
+
+            viewModel.stopAudio()
+
+        },
+
+        onShare = {
+
+            viewModel.shareGeneratedAudio()
+
+        },
+
+        onExport = {
+
+            viewModel.exportGeneratedAudio()
+
+        }
+
+    )
+
+}
 
             item {
                 Card(

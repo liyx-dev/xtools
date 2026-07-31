@@ -16,6 +16,10 @@ import com.liyx.xtools.core.voice.AudioMerger
 import com.liyx.xtools.core.voice.VoiceEngine
 import com.liyx.xtools.core.voice.VoicePipeline
 import com.liyx.xtools.core.storage.AudioStorageManager
+import com.liyx.xtools.core.player.AudioPlayer
+import com.liyx.xtools.core.player.AudioLibraryManager
+import com.liyx.xtools.core.player.models.AudioRecording
+import java.util.UUID
 
 class VoiceViewModel(
 
@@ -24,8 +28,10 @@ class VoiceViewModel(
     private val voiceEngine: VoiceEngine? = null,
 
    private val audioMerger: AudioMerger? = null, 
+private val audioStorageManager: AudioStorageManager? = null,
 
-private val audioStorageManager: AudioStorageManager? = null
+private val audioPlayer: AudioPlayer? = null,
+private val audioLibraryManager: AudioLibraryManager? = null
 
 ) : ViewModel()
 
@@ -339,6 +345,24 @@ val result =
 
         if (result != null) {
 
+audioLibraryManager?.add(
+
+    AudioRecording(
+
+        id = UUID.randomUUID().toString(),
+
+        title = job.title,
+
+        filePath = result,
+
+        duration = current.estimatedDurationMs,
+
+        createdAt = System.currentTimeMillis()
+
+    )
+
+)
+
             _uiState.value = _uiState.value.copy(
 
                 generatedAudio = result,
@@ -368,6 +392,69 @@ val result =
 }
 
      
+fun playGeneratedAudio() {
+
+    val file = _uiState.value.generatedAudio ?: return
+
+    audioPlayer?.play(file)
+
+    _uiState.value = _uiState.value.copy(
+        isPlaying = true
+    )
+}
+
+fun pauseAudio() {
+
+    audioPlayer?.pause()
+
+    _uiState.value = _uiState.value.copy(
+        isPlaying = false
+    )
+}
+
+fun resumeAudio() {
+
+    audioPlayer?.resume()
+
+    _uiState.value = _uiState.value.copy(
+        isPlaying = true
+    )
+}
+
+fun stopAudio() {
+
+    audioPlayer?.stop()
+
+    _uiState.value = _uiState.value.copy(
+        isPlaying = false
+    )
+}
+
+fun shareGeneratedAudio() {
+
+    // Will be connected to AndroidShareManager
+    // in the next step.
+
+}
+
+fun exportGeneratedAudio() {
+
+    // Will be connected to ExportManager
+    // in the next step.
+
+}
+
+fun canPlayAudio(): Boolean {
+
+    return _uiState.value.generatedAudio != null
+
+}
+
+fun hasGeneratedAudio(): Boolean {
+
+    return _uiState.value.generatedAudio != null
+
+}
 
  
 
