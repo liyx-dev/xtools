@@ -32,6 +32,7 @@ data class VoiceUiState(
 
     val isGenerating: Boolean = false,
 
+val isPlaying: Boolean = false,
     val queueSize: Int = 0,
 
     // ===== Statistics =====
