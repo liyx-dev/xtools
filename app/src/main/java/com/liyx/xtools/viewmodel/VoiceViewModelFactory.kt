@@ -3,6 +3,7 @@ package com.liyx.xtools.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.liyx.xtools.AppContainer
+import com.liyx.xtools.core.voice.AudioExporter
 
 class VoiceViewModelFactory(
 
@@ -47,7 +48,12 @@ audioPlayer =
         appContainer.audioPlayer,
 
     audioLibraryManager =
-        appContainer.audioLibraryManager
+        appContainer.audioLibraryManager,
+audioExporter =
+    appContainer.audioExporter,
+androidShareManager =
+
+    appContainer.androidShareManager
 
             ) as T
 

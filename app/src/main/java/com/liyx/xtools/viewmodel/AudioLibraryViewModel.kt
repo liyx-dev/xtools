@@ -7,8 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 class AudioLibraryViewModel(
 
-    private val libraryManager: AudioLibraryManager =
-        AudioLibraryManager()
+    private val libraryManager: AudioLibraryManager
 
 ) : ViewModel() {
 

@@ -10,6 +10,9 @@ import com.liyx.xtools.core.storage.AudioStorageManager
 import com.liyx.xtools.core.voice.*
 import com.liyx.xtools.core.player.AudioPlayer
 import com.liyx.xtools.core.player.AudioLibraryManager
+import com.liyx.xtools.core.export.AndroidShareManager
+import com.liyx.xtools.core.voice.AudioExporter
+import com.liyx.xtools.core.export.AndroidAudioExporter
 
 class AppContainer(
 
@@ -67,6 +70,9 @@ class AppContainer(
     val audioMerger: AudioMerger =
         AndroidAudioMerger()
 
+val audioExporter: AudioExporter =
+    AndroidAudioExporter(context)
+
     /*
      * Audio Storage
      */
@@ -78,7 +84,11 @@ class AppContainer(
 val audioPlayer = AudioPlayer(context)
 
 val audioLibraryManager = AudioLibraryManager()
- 
+val androidShareManager =
+
+    AndroidShareManager(context) 
+
+
    /*
      * Voice Pipeline
      */

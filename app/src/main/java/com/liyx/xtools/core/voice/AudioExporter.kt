@@ -1,12 +1,17 @@
 package com.liyx.xtools.core.voice
 
 /**
- * AudioExporter
- *
- * Responsible for saving generated audio.
+ * Exports generated audio
+ * to a user-accessible location.
  */
 interface AudioExporter {
 
-    fun export(fileName: String)
+    fun export(
+
+        sourceFile: String,
+
+        displayName: String
+
+    ): Boolean
 
 }

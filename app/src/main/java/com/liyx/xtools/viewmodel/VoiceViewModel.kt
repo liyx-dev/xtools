@@ -20,6 +20,9 @@ import com.liyx.xtools.core.player.AudioPlayer
 import com.liyx.xtools.core.player.AudioLibraryManager
 import com.liyx.xtools.core.player.models.AudioRecording
 import java.util.UUID
+import com.liyx.xtools.core.export.AndroidShareManager
+import com.liyx.xtools.core.export.ExportAudio
+import com.liyx.xtools.core.voice.AudioExporter
 
 class VoiceViewModel(
 
@@ -31,8 +34,9 @@ class VoiceViewModel(
 private val audioStorageManager: AudioStorageManager? = null,
 
 private val audioPlayer: AudioPlayer? = null,
-private val audioLibraryManager: AudioLibraryManager? = null
-
+private val audioLibraryManager: AudioLibraryManager? = null,
+private val audioExporter: AudioExporter? = null,
+private val androidShareManager: AndroidShareManager? = null
 ) : ViewModel()
 
  {
@@ -344,25 +348,6 @@ val result =
     )
 
         if (result != null) {
-
-audioLibraryManager?.add(
-
-    AudioRecording(
-
-        id = UUID.randomUUID().toString(),
-
-        title = job.title,
-
-        filePath = result,
-
-        duration = current.estimatedDurationMs,
-
-        createdAt = System.currentTimeMillis()
-
-    )
-
-)
-
             _uiState.value = _uiState.value.copy(
 
                 generatedAudio = result,
@@ -382,6 +367,24 @@ audioLibraryManager?.add(
                 remainingCharacters = 0
 
             )
+audioLibraryManager?.add(
+
+        AudioRecording(
+
+            id = UUID.randomUUID().toString(),
+
+            title = job.title,
+
+            filePath = result,
+
+            duration = current.estimatedDurationMs,
+
+            createdAt = System.currentTimeMillis()
+
+        )
+
+    )
+
 
         }
 
@@ -432,17 +435,59 @@ fun stopAudio() {
 
 fun shareGeneratedAudio() {
 
-    // Will be connected to AndroidShareManager
-    // in the next step.
+    val path = _uiState.value.generatedAudio ?: return
+
+    androidShareManager?.share(
+
+        ExportAudio(
+
+            filePath = path,
+
+            mimeType = "audio/wav"
+
+        )
+
+    )
 
 }
+
 
 fun exportGeneratedAudio() {
 
-    // Will be connected to ExportManager
-    // in the next step.
+    val file = _uiState.value.generatedAudio ?: return
+
+    val title =
+
+        _uiState.value.currentJobTitle.ifBlank {
+
+            "Generated Audio"
+
+        }
+
+    val success =
+
+        audioExporter?.export(
+
+            file,
+
+            title
+
+        ) ?: false
+
+    debug(
+
+        if (success)
+
+            "Audio exported successfully."
+
+        else
+
+            "Audio export failed."
+
+    )
 
 }
+
 
 fun canPlayAudio(): Boolean {
 
