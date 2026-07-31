@@ -439,13 +439,19 @@ fun shareGeneratedAudio() {
 
     androidShareManager?.share(
 
-        ExportAudio(
+       ExportAudio(
 
-            filePath = path,
+    title = _uiState.value.currentJobTitle.ifBlank {
 
-            mimeType = "audio/wav"
+        "Generated Audio"
 
-        )
+    },
+
+    filePath = path,
+
+    mimeType = "audio/wav"
+
+)
 
     )
 
