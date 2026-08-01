@@ -25,6 +25,7 @@ import com.liyx.xtools.core.export.AndroidShareManager
 import com.liyx.xtools.core.media.AudioExporter
 import com.liyx.xtools.core.media.AndroidAudioExporter
 import com.liyx.xtools.core.media.MediaEngine
+import com.liyx.xtools.core.utils.DebugLogger
 
 class AppContainer(
 
@@ -124,11 +125,23 @@ val androidShareManager =
      */
     val voicePipeline = VoicePipeline(
 
-        voiceEngine = voiceEngine,
+    voiceEngine = voiceEngine,
 
-        audioMerger = audioMerger
+    audioMerger = audioMerger,
 
-    )
+    logger = { message ->
+
+        DebugLogger.log(
+
+            context,
+
+            message
+
+        )
+
+    }
+
+)
 
     /*
      * Voice Manager

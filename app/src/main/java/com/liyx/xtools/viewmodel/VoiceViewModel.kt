@@ -23,6 +23,8 @@ import java.util.UUID
 import com.liyx.xtools.core.export.AndroidShareManager
 import com.liyx.xtools.core.export.ExportAudio
 import com.liyx.xtools.core.media.AudioExporter
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.withContext
 
 class VoiceViewModel(
 
@@ -287,112 +289,122 @@ fun generateVoice() {
 
     setGenerating(true)
 
-    CoroutineScope(Dispatchers.IO).launch {
+viewModelScope.launch {
 
-        val job = voiceManager?.createJob(
+    try {
 
-            title = current.title.ifBlank {
-                "Untitled Project"
-            },
+        val result = withContext(Dispatchers.IO) {
 
-            rawText = current.text
+            val job = voiceManager?.createJob(
 
-        )
+                title = current.title.ifBlank {
+                    "Untitled Project"
+                },
 
-        if (job == null) {
-
-            setGenerating(false)
-
-            return@launch
-
-        }
-
-        _uiState.value = _uiState.value.copy(
-
-            currentJobTitle = job.title,
-
-            totalChunks = job.totalChunks(),
-
-            currentChunk = 0,
-
-            processedCharacters = 0,
-
-            remainingCharacters = job.totalCharacters,
-
-            progress = 0f
-
-        )
-
-        val outputDirectory =
-
-    audioStorageManager?.getOutputDirectory(
-        job.title
-    )
-
-if (outputDirectory == null) {
-
-    setGenerating(false)
-
-    return@launch
-
-}
-
-val result =
-
-    voicePipeline?.process(
-
-        job,
-
-        outputDirectory
-
-    )
-
-        if (result != null) {
-            _uiState.value = _uiState.value.copy(
-
-                generatedAudio = result,
-
-                canPlay = true,
-
-                canShare = true,
-
-                canExport = true,
-
-                progress = 1f,
-
-                currentChunk = job.totalChunks(),
-
-                processedCharacters = job.totalCharacters,
-
-                remainingCharacters = 0
+                rawText = current.text
 
             )
-audioLibraryManager?.add(
 
-        AudioRecording(
+            if (job == null) {
+                return@withContext null
+            }
 
-            id = UUID.randomUUID().toString(),
+            _uiState.value = _uiState.value.copy(
 
-            title = job.title,
+                currentJobTitle = job.title,
 
-            filePath = result,
+                totalChunks = job.totalChunks(),
 
-            duration = current.estimatedDurationMs,
+                currentChunk = 0,
 
-            createdAt = System.currentTimeMillis()
+                processedCharacters = 0,
 
-        )
+                remainingCharacters = job.totalCharacters,
 
-    )
+                progress = 0f
 
+            )
+
+            val outputDirectory =
+                audioStorageManager?.getOutputDirectory(job.title)
+                    ?: return@withContext null
+
+            Pair(
+
+                job,
+
+                voicePipeline?.process(
+
+                    job,
+
+                    outputDirectory
+
+                )
+
+            )
 
         }
+
+        if (result != null) {
+
+            val (job, output) = result
+
+            if (output != null) {
+
+                _uiState.value = _uiState.value.copy(
+
+                    generatedAudio = output,
+
+                    canPlay = true,
+
+                    canShare = true,
+
+                    canExport = true,
+
+                    progress = 1f,
+
+                    currentChunk = job.totalChunks(),
+
+                    processedCharacters = job.totalCharacters,
+
+                    remainingCharacters = 0
+
+                )
+
+                audioLibraryManager?.add(
+
+                    AudioRecording(
+
+                        id = UUID.randomUUID().toString(),
+
+                        title = job.title,
+
+                        filePath = output,
+
+                        duration = current.estimatedDurationMs,
+
+                        createdAt = System.currentTimeMillis()
+
+                    )
+
+                )
+
+            }
+
+        }
+
+    } catch (e: Exception) {
+
+        debug(e.stackTraceToString())
+
+    } finally {
 
         setGenerating(false)
 
     }
 
 }
+
 
      
 fun playGeneratedAudio() {
