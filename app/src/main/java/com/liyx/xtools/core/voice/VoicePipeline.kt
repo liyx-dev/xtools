@@ -120,10 +120,26 @@ class VoicePipeline(
             log("Chunk ${index + 1} completed")
         }
 
-        val outputFile =
+
+              val outputFile =
             "$outputDirectory/${job.title}.wav"
 
-        log("Starting audio merge")
+        log("=================================")
+        log("STARTING AUDIO MERGE")
+        log("=================================")
+
+        log("Output file:")
+        log(outputFile)
+
+        log("Generated chunk count = ${generatedFiles.size}")
+
+        generatedFiles.forEachIndexed { index, file ->
+
+            log("Chunk ${index + 1}")
+
+            log(file)
+
+        }
 
         val merged = audioMerger.merge(
 
@@ -132,6 +148,8 @@ class VoicePipeline(
             outputFile
 
         )
+
+        log("Merge completed")
 
         log("Merge result = $merged")
 
@@ -146,19 +164,40 @@ class VoicePipeline(
 
         }
 
+        log("Checking merged file...")
+
         val mergedFile = File(outputFile)
 
         log("Merged file exists = ${mergedFile.exists()}")
-        log("Merged size = ${mergedFile.length()} bytes")
+
+        log("Merged file size = ${mergedFile.length()} bytes")
+
+        if (!mergedFile.exists()) {
+
+            log("ERROR: merged file does not exist")
+
+            job.status = VoiceJobStatus.FAILED
+            job.finishedAt = System.currentTimeMillis()
+
+            return null
+
+        }
 
         job.outputFile = outputFile
+
         job.progress = 1f
+
         job.status = VoiceJobStatus.COMPLETED
+
         job.finishedAt = System.currentTimeMillis()
 
-        log("VoicePipeline completed successfully")
+        log("=================================")
+        log("VOICE PIPELINE COMPLETED")
+        log("=================================")
 
         return outputFile
+
+   
 
     }
 

@@ -78,16 +78,21 @@ fun getAllAudioFiles(): List<File> {
 
         .walkTopDown()
 
-        .filter {
+       .filter {
 
-            it.isFile &&
+    it.isFile &&
 
-            (
-                it.extension.equals("wav", true) ||
-                it.extension.equals("mp3", true)
-            )
+    !it.name.startsWith("chunk_") &&
 
-        }
+    (
+
+        it.extension.equals("wav", true) ||
+
+        it.extension.equals("mp3", true)
+
+    )
+
+}
 
         .toList()
 
