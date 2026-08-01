@@ -1,18 +1,19 @@
 package com.liyx.xtools.core.voice
+
 import com.liyx.xtools.core.media.AudioMerger
+import com.liyx.xtools.core.media.MergeFailedException
+import com.liyx.xtools.core.media.WavReader
+import com.liyx.xtools.core.media.WavValidator
+import com.liyx.xtools.core.media.WavWriter
 import java.io.File
 
-/**
- * Temporary Android merger.
- *
- * Until FFmpeg is integrated,
- * this merger returns the first generated
- * chunk as the final audio.
- *
- * This allows the entire voice pipeline
- * to work end-to-end.
- */
 class AndroidAudioMerger : AudioMerger {
+
+    private val reader = WavReader()
+
+    private val writer = WavWriter()
+
+    private val validator = WavValidator()
 
     override fun merge(
 
@@ -28,29 +29,93 @@ class AndroidAudioMerger : AudioMerger {
 
         }
 
-        val first = File(inputFiles.first())
+        try {
 
-        if (!first.exists()) {
+            val mergedPCM = ArrayList<Byte>()
+
+            var header = reader.read(
+                File(inputFiles.first())
+            ).first
+
+            validator.validate(header)
+
+            inputFiles.forEachIndexed { index, path ->
+
+                val (currentHeader, pcm) =
+
+                    reader.read(File(path))
+
+                validator.validate(currentHeader)
+
+                if (index > 0) {
+
+                    requireCompatible(
+
+                        header,
+
+                        currentHeader
+
+                    )
+
+                }
+
+                mergedPCM.addAll(
+                    pcm.toList()
+                )
+
+            }
+
+            writer.write(
+
+                File(outputFile),
+
+                header.copy(
+
+                    dataSize = mergedPCM.size
+
+                ),
+
+                mergedPCM.toByteArray()
+
+            )
+
+            return true
+
+        } catch (e: Exception) {
+
+            e.printStackTrace()
 
             return false
 
         }
 
-        return try {
+    }
 
-            first.copyTo(
+    private fun requireCompatible(
 
-                File(outputFile),
+        first: com.liyx.xtools.core.media.WavHeader,
 
-                overwrite = true
+        second: com.liyx.xtools.core.media.WavHeader
+
+    ) {
+
+        if (
+
+            first.channels != second.channels ||
+
+            first.sampleRate != second.sampleRate ||
+
+            first.bitsPerSample != second.bitsPerSample ||
+
+            first.audioFormat != second.audioFormat
+
+        ) {
+
+            throw MergeFailedException(
+
+                "WAV formats do not match."
 
             )
-
-            true
-
-        } catch (e: Exception) {
-
-            false
 
         }
 
