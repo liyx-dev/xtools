@@ -399,13 +399,13 @@ viewModelScope.launch {
 
     } finally {
 
-        setGenerating(false)
-
-    }
+    setGenerating(false)
 
 }
 
+}   // closes launch
 
+}   // closes generateVoice()
      
 fun playGeneratedAudio() {
 
