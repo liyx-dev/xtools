@@ -8,6 +8,11 @@ import com.liyx.xtools.AppContainer
 import com.liyx.xtools.ui.HomeScreen
 import com.liyx.xtools.ui.VoiceStudioScreen
 
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.liyx.xtools.ui.library.AudioLibraryScreen
+import com.liyx.xtools.viewmodel.AudioLibraryViewModel
+import com.liyx.xtools.viewmodel.AudioLibraryViewModelFactory
+
 @Composable
 fun XtoolsNavigation(
 
@@ -47,17 +52,44 @@ fun XtoolsNavigation(
 
             VoiceStudioScreen(
 
-                appContainer = appContainer,
+    appContainer = appContainer,
 
-                onBack = {
+    onBack = {
 
-                    navController.popBackStack()
+        navController.popBackStack()
 
-                }
+    },
 
-            )
+    onOpenLibrary = {
+
+        navController.navigate(
+
+            Screen.AudioLibrary.route
+
+        )
+
+    }
+
+)
 
         }
+
+composable(Screen.AudioLibrary.route) {
+
+    val libraryViewModel: AudioLibraryViewModel = viewModel(
+
+        factory = AudioLibraryViewModelFactory(appContainer)
+
+    )
+
+    AudioLibraryScreen(
+
+        viewModel = libraryViewModel
+
+    )
+
+}
+
 
     }
 

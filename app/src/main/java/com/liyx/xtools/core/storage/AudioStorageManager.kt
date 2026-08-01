@@ -63,7 +63,35 @@ class AudioStorageManager(
         return getProjectDirectory(
             projectTitle
         ).absolutePath
-
     }
+
+
+fun getRootDirectory(): File {
+
+    return rootDirectory
+
+}
+
+fun getAllAudioFiles(): List<File> {
+
+    return rootDirectory
+
+        .walkTopDown()
+
+        .filter {
+
+            it.isFile &&
+
+            (
+                it.extension.equals("wav", true) ||
+                it.extension.equals("mp3", true)
+            )
+
+        }
+
+        .toList()
+
+}
+
 
 }

@@ -47,9 +47,16 @@ import com.liyx.xtools.ui.components.GeneratedAudioCard
 
 @Composable
 fun VoiceStudioScreen(
+
     appContainer: AppContainer,
-    onBack: () -> Unit
-) {
+
+    onBack: () -> Unit,
+
+    onOpenLibrary: () -> Unit
+
+)
+
+ {
 
     val context = LocalContext.current
 
@@ -245,6 +252,20 @@ item {
         }
 
     )
+
+}
+
+Spacer(modifier = Modifier.height(16.dp))
+
+Button(
+
+    onClick = onOpenLibrary,
+
+    modifier = Modifier.fillMaxWidth()
+
+) {
+
+    Text("📚 Open Audio Library")
 
 }
 

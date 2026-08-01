@@ -79,11 +79,21 @@ val audioExporter: AudioExporter =
     val audioStorageManager =
         AudioStorageManager(context)
 /*
+ * Shared Audio Library
+ */
+val audioLibraryManager =
+    AudioLibraryManager(audioStorageManager).apply {
+
+        loadLibrary()
+
+    }
+
+/*
  * Audio Player
  */
 val audioPlayer = AudioPlayer(context)
 
-val audioLibraryManager = AudioLibraryManager()
+
 val androidShareManager =
 
     AndroidShareManager(context) 

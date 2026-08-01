@@ -50,4 +50,10 @@ class AudioLibraryViewModel(
 
     }
 
+    fun reload() {
+
+        libraryManager.loadLibrary()
+
+    }
+
 }
