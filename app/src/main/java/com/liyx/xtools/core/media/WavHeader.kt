@@ -4,8 +4,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 /**
- * Represents the metadata
- * of a PCM WAV file.
+ * Represents a PCM WAV header.
  */
 data class WavHeader(
 

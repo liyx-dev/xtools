@@ -2,7 +2,8 @@ package com.liyx.xtools.core.voice
 
 import com.liyx.xtools.core.media.AudioMerger
 import com.liyx.xtools.core.media.MergeFailedException
-import com.liyx.xtools.core.media.StreamingWavWriter
+import com.liyx.xtools.core.media.stream.StreamingWavWriter
+
 import com.liyx.xtools.core.media.WavReader
 import com.liyx.xtools.core.media.WavValidator
 import java.io.File
@@ -32,13 +33,19 @@ class AndroidAudioMerger : AudioMerger {
 
             validator.validate(firstHeader)
 
-            val writer = StreamingWavWriter(
+  
+          val writer = StreamingWavWriter(
 
-                File(outputFile),
+    File(outputFile)
 
-                firstHeader
+)
 
-            )
+writer.start(
+
+    firstHeader
+
+)
+
 
             inputFiles.forEachIndexed { index, path ->
 
