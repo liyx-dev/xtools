@@ -255,17 +255,23 @@ item {
 
 }
 
-Spacer(modifier = Modifier.height(16.dp))
+item {
 
-Button(
+    Spacer(
+        modifier = Modifier.height(16.dp)
+    )
 
-    onClick = onOpenLibrary,
+    Button(
 
-    modifier = Modifier.fillMaxWidth()
+        onClick = onOpenLibrary,
 
-) {
+        modifier = Modifier.fillMaxWidth()
 
-    Text("📚 Open Audio Library")
+    ) {
+
+        Text("📚 Open Audio Library")
+
+    }
 
 }
 
