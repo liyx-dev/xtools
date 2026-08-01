@@ -8,7 +8,7 @@ import com.liyx.xtools.core.providers.VoiceProviderManager
 import com.liyx.xtools.core.providers.VoiceProviderRegistry
 import com.liyx.xtools.core.storage.AudioStorageManager
 
-import com.liyx.xtools.core.voice.AndroidAudioMerger
+import com.liyx.xtools.core.media.stream.StreamingAudioMerger
 import com.liyx.xtools.core.voice.ChunkEngine
 import com.liyx.xtools.core.voice.QueueEngine
 import com.liyx.xtools.core.voice.SmartChunkEngine
@@ -81,7 +81,7 @@ class AppContainer(
      * Audio Merger
      */
     val audioMerger: AudioMerger =
-        AndroidAudioMerger()
+    StreamingAudioMerger()
 
 val audioExporter: AudioExporter =
     AndroidAudioExporter(context)

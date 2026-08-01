@@ -1,16 +1,15 @@
-package com.liyx.xtools.core.voice
+package com.liyx.xtools.core.media.stream
 
 import com.liyx.xtools.core.media.AudioMerger
 import com.liyx.xtools.core.media.MergeFailedException
-import com.liyx.xtools.core.media.StreamingWavWriter
+import com.liyx.xtools.core.media.WavHeader
 import com.liyx.xtools.core.media.WavReader
 import com.liyx.xtools.core.media.WavValidator
 import java.io.File
 
-class AndroidAudioMerger : AudioMerger {
+class StreamingAudioMerger : AudioMerger {
 
     private val reader = WavReader()
-
     private val validator = WavValidator()
 
     override fun merge(
@@ -21,41 +20,41 @@ class AndroidAudioMerger : AudioMerger {
 
     ): Boolean {
 
-        if (inputFiles.isEmpty()) {
-            return false
-        }
+        if (inputFiles.isEmpty()) return false
 
         return try {
 
-            val firstHeader =
-                reader.read(File(inputFiles.first())).first
+            val firstFile = File(inputFiles.first())
 
-            validator.validate(firstHeader)
+            val (header, firstPCM) = reader.read(firstFile)
+
+            validator.validate(header)
 
             val writer = StreamingWavWriter(
 
-                File(outputFile),
-
-                firstHeader
+                File(outputFile)
 
             )
 
-            inputFiles.forEachIndexed { index, path ->
+            writer.start(header)
 
-                val (header, pcm) =
+            writer.appendPCM(firstPCM)
 
-                    reader.read(File(path))
+            for (i in 1 until inputFiles.size) {
 
-                validator.validate(header)
+                val (currentHeader, pcm) =
 
-                if (index > 0) {
+                    reader.read(File(inputFiles[i]))
 
-                    requireCompatible(
-                        firstHeader,
-                        header
-                    )
+                validator.validate(currentHeader)
 
-                }
+                requireCompatible(
+
+                    header,
+
+                    currentHeader
+
+                )
 
                 writer.appendPCM(pcm)
 
@@ -77,9 +76,9 @@ class AndroidAudioMerger : AudioMerger {
 
     private fun requireCompatible(
 
-        first: com.liyx.xtools.core.media.WavHeader,
+        first: WavHeader,
 
-        second: com.liyx.xtools.core.media.WavHeader
+        second: WavHeader
 
     ) {
 
