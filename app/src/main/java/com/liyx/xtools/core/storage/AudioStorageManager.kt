@@ -66,7 +66,7 @@ class AudioStorageManager(
     }
 
 
-fun getRootDirectory(): File {
+fun getVoiceProjectsDirectory(): File {
 
     return rootDirectory
 
