@@ -4,6 +4,7 @@ import java.io.File
 import com.liyx.xtools.core.jobs.VoiceJob
 import com.liyx.xtools.core.models.ChunkStatus
 import com.liyx.xtools.core.models.VoiceJobStatus
+import com.liyx.xtools.core.media.AudioMerger
 
 /**
  * VoicePipeline

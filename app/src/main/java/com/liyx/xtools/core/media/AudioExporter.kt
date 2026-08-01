@@ -1,4 +1,4 @@
-package com.liyx.xtools.core.voice
+package com.liyx.xtools.core.media
 
 /**
  * Exports generated audio

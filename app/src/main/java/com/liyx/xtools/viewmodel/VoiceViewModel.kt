@@ -12,7 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-import com.liyx.xtools.core.voice.AudioMerger
+import com.liyx.xtools.core.media.AudioMerger
 import com.liyx.xtools.core.voice.VoiceEngine
 import com.liyx.xtools.core.voice.VoicePipeline
 import com.liyx.xtools.core.storage.AudioStorageManager
@@ -22,7 +22,7 @@ import com.liyx.xtools.core.player.models.AudioRecording
 import java.util.UUID
 import com.liyx.xtools.core.export.AndroidShareManager
 import com.liyx.xtools.core.export.ExportAudio
-import com.liyx.xtools.core.voice.AudioExporter
+import com.liyx.xtools.core.media.AudioExporter
 
 class VoiceViewModel(
 

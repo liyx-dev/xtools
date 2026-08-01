@@ -3,7 +3,7 @@ package com.liyx.xtools.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.liyx.xtools.AppContainer
-import com.liyx.xtools.core.voice.AudioExporter
+import com.liyx.xtools.core.media.AudioExporter
 
 class VoiceViewModelFactory(
 
