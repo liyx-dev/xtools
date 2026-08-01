@@ -28,11 +28,19 @@ class MediaEngine(
 
     fun export(
 
-        fileName: String
+        sourceFile: String,
 
-    ) {
+        displayName: String
 
-        audioExporter.export(fileName)
+    ): Boolean {
+
+        return audioExporter.export(
+
+            sourceFile,
+
+            displayName
+
+        )
 
     }
 
