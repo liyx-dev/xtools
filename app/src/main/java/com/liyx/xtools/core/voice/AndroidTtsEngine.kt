@@ -128,7 +128,7 @@ class AndroidTtsEngine(
 
                 id = voice.name,
 
-                name = name = buildString {
+                name = buildString {
 
     append(voice.locale.displayLanguage)
 
