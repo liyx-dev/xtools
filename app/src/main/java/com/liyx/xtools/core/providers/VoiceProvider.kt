@@ -1,6 +1,7 @@
 package com.liyx.xtools.core.providers
 
 import com.liyx.xtools.core.voice.VoiceEngine
+import com.liyx.xtools.core.voice.VoiceInfo
 
 interface VoiceProvider {
 
@@ -16,5 +17,5 @@ interface VoiceProvider {
     val engine: VoiceEngine
 
     fun isAvailable(): Boolean
-
+fun getVoices(): List<VoiceInfo>
 }

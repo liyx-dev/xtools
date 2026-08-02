@@ -2,6 +2,7 @@ package com.liyx.xtools.core.providers
 
 import android.content.Context
 import com.liyx.xtools.core.voice.AndroidTtsEngine
+import com.liyx.xtools.core.voice.VoiceInfo
 
 class AndroidVoiceProvider(
 
@@ -11,7 +12,7 @@ class AndroidVoiceProvider(
 
     override val id = "android"
 
-    override val displayName = "System"
+    override val displayName = "Android System TTS"
 
     override val isOffline = true
 
@@ -23,9 +24,11 @@ class AndroidVoiceProvider(
 
     }
 
-    override fun isAvailable(): Boolean {
+    override fun isAvailable(): Boolean = true
 
-        return true
+    override fun getVoices(): List<VoiceInfo> {
+
+        return engine.getAvailableVoices()
 
     }
 

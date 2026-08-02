@@ -25,6 +25,7 @@ import com.liyx.xtools.core.export.ExportAudio
 import com.liyx.xtools.core.media.AudioExporter
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.withContext
+import com.liyx.xtools.core.voice.VoiceConfig
 
 class VoiceViewModel(
 
@@ -38,6 +39,7 @@ private val audioStorageManager: AudioStorageManager? = null,
 private val audioPlayer: AudioPlayer? = null,
 private val audioLibraryManager: AudioLibraryManager? = null,
 private val audioExporter: AudioExporter? = null,
+private var voiceConfig = VoiceConfig(),
 private val androidShareManager: AndroidShareManager? = null
 ) : ViewModel()
 
@@ -149,35 +151,88 @@ private fun debug(message: String) {
 
 }
         
-    fun updateVoice(voice: String) {
+    fun updateVoice(
 
-        _uiState.value = _uiState.value.copy(
+    voice: String
 
-            selectedVoice = voice
+) {
+if (voiceConfig.voiceId == voice) return
 
-        )
+    voiceConfig = voiceConfig.copy(
 
-    }
+        voiceId = voice
 
-    fun updateSpeed(speed: Float) {
+    )
 
-        _uiState.value = _uiState.value.copy(
+    voiceEngine?.applyConfig(
 
-            speed = speed
+        voiceConfig
 
-        )
+    )
 
-    }
+    _uiState.value = _uiState.value.copy(
 
-    fun updatePitch(pitch: Float) {
+        selectedVoice = voice
 
-        _uiState.value = _uiState.value.copy(
+    )
 
-            pitch = pitch
+}
 
-        )
 
-    }
+
+    fun updateSpeed(
+
+    speed: Float
+
+) {
+
+if (voiceConfig.speed == speed) return
+    voiceConfig = voiceConfig.copy(
+
+        speed = speed
+
+    )
+
+    voiceEngine?.applyConfig(
+
+        voiceConfig
+
+    )
+
+    _uiState.value = _uiState.value.copy(
+
+        speed = speed
+
+    )
+
+}
+
+    fun updatePitch(
+
+    pitch: Float
+
+) {
+if (voiceConfig.pitch == pitch) return
+
+    voiceConfig = voiceConfig.copy(
+
+        pitch = pitch
+
+    )
+
+    voiceEngine?.applyConfig(
+
+        voiceConfig
+
+    )
+
+    _uiState.value = _uiState.value.copy(
+
+        pitch = pitch
+
+    )
+
+}
 
     fun setGenerating(generating: Boolean) {
 

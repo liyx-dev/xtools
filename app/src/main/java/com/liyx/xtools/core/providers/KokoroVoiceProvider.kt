@@ -1,6 +1,7 @@
 package com.liyx.xtools.core.providers
 
 import com.liyx.xtools.core.voice.KokoroEngine
+import com.liyx.xtools.core.voice.VoiceInfo
 
 class KokoroVoiceProvider : VoiceProvider {
 
@@ -17,5 +18,11 @@ class KokoroVoiceProvider : VoiceProvider {
         return false
 
     }
+override fun getVoices(): List<VoiceInfo> {
+
+    return emptyList()
+
+}
+
 
 }

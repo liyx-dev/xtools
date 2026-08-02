@@ -103,6 +103,7 @@ class AndroidTtsEngine(
                 }
 
                 @Deprecated("Deprecated in Java")
+
                 override fun onError(utteranceId: String?) {
                     DebugLogger.log(context, "onError()")
                     synchronized(generationLock) {
@@ -115,13 +116,78 @@ class AndroidTtsEngine(
         )
     }
 
-    override fun getAvailableVoices(): List<String> {
-        if (!initialized) return emptyList()
-        return tts?.voices
-            ?.map { it.name }
-            ?.sorted()
-            ?: emptyList()
+   override fun getAvailableVoices(): List<VoiceInfo> {
+
+    if (!initialized) return emptyList()
+
+    return tts?.voices
+        ?.sortedBy { it.locale.displayName }
+        ?.map { voice ->
+
+            VoiceInfo(
+
+                id = voice.name,
+
+                name = name = buildString {
+
+    append(voice.locale.displayLanguage)
+
+    if (voice.locale.displayCountry.isNotBlank()) {
+
+        append(" (")
+
+        append(voice.locale.displayCountry)
+
+        append(")")
+
     }
+
+},
+              locale = voice.locale.displayName,
+
+                provider = "Android",
+
+                networkRequired = voice.isNetworkConnectionRequired,
+
+                quality =
+                    if (voice.quality >= 400) {
+
+                        "High"
+
+                    } else {
+
+                        "Standard"
+
+                    },
+
+                isOffline = !voice.isNetworkConnectionRequired
+
+            )
+
+        }
+
+        ?: emptyList()
+
+}
+
+
+override fun applyConfig(
+
+    config: VoiceConfig
+
+) {
+
+    setSpeed(config.speed)
+
+    setPitch(config.pitch)
+
+    if (config.voiceId.isNotBlank()) {
+
+        setVoice(config.voiceId)
+
+    }
+
+}
 
     override fun setVoice(voice: String) {
         selectedVoice = voice

@@ -15,7 +15,7 @@ interface VoiceEngine {
     /**
      * List available voices.
      */
-    fun getAvailableVoices(): List<String>
+    fun getAvailableVoices(): List<VoiceInfo>
 
     /**
      * Select a voice.
@@ -56,5 +56,7 @@ interface VoiceEngine {
      * Release all resources.
      */
     fun release()
+
+fun applyConfig(config: VoiceConfig)
 
 }

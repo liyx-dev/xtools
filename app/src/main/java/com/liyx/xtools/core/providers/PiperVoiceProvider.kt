@@ -1,6 +1,7 @@
 package com.liyx.xtools.core.providers
 
 import com.liyx.xtools.core.voice.PiperEngine
+import com.liyx.xtools.core.voice.VoiceInfo
 
 class PiperVoiceProvider : VoiceProvider {
 
@@ -12,10 +13,18 @@ class PiperVoiceProvider : VoiceProvider {
 
     override val engine = PiperEngine()
 
-    override fun isAvailable(): Boolean {
+    override fun isAvailable():
+
+ Boolean {
 
         return false
 
     }
+
+override fun getVoices(): List<VoiceInfo> {
+
+    return emptyList()
+
+}
 
 }

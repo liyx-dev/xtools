@@ -1,6 +1,7 @@
 package com.liyx.xtools.core.providers
 
 import com.liyx.xtools.core.voice.VoiceEngine
+import com.liyx.xtools.core.voice.VoiceInfo
 
 class VoiceProviderManager(
 
@@ -48,5 +49,19 @@ class VoiceProviderManager(
         return registry.availableProviders()
 
     }
+fun getAllVoices(): List<VoiceInfo> {
+
+    return registry
+
+        .availableProviders()
+
+        .flatMap {
+
+            it.getVoices()
+
+        }
+
+}
+
 
 }
