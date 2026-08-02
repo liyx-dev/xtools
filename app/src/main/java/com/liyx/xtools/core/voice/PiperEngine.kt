@@ -55,13 +55,25 @@ class PiperEngine(
 
     }
 
-    override fun getAvailableVoices(): List<String> {
+   override fun getAvailableVoices(): List<VoiceInfo> {
 
-        return modelManager
-            .downloadedModels()
-            .map { it.name }
+    return emptyList()
 
-    }
+}
+
+override fun applyConfig(
+
+    config: VoiceConfig
+
+) {
+
+    setVoice(config.voiceId)
+
+    setSpeed(config.speed)
+
+    setPitch(config.pitch)
+
+}
 
     override fun setVoice(voice: String) {
 
@@ -142,5 +154,7 @@ class PiperEngine(
         // Nothing to release yet.
 
     }
+
+
 
 }

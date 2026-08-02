@@ -6,11 +6,25 @@ class KokoroEngine : VoiceEngine {
 
     }
 
-    override fun getAvailableVoices(): List<String> {
+    override fun getAvailableVoices(): List<VoiceInfo> {
 
-        return emptyList()
+    return emptyList()
 
-    }
+}
+
+override fun applyConfig(
+
+    config: VoiceConfig
+
+) {
+
+    setVoice(config.voiceId)
+
+    setSpeed(config.speed)
+
+    setPitch(config.pitch)
+
+}
 
     override fun setVoice(voice: String) {
 

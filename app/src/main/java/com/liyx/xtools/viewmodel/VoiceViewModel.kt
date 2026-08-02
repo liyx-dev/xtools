@@ -39,7 +39,7 @@ private val audioStorageManager: AudioStorageManager? = null,
 private val audioPlayer: AudioPlayer? = null,
 private val audioLibraryManager: AudioLibraryManager? = null,
 private val audioExporter: AudioExporter? = null,
-private var voiceConfig = VoiceConfig(),
+private var voiceConfig: VoiceConfig = VoiceConfig(),
 private val androidShareManager: AndroidShareManager? = null
 ) : ViewModel()
 
