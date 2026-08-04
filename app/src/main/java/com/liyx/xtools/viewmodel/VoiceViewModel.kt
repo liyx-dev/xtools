@@ -101,35 +101,7 @@ private val voicePipeline: VoicePipeline? =
         _uiState.asStateFlow()
 
 init {
-
     loadVoices()
-
-}
-
-private fun loadVoices() {
-
-    val voices = providerManager.getAllVoices()
-
-    _uiState.value = _uiState.value.copy(
-
-        availableVoices = voices.map { it.id },
-
-        selectedVoice = voices.firstOrNull()?.id ?: "",
-
-        providerReady = voices.isNotEmpty(),
-
-        providerStatus =
-
-            if (voices.isEmpty())
-
-                "No voices found"
-
-            else
-
-                "${voices.size} voices loaded"
-
-    )
-
 }
 
 private fun debug(message: String) {
@@ -368,44 +340,52 @@ private fun estimateChunks(
 
 }
 
-
 private fun loadVoices() {
 
-    val voices =
+    val voices = providerManager
+        .getAllVoices()
+        .map {
 
-        providerManager
+            VoiceItem(
 
-            .getAllVoices()
+                id = it.id,
 
-            .map {
+                name = it.name,
 
-                VoiceItem(
+                locale = it.locale,
 
-                    id = it.id,
+                provider = it.provider,
 
-                    name = it.name,
+                quality = it.quality,
 
-                    locale = it.locale,
+                offline = it.isOffline
 
-                    provider = it.provider,
+            )
 
-                    quality = it.quality,
+        }
 
-                    offline = it.isOffline
+    _uiState.value = _uiState.value.copy(
 
-                )
+        availableVoices = voices,
 
-            }
+      selectedVoice =
+    if (_uiState.value.selectedVoice.isBlank())
+        voices.firstOrNull()?.id ?: ""
+    else
+        _uiState.value.selectedVoice,
 
-    _uiState.value =
+        providerReady = voices.isNotEmpty(),
 
-        _uiState.value.copy(
+        providerStatus =
+            if (voices.isEmpty())
+                "No voices found"
+            else
+                "${voices.size} voices loaded"
 
-            availableVoices = voices
-
-        )
+    )
 
 }
+
 
 fun generateVoice() {
 
