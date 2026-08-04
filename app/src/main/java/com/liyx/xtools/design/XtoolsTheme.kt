@@ -8,40 +8,58 @@ import androidx.compose.runtime.Composable
 
 private val DarkColors = darkColorScheme(
 
-    primary = XtoolsColors.Primary,
+    primary = XGreen,
 
-    secondary = XtoolsColors.Secondary,
+    secondary = XBlue,
 
-    tertiary = XtoolsColors.Accent,
+    tertiary = XYellow,
 
-    background = XtoolsColors.Background,
+    background = XBackground,
 
-    surface = XtoolsColors.Surface,
+    surface = XSurface,
 
-    error = XtoolsColors.Error
+    surfaceVariant = XSurface2,
+
+    onPrimary = XWhite,
+
+    onSecondary = XWhite,
+
+    onBackground = XWhite,
+
+    onSurface = XWhite,
+
+    error = XRed
 
 )
 
 private val LightColors = lightColorScheme(
 
-    primary = XtoolsColors.Primary,
+    primary = XGreen,
 
-    secondary = XtoolsColors.Secondary,
+    secondary = XBlue,
 
-    tertiary = XtoolsColors.Accent,
+    tertiary = XYellow,
 
-    background = XtoolsColors.Background,
+    background = XWhite,
 
-    surface = XtoolsColors.Surface,
+    surface = XWhite,
 
-    error = XtoolsColors.Error
+    onPrimary = XWhite,
+
+    onSecondary = XWhite,
+
+    onBackground = XBlack,
+
+    onSurface = XBlack,
+
+    error = XRed
 
 )
 
 @Composable
 fun XtoolsTheme(
 
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = true,
 
     content: @Composable () -> Unit
 
@@ -49,10 +67,7 @@ fun XtoolsTheme(
 
     MaterialTheme(
 
-        colorScheme = if (darkTheme)
-            DarkColors
-        else
-            LightColors,
+        colorScheme = if (darkTheme) DarkColors else LightColors,
 
         typography = XtoolsTypography,
 

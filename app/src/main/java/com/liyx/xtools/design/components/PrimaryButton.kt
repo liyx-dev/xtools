@@ -1,19 +1,14 @@
 package com.liyx.xtools.design.components
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
+import com.liyx.xtools.design.XtoolsColors
 
 @Composable
 fun PrimaryButton(
@@ -27,17 +22,28 @@ fun PrimaryButton(
     Button(
         onClick = onClick,
         enabled = enabled && !loading,
+
         modifier = modifier
             .fillMaxWidth()
-            .height(56.dp),
-        shape = MaterialTheme.shapes.large,
+            .height(58.dp)
+            .shadow(
+                elevation = 12.dp,
+                shape = RoundedCornerShape(18.dp)
+            ),
+
+        shape = RoundedCornerShape(18.dp),
+
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary
+            containerColor = XtoolsColors.XGreen,
+            contentColor = XtoolsColors.PureWhite,
+            disabledContainerColor = XtoolsColors.Surface,
+            disabledContentColor = XtoolsColors.TextMuted
         )
+
     ) {
 
         Row(
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
@@ -46,7 +52,7 @@ fun PrimaryButton(
                 CircularProgressIndicator(
                     modifier = Modifier.size(18.dp),
                     strokeWidth = 2.dp,
-                    color = MaterialTheme.colorScheme.onPrimary
+                    color = XtoolsColors.PureWhite
                 )
 
             }

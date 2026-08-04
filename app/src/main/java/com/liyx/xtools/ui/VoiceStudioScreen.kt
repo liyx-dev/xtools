@@ -44,6 +44,10 @@ import com.liyx.xtools.core.utils.DebugLogger
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import com.liyx.xtools.ui.components.GeneratedAudioCard
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
+import com.liyx.xtools.design.components.SecondaryButton
+
 
 @Composable
 fun VoiceStudioScreen(
@@ -92,164 +96,16 @@ fun VoiceStudioScreen(
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
 
-            item {
-                VoiceHeader()
-            }
 
-            item {
-                ProjectTitleCard(
-                    title = state.title,
-                    onTitleChanged = {
-                        viewModel.updateTitle(it)
-                    }
-                )
-            }
+              item {
 
-            item {
-                ScriptEditorCard(
-                    text = state.text,
-                    characterCount = state.characterCount,
-                    estimatedDuration = state.estimatedDurationMs,
-                    onTextChanged = {
-                        viewModel.updateText(it)
-                    }
-                )
-            }
+    VoiceHeader(
 
-            item {
-                ScriptAnalysisCard(
-                    characterCount = state.characterCount,
-                    estimatedDuration = state.estimatedDurationMs,
-                    chunkCount = state.estimatedChunks,
-                    wordCount = state.wordCount,
-                    paragraphCount = state.paragraphCount
-                )
-            }
+        title = "Xtools Voice Studio",
 
-            item {
-                VoiceSelectorCard(
-                    selectedVoice = state.selectedVoice,
-                    onVoiceSelected = {
-                        viewModel.updateVoice(it)
-                    }
-                )
-            }
+        subtitle = "Create studio-quality narration with AI voices",
 
-            item {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    QuickStatCard(
-                        modifier = Modifier.weight(1f),
-                        value = state.characterCount.toString(),
-                        label = "Characters"
-                    )
-
-                    QuickStatCard(
-                        modifier = Modifier.weight(1f),
-                        value = formatDuration(state.estimatedDurationMs),
-                        label = "Estimated Audio"
-                    )
-                }
-            }
-
-            item {
-                VoiceSettingsCard(
-                    speed = state.speed,
-                    pitch = state.pitch,
-                    selectedVoice = state.selectedVoice,
-                    onSpeedChanged = {
-                        viewModel.updateSpeed(it)
-                    },
-                    onPitchChanged = {
-                        viewModel.updatePitch(it)
-                    }
-                )
-            }
-
-            item {
-                PrimaryButton(
-                    text = if (state.isGenerating)
-                        "Generating..."
-                    else
-                        "Generate Voice",
-                    onClick = {
-                        viewModel.generateVoice()
-                    },
-                    enabled = state.text.isNotBlank(),
-                    loading = state.isGenerating
-                )
-            }
-
-            item {
-                GenerationPipelineCard(
-                    generating = state.isGenerating,
-                    progress = state.progress,
-                    currentVoice = state.selectedVoice,
-                    characterCount = state.characterCount,
-                    estimatedDuration = state.estimatedDurationMs
-                )
-            }
-
-            item {
-                Text(
-                    text = "Debug: ${state.debugMessage}",
-                    modifier = Modifier.padding(8.dp)
-                )
-            }
-
-            item {
-                GenerationDashboardCard(
-                    progress = state.progress,
-                    processedChunks = 0,
-                    totalChunks = state.estimatedChunks,
-                    processedCharacters = 0,
-                    totalCharacters = state.characterCount,
-                    generating = state.isGenerating
-                )
-            }
-
-item {
-
-    GeneratedAudioCard(
-
-        audioPath = state.generatedAudio,
-
-        canPlay = state.canPlay,
-
-        canShare = state.canShare,
-
-        canExport = state.canExport,
-
-        onPlay = {
-
-            viewModel.playGeneratedAudio()
-
-        },
-
-        onPause = {
-
-            viewModel.pauseAudio()
-
-        },
-
-        onStop = {
-
-            viewModel.stopAudio()
-
-        },
-
-        onShare = {
-
-            viewModel.shareGeneratedAudio()
-
-        },
-
-        onExport = {
-
-            viewModel.exportGeneratedAudio()
-
-        }
+        badge = "ANDROID TTS READY"
 
     )
 
@@ -257,24 +113,640 @@ item {
 
 item {
 
-    Spacer(
-        modifier = Modifier.height(16.dp)
-    )
+    ElevatedCard(
 
-    Button(
+        modifier = Modifier.fillMaxWidth(),
 
-        onClick = onOpenLibrary,
-
-        modifier = Modifier.fillMaxWidth()
+        shape = MaterialTheme.shapes.extraLarge
 
     ) {
 
-        Text("📚 Open Audio Library")
+        Column(
+
+            modifier = Modifier.padding(20.dp)
+
+        ) {
+
+            Text(
+
+                "🎬 Voice Project",
+
+                style = MaterialTheme.typography.titleLarge,
+
+                color = MaterialTheme.colorScheme.primary
+
+            )
+
+            Spacer(Modifier.height(4.dp))
+
+            Text(
+
+                "Every great narration starts with a project.",
+
+                style = MaterialTheme.typography.bodyMedium,
+
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+
+            )
+
+            Spacer(Modifier.height(18.dp))
+
+            ProjectTitleCard(
+
+                title = state.title,
+
+                onTitleChanged = {
+
+                    viewModel.updateTitle(it)
+
+                }
+
+            )
+
+        }
 
     }
 
 }
 
+item {
+
+    ElevatedCard(
+
+        modifier = Modifier.fillMaxWidth(),
+
+        shape = MaterialTheme.shapes.extraLarge
+
+    ) {
+
+        Column(
+
+            modifier = Modifier.padding(20.dp)
+
+        ) {
+
+            Text(
+
+                "📝 Script Studio",
+
+                style = MaterialTheme.typography.titleLarge,
+
+                color = MaterialTheme.colorScheme.primary
+
+            )
+
+            Spacer(Modifier.height(4.dp))
+
+            Text(
+
+                "Write, paste or edit your narration script.",
+
+                style = MaterialTheme.typography.bodyMedium,
+
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+
+            )
+
+            Spacer(Modifier.height(16.dp))
+
+            ScriptEditorCard(
+
+                text = state.text,
+
+                characterCount = state.characterCount,
+
+                estimatedDuration = state.estimatedDurationMs,
+
+                onTextChanged = {
+
+                    viewModel.updateText(it)
+
+                }
+
+            )
+
+        }
+
+    }
+
+}
+
+    item {
+
+    ElevatedCard(
+
+        modifier = Modifier.fillMaxWidth(),
+
+        shape = MaterialTheme.shapes.extraLarge
+
+    ) {
+
+        Column(
+
+            modifier = Modifier.padding(20.dp)
+
+        ) {
+
+            Text(
+
+                text = "📊 Live Script Analytics",
+
+                style = MaterialTheme.typography.titleLarge,
+
+                color = MaterialTheme.colorScheme.primary
+
+            )
+
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
+
+            ScriptAnalysisCard(
+
+                characterCount = state.characterCount,
+
+                estimatedDuration = state.estimatedDurationMs,
+
+                chunkCount = state.estimatedChunks,
+
+                wordCount = state.wordCount,
+
+                paragraphCount = state.paragraphCount
+
+            )
+
+        }
+
+    }
+
+}
+
+item {
+
+    Row(
+
+        modifier = Modifier.fillMaxWidth(),
+
+        horizontalArrangement = Arrangement.spacedBy(14.dp)
+
+    ) {
+
+        QuickStatCard(
+
+            modifier = Modifier.weight(1f),
+
+            value = state.characterCount.toString(),
+
+            label = "Characters",
+
+            icon = "✍"
+
+        )
+
+        QuickStatCard(
+
+            modifier = Modifier.weight(1f),
+
+            value = state.wordCount.toString(),
+
+            label = "Words",
+
+            icon = "📖"
+
+        )
+
+    }
+
+}
+
+item {
+
+    Row(
+
+        modifier = Modifier.fillMaxWidth(),
+
+        horizontalArrangement = Arrangement.spacedBy(14.dp)
+
+    ) {
+
+        QuickStatCard(
+
+            modifier = Modifier.weight(1f),
+
+            value = state.estimatedChunks.toString(),
+
+            label = "Chunks",
+
+            icon = "🧩"
+
+        )
+
+        QuickStatCard(
+
+            modifier = Modifier.weight(1f),
+
+            value = formatDuration(state.estimatedDurationMs),
+
+            label = "Duration",
+
+            icon = "⏱"
+
+        )
+
+    }
+
+}
+
+item {
+
+    ElevatedCard(
+
+        modifier = Modifier.fillMaxWidth(),
+
+        shape = MaterialTheme.shapes.extraLarge
+
+    ) {
+
+        Column(
+
+            modifier = Modifier.padding(20.dp)
+
+        ) {
+
+            Text(
+
+                text = "🎙 AI Voice Studio",
+
+                style = MaterialTheme.typography.titleLarge,
+
+                color = MaterialTheme.colorScheme.primary
+
+            )
+
+            Spacer(
+                modifier = Modifier.height(6.dp)
+            )
+
+            Text(
+
+                text = "Choose your preferred provider and studio-quality narration voice.",
+
+                style = MaterialTheme.typography.bodyMedium,
+
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+
+            )
+
+            Spacer(
+                modifier = Modifier.height(20.dp)
+            )
+
+            VoiceSelectorCard(
+
+                selectedVoice = state.selectedVoice,
+
+                onVoiceSelected = {
+
+                    viewModel.updateVoice(it)
+
+                }
+
+            )
+
+        }
+
+    }
+
+}
+       
+item {
+
+    ElevatedCard(
+
+        modifier = Modifier.fillMaxWidth(),
+
+        shape = MaterialTheme.shapes.extraLarge
+
+    ) {
+
+        Column(
+
+            modifier = Modifier.padding(22.dp)
+
+        ) {
+
+            Text(
+
+                text = "🎛 Studio Control Center",
+
+                style = MaterialTheme.typography.titleLarge,
+
+                color = MaterialTheme.colorScheme.primary
+
+            )
+
+            Spacer(
+                modifier = Modifier.height(6.dp)
+            )
+
+            Text(
+
+                text = "Fine tune your narration before generating audio.",
+
+                style = MaterialTheme.typography.bodyMedium,
+
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+
+            )
+
+            Spacer(
+                modifier = Modifier.height(20.dp)
+            )
+
+            VoiceSettingsCard(
+
+                speed = state.speed,
+
+                pitch = state.pitch,
+
+                selectedVoice = state.selectedVoice,
+
+                onSpeedChanged = {
+
+                    viewModel.updateSpeed(it)
+
+                },
+
+                onPitchChanged = {
+
+                    viewModel.updatePitch(it)
+
+                }
+
+            )
+
+            Spacer(
+                modifier = Modifier.height(20.dp)
+            )
+
+            SecondaryButton(
+
+                text = "🎧 Preview Voice",
+
+                onClick = {
+
+                    // Preview coming next phase
+
+                }
+
+            )
+
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
+
+            PrimaryButton(
+
+                text =
+
+                    if (state.isGenerating)
+
+                        "Generating Premium Voice..."
+
+                    else
+
+                        "🚀 Generate Voice",
+
+                loading = state.isGenerating,
+
+                enabled = state.text.isNotBlank(),
+
+                onClick = {
+
+                    viewModel.generateVoice()
+
+                }
+
+            )
+
+        }
+
+    }
+
+}
+
+       item {
+
+    ElevatedCard(
+
+        modifier = Modifier.fillMaxWidth(),
+
+        shape = MaterialTheme.shapes.extraLarge
+
+    ) {
+
+        Column(
+
+            modifier = Modifier.padding(22.dp)
+
+        ) {
+
+            Text(
+
+                text = "⚙ Production Dashboard",
+
+                style = MaterialTheme.typography.titleLarge,
+
+                color = MaterialTheme.colorScheme.primary
+
+            )
+
+            Spacer(
+                modifier = Modifier.height(6.dp)
+            )
+
+            Text(
+
+                text = "Real-time voice rendering progress",
+
+                style = MaterialTheme.typography.bodyMedium,
+
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+
+            )
+
+            Spacer(
+                modifier = Modifier.height(18.dp)
+            )
+
+            GenerationPipelineCard(
+
+                generating = state.isGenerating,
+
+                progress = state.progress,
+
+                currentVoice = state.selectedVoice,
+
+                characterCount = state.characterCount,
+
+                estimatedDuration = state.estimatedDurationMs
+
+            )
+
+            Spacer(
+                modifier = Modifier.height(20.dp)
+            )
+
+            GenerationDashboardCard(
+
+                progress = state.progress,
+
+                processedChunks = state.currentChunk,
+
+                totalChunks = state.totalChunks,
+
+                processedCharacters = state.processedCharacters,
+
+                totalCharacters = state.characterCount,
+
+                generating = state.isGenerating
+
+            )
+
+        }
+
+    }
+
+}
+        
+    
+            item {
+
+    ElevatedCard(
+
+        modifier = Modifier.fillMaxWidth(),
+
+        shape = MaterialTheme.shapes.extraLarge
+
+    ) {
+
+        Column(
+
+            modifier = Modifier.padding(22.dp)
+
+        ) {
+
+            Text(
+
+                text = "🎧 Studio Player",
+
+                style = MaterialTheme.typography.titleLarge,
+
+                color = MaterialTheme.colorScheme.primary
+
+            )
+
+            Spacer(Modifier.height(6.dp))
+
+            Text(
+
+                text = "Preview, export and share your generated narration.",
+
+                style = MaterialTheme.typography.bodyMedium,
+
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+
+            )
+
+            Spacer(Modifier.height(18.dp))
+
+            GeneratedAudioCard(
+
+                audioPath = state.generatedAudio,
+
+                canPlay = state.canPlay,
+
+                canShare = state.canShare,
+
+                canExport = state.canExport,
+
+                onPlay = { viewModel.playGeneratedAudio() },
+
+                onPause = { viewModel.pauseAudio() },
+
+                onStop = { viewModel.stopAudio() },
+
+                onShare = { viewModel.shareGeneratedAudio() },
+
+                onExport = { viewModel.exportGeneratedAudio() }
+
+            )
+
+        }
+
+    }
+
+}
+    
+
+
+item {
+
+    ElevatedCard(
+
+        modifier = Modifier.fillMaxWidth(),
+
+        shape = MaterialTheme.shapes.extraLarge
+
+    ) {
+
+        Column(
+
+            modifier = Modifier.padding(22.dp)
+
+        ) {
+
+            Text(
+
+                text = "🎵 Audio Library",
+
+                style = MaterialTheme.typography.titleLarge,
+
+                color = MaterialTheme.colorScheme.primary
+
+            )
+
+            Spacer(
+                modifier = Modifier.height(6.dp)
+            )
+
+            Text(
+
+                text = "Manage every recording you've created.",
+
+                style = MaterialTheme.typography.bodyMedium,
+
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+
+            )
+
+            Spacer(
+                modifier = Modifier.height(20.dp)
+            )
+
+            PrimaryButton(
+
+                text = "📚 Open Audio Library",
+
+                onClick = onOpenLibrary
+
+            )
+
+        }
+
+    }
+
+}
             item {
                 Card(
                     modifier = Modifier
@@ -285,17 +757,29 @@ item {
                         modifier = Modifier.padding(16.dp)
                     ) {
 
-                        Text(
-                            text = "Developer Debug Console"
-                        )
+                   Text(
+
+    text = "Developer Console",
+
+    style = MaterialTheme.typography.titleLarge,
+
+    color = MaterialTheme.colorScheme.primary
+
+)
 
                         Spacer(
                             modifier = Modifier.height(8.dp)
                         )
 
-                        Text(
-                            text = debugLog
-                        )
+                     Text(
+
+    text = debugLog,
+
+    style = MaterialTheme.typography.bodySmall,
+
+    color = MaterialTheme.colorScheme.onSurfaceVariant
+
+)
 
                         Spacer(
                             modifier = Modifier.height(12.dp)
@@ -336,11 +820,64 @@ item {
                 }
             }
 
-            item {
-                ChunkPreviewCard(
-                    chunks = state.chunks
-                )
-            }
+
+
+
+          item {
+
+    ElevatedCard(
+
+        modifier = Modifier.fillMaxWidth(),
+
+        shape = MaterialTheme.shapes.extraLarge
+
+    ) {
+
+        Column(
+
+            modifier = Modifier.padding(22.dp)
+
+        ) {
+
+            Text(
+
+                text = "🧩 Smart Chunk Preview",
+
+                style = MaterialTheme.typography.titleLarge,
+
+                color = MaterialTheme.colorScheme.primary
+
+            )
+
+            Spacer(
+                modifier = Modifier.height(6.dp)
+            )
+
+            Text(
+
+                text = "Preview how your script will be divided before synthesis.",
+
+                style = MaterialTheme.typography.bodyMedium,
+
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+
+            )
+
+            Spacer(
+                modifier = Modifier.height(18.dp)
+            )
+
+            ChunkPreviewCard(
+
+                chunks = state.chunks
+
+            )
+
+        }
+
+    }
+
+}
 
             item {
                 Spacer(

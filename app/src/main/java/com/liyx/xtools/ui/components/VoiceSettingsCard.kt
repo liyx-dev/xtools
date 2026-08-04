@@ -1,14 +1,18 @@
 package com.liyx.xtools.ui.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Slider
-import androidx.compose.material3.Text
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.GraphicEq
+import androidx.compose.material.icons.filled.Restore
+import androidx.compose.material.icons.filled.Speed
+import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.liyx.xtools.design.components.XSlider
 
 @Composable
 fun VoiceSettingsCard(
@@ -19,21 +23,21 @@ fun VoiceSettingsCard(
 
     selectedVoice: String,
 
+    modifier: Modifier = Modifier,
+
     onSpeedChanged: (Float) -> Unit,
 
-    onPitchChanged: (Float) -> Unit
+    onPitchChanged: (Float) -> Unit,
+
+    onReset: (() -> Unit)? = null
 
 ) {
 
     Card(
 
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
 
-        shape = MaterialTheme.shapes.large,
-
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 4.dp
-        )
+        shape = MaterialTheme.shapes.extraLarge
 
     ) {
 
@@ -43,78 +47,253 @@ fun VoiceSettingsCard(
 
         ) {
 
-            Text(
+            Row(
 
-                text = "Voice Settings",
+                modifier = Modifier.fillMaxWidth(),
 
-                style = MaterialTheme.typography.titleLarge
+                horizontalArrangement = Arrangement.SpaceBetween,
+
+                verticalAlignment = Alignment.CenterVertically
+
+            ) {
+
+                Column {
+
+                    Text(
+
+                        "Voice Studio",
+
+                        style = MaterialTheme.typography.titleLarge
+
+                    )
+
+                    Text(
+
+                        selectedVoice,
+
+                        style = MaterialTheme.typography.bodyMedium,
+
+                        color = MaterialTheme.colorScheme.primary
+
+                    )
+
+                }
+
+                FilledIconButton(
+
+                    onClick = {
+
+                        onReset?.invoke()
+
+                    },
+
+                    shape = CircleShape
+
+                ) {
+
+                    Icon(
+
+                        Icons.Default.Restore,
+
+                        contentDescription = null
+
+                    )
+
+                }
+
+            }
+
+            Spacer(
+
+                Modifier.height(24.dp)
 
             )
 
-            Spacer(modifier = Modifier.height(18.dp))
+            Row(
 
-            Text(
+                verticalAlignment = Alignment.CenterVertically
 
-                text = "Selected Voice",
+            ) {
 
-                style = MaterialTheme.typography.labelMedium
+                Icon(
+
+                    Icons.Default.Speed,
+
+                    contentDescription = null,
+
+                    tint = MaterialTheme.colorScheme.primary
+
+                )
+
+                Spacer(
+
+                    Modifier.width(10.dp)
+
+                )
+
+                Text(
+
+                    "Speaking Speed",
+
+                    style = MaterialTheme.typography.titleMedium
+
+                )
+
+            }
+
+            Spacer(
+
+                Modifier.height(10.dp)
 
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Text(
-
-                text = selectedVoice,
-
-                style = MaterialTheme.typography.bodyLarge,
-
-                color = MaterialTheme.colorScheme.primary
-
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Text(
-
-                text = "Speech Speed",
-
-                style = MaterialTheme.typography.labelMedium
-
-            )
-
-            Slider(
+            XSlider(
 
                 value = speed,
 
                 onValueChange = onSpeedChanged,
 
-                valueRange = 0.5f..2f
+                valueRange = 0.5f..2f,
+
+                steps = 14,
+
+                valueText = "${String.format("%.1f", speed)}×"
 
             )
 
-            Spacer(modifier = Modifier.height(18.dp))
+            Spacer(
 
-            Text(
-
-                text = "Pitch",
-
-                style = MaterialTheme.typography.labelMedium
+                Modifier.height(24.dp)
 
             )
 
-            Slider(
+            Row(
+
+                verticalAlignment = Alignment.CenterVertically
+
+            ) {
+
+                Icon(
+
+                    Icons.Default.GraphicEq,
+
+                    contentDescription = null,
+
+                    tint = MaterialTheme.colorScheme.secondary
+
+                )
+
+                Spacer(
+
+                    Modifier.width(10.dp)
+
+                )
+
+                Text(
+
+                    "Voice Pitch",
+
+                    style = MaterialTheme.typography.titleMedium
+
+                )
+
+            }
+
+            Spacer(
+
+                Modifier.height(10.dp)
+
+            )
+
+            XSlider(
 
                 value = pitch,
 
                 onValueChange = onPitchChanged,
 
-                valueRange = 0.5f..2f
+                valueRange = 0.5f..2f,
+
+                steps = 14,
+
+                valueText = "${String.format("%.1f", pitch)}×"
 
             )
+
+            Spacer(
+
+                Modifier.height(28.dp)
+
+            )
+
+            HorizontalDivider()
+
+            Spacer(
+
+                Modifier.height(18.dp)
+
+            )
+
+            Row(
+
+                modifier = Modifier.fillMaxWidth(),
+
+                horizontalArrangement = Arrangement.SpaceEvenly
+
+            ) {
+
+                AssistChip(
+
+                    onClick = {},
+
+                    label = {
+
+                        Text("Studio")
+
+                    },
+
+                    leadingIcon = {
+
+                        Icon(
+
+                            Icons.Default.Tune,
+
+                            null
+
+                        )
+
+                    }
+
+                )
+
+                AssistChip(
+
+                    onClick = {},
+
+                    label = {
+
+                        Text("Natural")
+
+                    }
+
+                )
+
+                AssistChip(
+
+                    onClick = {},
+
+                    label = {
+
+                        Text("HD")
+
+                    }
+
+                )
+
+            }
 
         }
 
     }
+
 
 }

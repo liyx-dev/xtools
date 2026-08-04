@@ -1,66 +1,71 @@
 package com.liyx.xtools.design.components
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
+import com.liyx.xtools.design.XShape
+import com.liyx.xtools.design.XtoolsColors
 
 @Composable
 fun XCard(
-    title: String,
-    subtitle: String = "",
+
     modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    contentPadding: PaddingValues = PaddingValues(20.dp),
-    onClick: (() -> Unit)? = null,
-    content: (@Composable () -> Unit)? = null
+
+    shape: Shape = XShape.Card,
+
+    padding: PaddingValues = PaddingValues(18.dp),
+
+    content: @Composable () -> Unit
+
 ) {
 
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .then(
-                if (onClick != null) Modifier.clickable(enabled = enabled) {
-                    onClick()
-                } else Modifier
-            ),
-        shape = MaterialTheme.shapes.large,
+
+        modifier = modifier.fillMaxWidth(),
+
+        shape = shape,
+
+        border = BorderStroke(
+
+            1.dp,
+
+            XtoolsColors.CardBorder
+
+        ),
+
+        colors = CardDefaults.cardColors(
+
+            containerColor = XtoolsColors.Card
+
+        ),
+
         elevation = CardDefaults.cardElevation(
+
             defaultElevation = 8.dp
+
         )
+
     ) {
 
-        Column(
-            modifier = Modifier.padding(contentPadding)
+        Box(
+
+            modifier = Modifier.padding(padding)
+
         ) {
 
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleLarge
-            )
-
-            if (subtitle.isNotBlank()) {
-
-                Text(
-                    text = subtitle,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-
-            }
-
-            content?.invoke()
+            content()
 
         }
 
     }
 
-}
+}  

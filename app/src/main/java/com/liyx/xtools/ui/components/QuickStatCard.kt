@@ -12,14 +12,13 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun QuickStatCard(
-
+    modifier: Modifier = Modifier,
     value: String,
-
     label: String,
+    icon: String = ""
+)
 
-    modifier: Modifier = Modifier
-
-) {
+ {
 
     Card(
 
@@ -37,10 +36,32 @@ fun QuickStatCard(
 
         Column(
 
-            modifier = Modifier.padding(20.dp)
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(20.dp)
 
-        ) {
+)
 
+ {
+
+
+if (icon.isNotEmpty()) {
+
+Text(
+
+    text = icon,
+
+    style = MaterialTheme.typography.headlineSmall,
+
+    color = MaterialTheme.colorScheme.primary
+
+)
+
+    Spacer(
+        modifier = Modifier.height(8.dp)
+    )
+
+}
             Text(
 
                 text = value,
@@ -55,13 +76,15 @@ fun QuickStatCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
+       Text(
 
-                text = label,
+    text = label,
 
-                style = MaterialTheme.typography.bodyMedium
+    style = MaterialTheme.typography.bodyMedium,
 
-            )
+    color = MaterialTheme.colorScheme.onSurfaceVariant
+
+)
 
         }
 

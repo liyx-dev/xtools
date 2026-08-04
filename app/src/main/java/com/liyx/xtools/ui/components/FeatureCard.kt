@@ -1,19 +1,28 @@
 package com.liyx.xtools.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.liyx.xtools.design.XtoolsColors
 
 @Composable
 fun FeatureCard(
@@ -34,7 +43,7 @@ fun FeatureCard(
             .fillMaxWidth()
             .clickable { onClick() },
 
-        shape = MaterialTheme.shapes.large,
+        shape = RoundedCornerShape(26.dp),
 
         elevation = CardDefaults.cardElevation(
             defaultElevation = 8.dp
@@ -46,25 +55,54 @@ fun FeatureCard(
 
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp),
+                .padding(22.dp),
 
             verticalAlignment = Alignment.CenterVertically
 
         ) {
 
-            Icon(
+            Box(
 
-                imageVector = icon,
+                modifier = Modifier
+                    .size(78.dp)
+                    .clip(CircleShape)
+                    .background(
 
-                contentDescription = null,
+                        Brush.linearGradient(
 
-                tint = MaterialTheme.colorScheme.primary,
+                            listOf(
 
-                modifier = Modifier.size(34.dp)
+                                XtoolsColors.Primary,
 
+                                XtoolsColors.Secondary
+
+                            )
+
+                        )
+
+                    ),
+
+                contentAlignment = Alignment.Center
+
+            ) {
+
+                Icon(
+
+                    imageVector = icon,
+
+                    contentDescription = null,
+
+                    tint = Color.White,
+
+                    modifier = Modifier.size(38.dp)
+
+                )
+
+            }
+
+            Spacer(
+                modifier = Modifier.width(18.dp)
             )
-
-            Spacer(modifier = Modifier.width(18.dp))
 
             Column(
 
@@ -72,15 +110,50 @@ fun FeatureCard(
 
             ) {
 
+                Surface(
+
+                    shape = RoundedCornerShape(50.dp),
+
+                    color = XtoolsColors.Primary.copy(alpha = .12f)
+
+                ) {
+
+                    Text(
+
+                        text = "PRODUCTION READY",
+
+                        modifier = Modifier.padding(
+                            horizontal = 12.dp,
+                            vertical = 5.dp
+                        ),
+
+                        style = MaterialTheme.typography.labelMedium,
+
+                        fontWeight = FontWeight.Bold,
+
+                        color = XtoolsColors.Primary
+
+                    )
+
+                }
+
+                Spacer(
+                    modifier = Modifier.height(10.dp)
+                )
+
                 Text(
 
                     text = title,
 
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.headlineSmall,
+
+                    fontWeight = FontWeight.Bold
 
                 )
 
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(
+                    modifier = Modifier.height(6.dp)
+                )
 
                 Text(
 
@@ -92,6 +165,22 @@ fun FeatureCard(
 
                 )
 
+                Spacer(
+                    modifier = Modifier.height(12.dp)
+                )
+
+                Text(
+
+                    text = "Open Studio",
+
+                    style = MaterialTheme.typography.labelLarge,
+
+                    color = XtoolsColors.Primary,
+
+                    fontWeight = FontWeight.Bold
+
+                )
+
             }
 
             Icon(
@@ -100,7 +189,9 @@ fun FeatureCard(
 
                 contentDescription = null,
 
-                tint = MaterialTheme.colorScheme.primary
+                tint = XtoolsColors.Primary,
+
+                modifier = Modifier.size(28.dp)
 
             )
 

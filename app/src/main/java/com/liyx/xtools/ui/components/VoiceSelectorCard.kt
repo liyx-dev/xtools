@@ -1,121 +1,237 @@
 package com.liyx.xtools.ui.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.GraphicEq
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.liyx.xtools.design.components.VoiceCard
+import com.liyx.xtools.design.components.XTextField
 
-private val voices = listOf(
-    "Emma",
-    "David",
-    "Sophia",
-    "Michael",
-    "Narrator",
-    "Studio"
+data class VoiceItem(
+
+    val id: String,
+
+    val name: String,
+
+    val locale: String,
+
+    val provider: String,
+
+    val quality: String,
+
+    val offline: Boolean
+
 )
 
 @Composable
 fun VoiceSelectorCard(
 
+    voices: List<VoiceItem>,
+
     selectedVoice: String,
 
-    onVoiceSelected: (String) -> Unit
+    favorites: Set<String> = emptySet(),
+
+    modifier: Modifier = Modifier,
+
+    onVoiceSelected: (String) -> Unit,
+
+    onPreview: (String) -> Unit,
+
+    onFavorite: (String) -> Unit
 
 ) {
 
-    Column {
+    var search by remember {
 
-        Text(
+        mutableStateOf("")
 
-            text = "Voice",
+    }
 
-            style = MaterialTheme.typography.titleMedium
+    val filteredVoices = remember(
 
-        )
+        search,
 
-        Spacer(modifier = Modifier.height(12.dp))
+        voices
 
-        LazyRow(
+    ) {
 
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        if (search.isBlank())
+
+            voices
+
+        else
+
+            voices.filter {
+
+                it.name.contains(
+
+                    search,
+
+                    ignoreCase = true
+
+                ) ||
+
+                it.locale.contains(
+
+                    search,
+
+                    ignoreCase = true
+
+                ) ||
+
+                it.provider.contains(
+
+                    search,
+
+                    ignoreCase = true
+
+                )
+
+            }
+
+    }
+
+    Card(
+
+        modifier = modifier.fillMaxWidth(),
+
+        shape = MaterialTheme.shapes.extraLarge
+
+    ) {
+
+        Column(
+
+            modifier = Modifier.padding(20.dp)
 
         ) {
 
-            items(voices) { voice ->
+            Text(
 
-                val selected = voice == selectedVoice
+                text = "Voice Library",
 
-                Card(
+                style = MaterialTheme.typography.titleLarge
 
-                    modifier = Modifier.clickable {
+            )
 
-                        onVoiceSelected(voice)
+            Spacer(
 
-                    },
+                Modifier.height(4.dp)
 
-                    colors = CardDefaults.cardColors(
+            )
 
-                        containerColor =
-                        if (selected)
-                            MaterialTheme.colorScheme.primary
-                        else
-                            MaterialTheme.colorScheme.surfaceVariant
+            Text(
+
+                text = "${filteredVoices.size} voices available",
+
+                style = MaterialTheme.typography.bodySmall,
+
+                color = MaterialTheme.colorScheme.outline
+
+            )
+
+            Spacer(
+
+                Modifier.height(16.dp)
+
+            )
+
+            XTextField(
+
+                value = search,
+
+                onValueChange = {
+
+                    search = it
+
+                },
+
+                label = "Search voices",
+
+                leadingIcon = Icons.Default.Search
+
+            )
+
+            Spacer(
+
+                Modifier.height(20.dp)
+
+            )
+
+            LazyColumn(
+
+                verticalArrangement = Arrangement.spacedBy(14.dp),
+
+                modifier = Modifier.heightIn(max = 420.dp)
+
+            ) {
+
+                items(
+
+                    filteredVoices,
+
+                    key = { it.id }
+
+                ) { voice ->
+
+                    VoiceCard(
+
+                        name = voice.name,
+
+                        locale = voice.locale,
+
+                        provider = voice.provider,
+
+                        quality = voice.quality,
+
+                        offline = voice.offline,
+
+                        selected =
+
+                            voice.id == selectedVoice,
+
+                        favorite =
+
+                            favorites.contains(voice.id),
+
+                        onClick = {
+
+                            onVoiceSelected(
+
+                                voice.id
+
+                            )
+
+                        },
+
+                        onPreviewClick = {
+
+                            onPreview(
+
+                                voice.id
+
+                            )
+
+                        },
+
+                        onFavoriteClick = {
+
+                            onFavorite(
+
+                                voice.id
+
+                            )
+
+                        }
 
                     )
-
-                ) {
-
-                    Column(
-
-                        modifier = Modifier
-                            .padding(18.dp),
-
-                        horizontalAlignment = Alignment.CenterHorizontally
-
-                    ) {
-
-                        Icon(
-
-                            imageVector = Icons.Default.GraphicEq,
-
-                            contentDescription = null,
-
-                            tint =
-                            if (selected)
-                                MaterialTheme.colorScheme.onPrimary
-                            else
-                                MaterialTheme.colorScheme.primary
-
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Text(
-
-                            text = voice,
-
-                            color =
-                            if (selected)
-                                MaterialTheme.colorScheme.onPrimary
-                            else
-                                MaterialTheme.colorScheme.onSurface,
-
-                            style = MaterialTheme.typography.bodyMedium
-
-                        )
-
-                    }
 
                 }
 
@@ -126,3 +242,4 @@ fun VoiceSelectorCard(
     }
 
 }
+       
