@@ -403,15 +403,19 @@ item {
 
             VoiceSelectorCard(
 
-                selectedVoice = state.selectedVoice,
+    voices = state.availableVoices,
 
-                onVoiceSelected = {
+    selectedVoice = state.selectedVoice,
 
-                    viewModel.updateVoice(it)
+    favorites = state.favoriteVoices,
 
-                }
+    onVoiceSelected = viewModel::updateVoice,
 
-            )
+    onPreview = viewModel::previewVoice,
+
+    onFavorite = viewModel::toggleFavorite
+
+)
 
         }
 

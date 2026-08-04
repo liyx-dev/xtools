@@ -12,10 +12,15 @@ import com.liyx.xtools.design.XtoolsColors
 
 @Composable
 fun SecondaryButton(
+
     text: String,
+
     onClick: () -> Unit,
+
     modifier: Modifier = Modifier,
+
     enabled: Boolean = true
+
 ) {
 
     OutlinedButton(
@@ -31,19 +36,27 @@ fun SecondaryButton(
         shape = RoundedCornerShape(18.dp),
 
         border = BorderStroke(
+
             1.dp,
-            XtoolsColors.XBlue
+
+            XtoolsColors.SecondaryButton
+
         ),
 
         colors = ButtonDefaults.outlinedButtonColors(
-            contentColor = XtoolsColors.XBlue
+
+            contentColor = XtoolsColors.SecondaryButton
+
         )
 
     ) {
 
         Text(
+
             text = text,
+
             style = MaterialTheme.typography.titleMedium
+
         )
 
     }

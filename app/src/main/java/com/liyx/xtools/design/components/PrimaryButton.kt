@@ -20,7 +20,9 @@ fun PrimaryButton(
 ) {
 
     Button(
+
         onClick = onClick,
+
         enabled = enabled && !loading,
 
         modifier = modifier
@@ -34,32 +36,47 @@ fun PrimaryButton(
         shape = RoundedCornerShape(18.dp),
 
         colors = ButtonDefaults.buttonColors(
-            containerColor = XtoolsColors.XGreen,
-            contentColor = XtoolsColors.PureWhite,
+
+            containerColor = XtoolsColors.PrimaryButton,
+
+            contentColor = XtoolsColors.TextPrimary,
+
             disabledContainerColor = XtoolsColors.Surface,
+
             disabledContentColor = XtoolsColors.TextMuted
+
         )
 
     ) {
 
         Row(
+
             horizontalArrangement = Arrangement.spacedBy(12.dp),
+
             verticalAlignment = Alignment.CenterVertically
+
         ) {
 
             if (loading) {
 
                 CircularProgressIndicator(
+
                     modifier = Modifier.size(18.dp),
+
                     strokeWidth = 2.dp,
-                    color = XtoolsColors.PureWhite
+
+                    color = XtoolsColors.TextPrimary
+
                 )
 
             }
 
             Text(
+
                 text = text,
+
                 style = MaterialTheme.typography.titleMedium
+
             )
 
         }

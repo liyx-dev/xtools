@@ -1,6 +1,5 @@
 package com.liyx.xtools.design
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -8,51 +7,39 @@ import androidx.compose.runtime.Composable
 
 private val DarkColors = darkColorScheme(
 
-    primary = XGreen,
+    primary = XtoolsColors.BrandGreen,
+    secondary = XtoolsColors.FacebookBlue,
+    tertiary = XtoolsColors.PremiumGold,
 
-    secondary = XBlue,
+    background = XtoolsColors.Background,
+    surface = XtoolsColors.Surface,
+    surfaceVariant = XtoolsColors.Surface2,
 
-    tertiary = XYellow,
+    onPrimary = XtoolsColors.TextPrimary,
+    onSecondary = XtoolsColors.TextPrimary,
+    onBackground = XtoolsColors.TextPrimary,
+    onSurface = XtoolsColors.TextPrimary,
 
-    background = XBackground,
-
-    surface = XSurface,
-
-    surfaceVariant = XSurface2,
-
-    onPrimary = XWhite,
-
-    onSecondary = XWhite,
-
-    onBackground = XWhite,
-
-    onSurface = XWhite,
-
-    error = XRed
+    error = XtoolsColors.Error
 
 )
 
 private val LightColors = lightColorScheme(
 
-    primary = XGreen,
+    primary = XtoolsColors.BrandGreen,
+    secondary = XtoolsColors.FacebookBlue,
+    tertiary = XtoolsColors.PremiumGold,
 
-    secondary = XBlue,
+    background = androidx.compose.ui.graphics.Color.White,
+    surface = androidx.compose.ui.graphics.Color.White,
 
-    tertiary = XYellow,
+    onPrimary = androidx.compose.ui.graphics.Color.White,
+    onSecondary = androidx.compose.ui.graphics.Color.White,
 
-    background = XWhite,
+    onBackground = androidx.compose.ui.graphics.Color.Black,
+    onSurface = androidx.compose.ui.graphics.Color.Black,
 
-    surface = XWhite,
-
-    onPrimary = XWhite,
-
-    onSecondary = XWhite,
-
-    onBackground = XBlack,
-
-    onSurface = XBlack,
-
-    error = XRed
+    error = XtoolsColors.Error
 
 )
 
@@ -78,3 +65,4 @@ fun XtoolsTheme(
     )
 
 }
+

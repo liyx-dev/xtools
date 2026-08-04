@@ -5,10 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.GraphicEq
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,67 +15,104 @@ import androidx.compose.ui.unit.dp
 import com.liyx.xtools.design.XtoolsColors
 
 @Composable
-fun VoiceHeader() {
+fun VoiceHeader(
+
+    title: String,
+
+    subtitle: String,
+
+    badge: String
+
+) {
 
     Surface(
+
         modifier = Modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.large,
+
+        shape = MaterialTheme.shapes.extraLarge,
+
         tonalElevation = 6.dp
+
     ) {
 
         Box(
+
             modifier = Modifier
                 .background(
                     Brush.horizontalGradient(
                         listOf(
-                            XtoolsColors.Primary,
-                            XtoolsColors.Secondary
+                            XtoolsColors.BrandGreen,
+                            XtoolsColors.FacebookBlue,
+                            XtoolsColors.PurpleAccent
                         )
                     )
                 )
                 .padding(24.dp)
+
         ) {
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Column {
 
-                Box(
-                    modifier = Modifier
-                        .size(68.dp)
-                        .clip(CircleShape)
-                        .background(XtoolsColors.Surface),
-                    contentAlignment = Alignment.Center
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
 
-                    Icon(
-                        imageVector = Icons.Default.GraphicEq,
-                        contentDescription = null,
-                        tint = XtoolsColors.Primary,
-                        modifier = Modifier.size(34.dp)
-                    )
+                    Box(
+                        modifier = Modifier
+                            .size(68.dp)
+                            .clip(CircleShape)
+                            .background(XtoolsColors.Surface),
+                        contentAlignment = Alignment.Center
+                    ) {
+
+                        Icon(
+                            imageVector = Icons.Default.GraphicEq,
+                            contentDescription = null,
+                            tint = XtoolsColors.BrandGreen,
+                            modifier = Modifier.size(34.dp)
+                        )
+
+                    }
+
+                    Spacer(Modifier.width(18.dp))
+
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
+
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = XtoolsColors.TextPrimary
+                        )
+
+                        Spacer(Modifier.height(4.dp))
+
+                        Text(
+                            text = subtitle,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = XtoolsColors.TextSecondary
+                        )
+
+                    }
 
                 }
 
-                Spacer(modifier = Modifier.width(20.dp))
+                Spacer(Modifier.height(18.dp))
 
-                Column {
+                AssistChip(
 
-                    Text(
-                        text = "Voice Studio",
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = XtoolsColors.Surface
-                    )
+                    onClick = {},
 
-                    Spacer(modifier = Modifier.height(4.dp))
+                    enabled = false,
 
-                    Text(
-                        text = "Turn text into natural speech.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = XtoolsColors.Surface.copy(alpha = .9f)
-                    )
+                    label = {
 
-                }
+                        Text(badge)
+
+                    }
+
+                )
 
             }
 

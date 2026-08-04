@@ -13,22 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.liyx.xtools.design.components.VoiceCard
 import com.liyx.xtools.design.components.XTextField
-
-data class VoiceItem(
-
-    val id: String,
-
-    val name: String,
-
-    val locale: String,
-
-    val provider: String,
-
-    val quality: String,
-
-    val offline: Boolean
-
-)
+import com.liyx.xtools.core.models.VoiceItem
+import com.liyx.xtools.core.models.VoiceItem
 
 @Composable
 fun VoiceSelectorCard(

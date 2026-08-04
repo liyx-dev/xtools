@@ -1,6 +1,7 @@
 package com.liyx.xtools.viewmodel
 
 import com.liyx.xtools.core.models.Chunk
+import com.liyx.xtools.core.models.VoiceItem
 
 data class VoiceUiState(
 
@@ -18,7 +19,9 @@ data class VoiceUiState(
 
     val selectedVoice: String = "Default",
 
-    val availableVoices: List<String> = emptyList(),
+   val availableVoices: List<VoiceItem> = emptyList(),
+
+val favoriteVoices: Set<String> = emptySet(),
 
     // ===== Voice Controls =====
 

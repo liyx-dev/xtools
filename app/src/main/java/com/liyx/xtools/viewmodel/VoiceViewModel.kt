@@ -574,6 +574,29 @@ fun hasGeneratedAudio(): Boolean {
 
 }
 
+fun previewVoice(id: String) {
+
+    debug("Preview voice: $id")
+
+}
+
+fun toggleFavorite(id: String) {
+
+    val current = _uiState.value.favoriteVoices
+
+    val updated =
+        if (current.contains(id))
+            current - id
+        else
+            current + id
+
+    _uiState.value =
+        _uiState.value.copy(
+            favoriteVoices = updated
+        )
+
+}
+
  
 
 }
