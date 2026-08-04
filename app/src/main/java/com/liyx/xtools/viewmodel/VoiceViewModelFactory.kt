@@ -32,6 +32,7 @@ class VoiceViewModelFactory(
 
                 voiceManager = appContainer.voiceManager,
 
+providerManager = appContainer.providerManager,
                 voiceEngine =
 
                     appContainer.providerManager

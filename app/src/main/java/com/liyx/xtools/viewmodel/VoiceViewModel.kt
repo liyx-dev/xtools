@@ -26,10 +26,13 @@ import com.liyx.xtools.core.media.AudioExporter
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.withContext
 import com.liyx.xtools.core.voice.VoiceConfig
+import com.liyx.xtools.core.providers.VoiceProviderManager
+import com.liyx.xtools.core.models.VoiceItem
 
 class VoiceViewModel(
 
     private val voiceManager: com.liyx.xtools.core.voice.VoiceManager? = null,
+private val providerManager: VoiceProviderManager,
 
     private val voiceEngine: VoiceEngine? = null,
 
@@ -97,6 +100,38 @@ private val voicePipeline: VoicePipeline? =
     val uiState: StateFlow<VoiceUiState> =
         _uiState.asStateFlow()
 
+init {
+
+    loadVoices()
+
+}
+
+private fun loadVoices() {
+
+    val voices = providerManager.getAllVoices()
+
+    _uiState.value = _uiState.value.copy(
+
+        availableVoices = voices.map { it.id },
+
+        selectedVoice = voices.firstOrNull()?.id ?: "",
+
+        providerReady = voices.isNotEmpty(),
+
+        providerStatus =
+
+            if (voices.isEmpty())
+
+                "No voices found"
+
+            else
+
+                "${voices.size} voices loaded"
+
+    )
+
+}
+
 private fun debug(message: String) {
 
     _uiState.value = _uiState.value.copy(
@@ -150,13 +185,9 @@ private fun debug(message: String) {
     )
 
 }
-        
-    fun updateVoice(
+        fun updateVoice(voice: String) {
 
-    voice: String
-
-) {
-if (voiceConfig.voiceId == voice) return
+    if (voiceConfig.voiceId == voice) return
 
     voiceConfig = voiceConfig.copy(
 
@@ -175,6 +206,8 @@ if (voiceConfig.voiceId == voice) return
         selectedVoice = voice
 
     )
+
+    debug("Voice changed to $voice")
 
 }
 
@@ -335,6 +368,44 @@ private fun estimateChunks(
 
 }
 
+
+private fun loadVoices() {
+
+    val voices =
+
+        providerManager
+
+            .getAllVoices()
+
+            .map {
+
+                VoiceItem(
+
+                    id = it.id,
+
+                    name = it.name,
+
+                    locale = it.locale,
+
+                    provider = it.provider,
+
+                    quality = it.quality,
+
+                    offline = it.isOffline
+
+                )
+
+            }
+
+    _uiState.value =
+
+        _uiState.value.copy(
+
+            availableVoices = voices
+
+        )
+
+}
 
 fun generateVoice() {
 
