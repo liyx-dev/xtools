@@ -12,6 +12,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.liyx.xtools.ui.library.AudioLibraryScreen
 import com.liyx.xtools.viewmodel.AudioLibraryViewModel
 import com.liyx.xtools.viewmodel.AudioLibraryViewModelFactory
+import com.liyx.xtools.ui.library.VoiceLibraryScreen
 
 @Composable
 fun XtoolsNavigation(
@@ -68,7 +69,17 @@ fun XtoolsNavigation(
 
         )
 
+    },
+onOpenVoiceLibrary = {
+
+        navController.navigate(
+
+            Screen.VoiceLibrary.route
+
+        )
+
     }
+
 
 )
 
@@ -89,6 +100,23 @@ composable(Screen.AudioLibrary.route) {
     )
 
 }
+
+composable(Screen.VoiceLibrary.route) {
+
+    VoiceLibraryScreen(
+
+        appContainer = appContainer,
+
+        onBack = {
+
+            navController.popBackStack()
+
+        }
+
+    )
+
+}
+
 
 
     }

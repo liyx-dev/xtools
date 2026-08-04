@@ -7,5 +7,5 @@ sealed class Screen(val route: String) {
     data object VoiceStudio : Screen("voice_studio")
 
     data object AudioLibrary : Screen("audio_library")
-
+data object VoiceLibrary : Screen("voice_library")
 }

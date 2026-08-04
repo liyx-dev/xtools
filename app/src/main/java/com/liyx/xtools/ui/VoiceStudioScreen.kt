@@ -56,7 +56,8 @@ fun VoiceStudioScreen(
 
     onBack: () -> Unit,
 
-    onOpenLibrary: () -> Unit
+    onOpenLibrary: () -> Unit,
+onOpenVoiceLibrary: () -> Unit
 
 )
 
@@ -369,13 +370,13 @@ item {
 
         Column(
 
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(22.dp)
 
         ) {
 
             Text(
 
-                text = "🎙 AI Voice Studio",
+                text = "🎙 Selected Voice",
 
                 style = MaterialTheme.typography.titleLarge,
 
@@ -384,12 +385,28 @@ item {
             )
 
             Spacer(
-                modifier = Modifier.height(6.dp)
+
+                modifier = Modifier.height(8.dp)
+
             )
 
             Text(
 
-                text = "Choose your preferred provider and studio-quality narration voice.",
+                text = state.selectedVoice,
+
+                style = MaterialTheme.typography.titleMedium
+
+            )
+
+            Spacer(
+
+                modifier = Modifier.height(4.dp)
+
+            )
+
+            Text(
+
+                text = "Tap below to browse the Voice Library.",
 
                 style = MaterialTheme.typography.bodyMedium,
 
@@ -398,30 +415,29 @@ item {
             )
 
             Spacer(
+
                 modifier = Modifier.height(20.dp)
+
             )
 
-            VoiceSelectorCard(
+            PrimaryButton(
 
-    voices = state.availableVoices,
+                text = "🎙 Browse Voice Library",
 
-    selectedVoice = state.selectedVoice,
+                onClick = {
 
-    favorites = state.favoriteVoices,
+                    onOpenVoiceLibrary()
 
-    onVoiceSelected = viewModel::updateVoice,
+                }
 
-    onPreview = viewModel::previewVoice,
-
-    onFavorite = viewModel::toggleFavorite
-
-)
+            )
 
         }
 
     }
 
 }
+
        
 item {
 
