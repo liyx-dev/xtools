@@ -1,7 +1,6 @@
 package com.liyx.xtools.design.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Clear
@@ -13,8 +12,8 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.liyx.xtools.design.XtoolsColors
 
 @Composable
 fun XTextField(
@@ -45,14 +44,16 @@ fun XTextField(
 
         onValueChange = onValueChange,
 
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
 
         label = {
 
             if (label.isNotEmpty()) {
 
-                Text(label)
+                Text(
+                    text = label,
+                    color = XtoolsColors.TextSecondary
+                )
 
             }
 
@@ -63,8 +64,8 @@ fun XTextField(
             if (placeholder.isNotEmpty()) {
 
                 Text(
-                    placeholder,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = placeholder,
+                    color = XtoolsColors.TextMuted
                 )
 
             }
@@ -97,7 +98,9 @@ fun XTextField(
 
                         imageVector = Icons.Outlined.Clear,
 
-                        contentDescription = "Clear"
+                        contentDescription = "Clear",
+
+                        tint = XtoolsColors.IconSecondary
 
                     )
 
@@ -107,37 +110,39 @@ fun XTextField(
 
         },
 
+        textStyle = MaterialTheme.typography.bodyLarge.copy(
+            color = XtoolsColors.TextPrimary
+        ),
+
         colors = OutlinedTextFieldDefaults.colors(
 
-            focusedContainerColor =
-                MaterialTheme.colorScheme.surface,
+            focusedContainerColor = XtoolsColors.Surface2,
 
-            unfocusedContainerColor =
-                MaterialTheme.colorScheme.surface,
+            unfocusedContainerColor = XtoolsColors.Surface2,
 
-            disabledContainerColor =
-                MaterialTheme.colorScheme.surface,
+            disabledContainerColor = XtoolsColors.Surface,
 
-            focusedBorderColor =
-                MaterialTheme.colorScheme.primary,
+            focusedBorderColor = XtoolsColors.BrandGreen,
 
-            unfocusedBorderColor =
-                MaterialTheme.colorScheme.outline,
+            unfocusedBorderColor = XtoolsColors.CardBorder,
 
-            cursorColor =
-                MaterialTheme.colorScheme.primary,
+            disabledBorderColor = XtoolsColors.Divider,
 
-            focusedLabelColor =
-                MaterialTheme.colorScheme.primary,
+            cursorColor = XtoolsColors.BrandGreen,
 
-            unfocusedLabelColor =
-                MaterialTheme.colorScheme.onSurfaceVariant,
+            focusedLabelColor = XtoolsColors.BrandGreen,
 
-            focusedTextColor =
-                MaterialTheme.colorScheme.onSurface,
+            unfocusedLabelColor = XtoolsColors.TextSecondary,
 
-            unfocusedTextColor =
-                MaterialTheme.colorScheme.onSurface
+            focusedTextColor = XtoolsColors.TextPrimary,
+
+            unfocusedTextColor = XtoolsColors.TextPrimary,
+
+            disabledTextColor = XtoolsColors.TextDisabled,
+
+            focusedPlaceholderColor = XtoolsColors.TextMuted,
+
+            unfocusedPlaceholderColor = XtoolsColors.TextMuted
 
         )
 

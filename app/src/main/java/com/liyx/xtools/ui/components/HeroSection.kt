@@ -39,9 +39,9 @@ fun HeroSection() {
                 .background(
                     Brush.verticalGradient(
                         listOf(
-                            XtoolsColors.Primary,
-                            XtoolsColors.Secondary,
-                            XtoolsColors.PrimaryDark
+                            XtoolsColors.BrandGreen,
+                            XtoolsColors.FacebookBlue,
+                            XtoolsColors.BrandGreenDark
                         )
                     )
                 )

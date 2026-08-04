@@ -57,7 +57,7 @@ fun ComingSoonCard(
 
                 shape = CircleShape,
 
-                color = XtoolsColors.Primary.copy(alpha = .12f)
+                color = XtoolsColors.BrandGreen.copy(alpha = .12f)
 
             ) {
 
@@ -73,7 +73,7 @@ fun ComingSoonCard(
 
                         contentDescription = null,
 
-                        tint = XtoolsColors.Primary,
+                        tint = XtoolsColors.BrandGreen,
 
                         modifier = Modifier.size(30.dp)
 
@@ -97,33 +97,37 @@ fun ComingSoonCard(
 
                 Surface(
 
-                    shape = RoundedCornerShape(50.dp),
+    shape = RoundedCornerShape(50.dp),
 
-                    color = Color(0xFFFFF3CD)
+    color = XtoolsColors.PremiumGold.copy(alpha = .18f)
 
-                ) {
+) {
 
-                    Text(
+    Text(
 
-                        text = "COMING SOON",
+        text = "COMING SOON",
 
-                        modifier = Modifier.padding(
+        modifier = Modifier.padding(
 
-                            horizontal = 12.dp,
+            horizontal = 12.dp,
 
-                            vertical = 5.dp
+            vertical = 5.dp
 
-                        ),
+        ),
 
-                        style = MaterialTheme.typography.labelMedium,
+        style = MaterialTheme.typography.labelMedium,
 
-                        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.Bold,
 
-                        color = Color(0xFF8A6D3B)
+        color = XtoolsColors.PremiumGold
 
-                    )
+    )
 
-                }
+}
+
+                        
+
+
 
                 Spacer(
 

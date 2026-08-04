@@ -72,9 +72,9 @@ fun FeatureCard(
 
                             listOf(
 
-                                XtoolsColors.Primary,
+                                XtoolsColors.BrandGreen,
 
-                                XtoolsColors.Secondary
+                                XtoolsColors.FacebookBlue
 
                             )
 
@@ -114,7 +114,7 @@ fun FeatureCard(
 
                     shape = RoundedCornerShape(50.dp),
 
-                    color = XtoolsColors.Primary.copy(alpha = .12f)
+                    color = XtoolsColors.BrandGreen.copy(alpha = .12f)
 
                 ) {
 
@@ -131,7 +131,7 @@ fun FeatureCard(
 
                         fontWeight = FontWeight.Bold,
 
-                        color = XtoolsColors.Primary
+                        color = XtoolsColors.BrandGreen
 
                     )
 
@@ -175,7 +175,7 @@ fun FeatureCard(
 
                     style = MaterialTheme.typography.labelLarge,
 
-                    color = XtoolsColors.Primary,
+                    color = XtoolsColors.BrandGreen,
 
                     fontWeight = FontWeight.Bold
 
@@ -189,7 +189,7 @@ fun FeatureCard(
 
                 contentDescription = null,
 
-                tint = XtoolsColors.Primary,
+                tint = XtoolsColors.BrandGreen,
 
                 modifier = Modifier.size(28.dp)
 
