@@ -393,8 +393,6 @@ if (providerManager.getSelectedVoice() == null && voices.isNotEmpty()) {
 
       selectedVoice = providerManager.getSelectedVoiceName()
  
-   
-        _uiState.value.selectedVoice,
 
         providerReady = voices.isNotEmpty(),
 
