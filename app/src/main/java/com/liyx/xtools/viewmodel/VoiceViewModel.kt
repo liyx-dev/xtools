@@ -29,12 +29,13 @@ import com.liyx.xtools.core.voice.VoiceConfig
 import com.liyx.xtools.core.providers.VoiceProviderManager
 import com.liyx.xtools.core.models.VoiceItem
 import kotlinx.coroutines.delay
+import com.liyx.xtools.core.providers.VoicePreference
 
 class VoiceViewModel(
 
     private val voiceManager: com.liyx.xtools.core.voice.VoiceManager? = null,
 private val providerManager: VoiceProviderManager,
-
+private val voicePreference: VoicePreference,
     private val voiceEngine: VoiceEngine? = null,
 
    private val audioMerger: AudioMerger? = null, 
@@ -163,7 +164,7 @@ private fun debug(message: String) {
 fun updateVoice(voiceId: String) {
 
     providerManager.setSelectedVoice(voiceId)
-
+voicePreference.saveVoice(voiceId)
     val selected = providerManager.getSelectedVoice()
 
   if (selected == null) {

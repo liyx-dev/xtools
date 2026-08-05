@@ -26,6 +26,7 @@ import com.liyx.xtools.core.media.AudioExporter
 import com.liyx.xtools.core.media.AndroidAudioExporter
 import com.liyx.xtools.core.media.MediaEngine
 import com.liyx.xtools.core.utils.DebugLogger
+import com.liyx.xtools.core.providers.VoicePreference
 
 class AppContainer(
 
@@ -61,10 +62,20 @@ class AppContainer(
     )
 
     val providerManager = VoiceProviderManager(
+    providerRegistry
+)
 
-        providerRegistry
+val voicePreference = VoicePreference(context)
 
-    )
+init {
+
+    voicePreference.loadVoice()?.let { id ->
+
+        providerManager.setSelectedVoice(id)
+
+    }
+
+}
 
     /*
      * Current Voice Engine
