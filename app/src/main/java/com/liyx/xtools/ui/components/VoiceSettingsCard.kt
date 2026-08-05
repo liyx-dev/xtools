@@ -74,6 +74,7 @@ fun VoiceSettingsCard(
     maxLines = 1,
     overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
 )
+}
 
                 FilledIconButton(
 
