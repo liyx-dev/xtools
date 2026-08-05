@@ -17,9 +17,11 @@ data class VoiceUiState(
 
     // ===== Voice =====
 
-    val selectedVoice: String = "Default",
+    val selectedVoiceId: String = "",
 
-   val availableVoices: List<VoiceItem> = emptyList(),
+val selectedVoiceName: String = "No Voice Selected",
+
+val availableVoices: List<VoiceItem> = emptyList(),
 
 val favoriteVoices: Set<String> = emptySet(),
 

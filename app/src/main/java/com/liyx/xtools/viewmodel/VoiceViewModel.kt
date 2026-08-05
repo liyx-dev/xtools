@@ -184,7 +184,13 @@ fun updateVoice(voiceId: String) {
     voiceConfig
 )
 
-loadVoices()
+_uiState.value = _uiState.value.copy(
+
+    selectedVoiceId = selected.id,
+
+    selectedVoiceName = selected.name
+
+)
 
 }
 
@@ -393,22 +399,26 @@ if (providerManager.getSelectedVoice() == null && voices.isNotEmpty()) {
     )
 
 }
-    _uiState.value = _uiState.value.copy(
 
-        availableVoices = voices,
+    val selected = providerManager.getSelectedVoice()
 
-      selectedVoice = providerManager.getSelectedVoiceName(),
- 
+_uiState.value = _uiState.value.copy(
 
-        providerReady = voices.isNotEmpty(),
+    availableVoices = voices,
 
-        providerStatus =
-            if (voices.isEmpty())
-                "No voices found"
-            else
-                "${voices.size} voices loaded"
+    selectedVoiceId = selected?.id ?: "",
 
-    )
+    selectedVoiceName = selected?.name ?: "No Voice Selected",
+
+    providerReady = voices.isNotEmpty(),
+
+    providerStatus =
+        if (voices.isEmpty())
+            "No voices found"
+        else
+            "${voices.size} voices loaded"
+
+)
 
 }
 
