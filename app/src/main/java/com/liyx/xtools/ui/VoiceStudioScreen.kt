@@ -76,6 +76,9 @@ onOpenVoiceLibrary: () -> Unit
     )
 
     val state by viewModel.uiState.collectAsState()
+LaunchedEffect(Unit) {
+    viewModel.refreshSelectedVoice()
+}
 
     Scaffold(
         topBar = {

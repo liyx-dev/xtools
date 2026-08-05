@@ -166,31 +166,22 @@ fun updateVoice(voiceId: String) {
 
     val selected = providerManager.getSelectedVoice()
 
-    if (selected == null) {
+  if (selected == null) {
+    debug("Voice not found")
+    return
+}
 
-        debug("Voice not found")
-
-        return
-
-    }
-
-    voiceConfig = voiceConfig.copy(
-
-        voiceId = selected.id
-
-    )
-
-    voiceEngine?.applyConfig(
-    voiceConfig
+voiceConfig = voiceConfig.copy(
+    voiceId = selected.id
 )
+
+voiceEngine?.applyConfig(voiceConfig)
 
 _uiState.value = _uiState.value.copy(
-
     selectedVoiceId = selected.id,
-
     selectedVoiceName = selected.name
-
 )
+
 
 }
 
@@ -351,26 +342,40 @@ private fun estimateChunks(
         .size
 
 }
-
+           
 private fun loadVoices() {
-if (providerManager.getAllVoices().isEmpty()) {
 
-    viewModelScope.launch {
+    val voices = providerManager.getAllVoices()
 
-        kotlinx.coroutines.delay(800)
+    if (voices.isEmpty()) {
 
-        loadVoices()
+        viewModelScope.launch {
+
+            delay(800)
+
+            loadVoices()
+
+        }
+
+        return
 
     }
 
-    return
+    val selected = providerManager.getSelectedVoice()
 
-}
+    if (selected == null) {
 
-    val voices = providerManager
-        .getAllVoices()
-        .map {
+        providerManager.setSelectedVoice(voices.first().id)
 
+        loadVoices()
+
+        return
+
+    }
+
+    _uiState.value = _uiState.value.copy(
+
+        availableVoices = voices.map {
 
             VoiceItem(
 
@@ -388,40 +393,38 @@ if (providerManager.getAllVoices().isEmpty()) {
 
             )
 
-        }
+        },
 
-if (providerManager.getSelectedVoice() == null && voices.isNotEmpty()) {
+        selectedVoiceId = selected.id,
 
-    providerManager.setSelectedVoice(
+        selectedVoiceName = selected.name,
 
-        voices.first().id
+        providerReady = true,
+
+        providerStatus = "${voices.size} voices loaded"
 
     )
-
 }
+
+
+fun refreshSelectedVoice() {
 
     val selected = providerManager.getSelectedVoice()
 
-_uiState.value = _uiState.value.copy(
+    if (selected != null) {
 
-    availableVoices = voices,
+        voiceConfig = voiceConfig.copy(
+            voiceId = selected.id
+        )
 
-    selectedVoiceId = selected?.id ?: "",
+        voiceEngine?.applyConfig(voiceConfig)
 
-    selectedVoiceName = selected?.name ?: "No Voice Selected",
-
-    providerReady = voices.isNotEmpty(),
-
-    providerStatus =
-        if (voices.isEmpty())
-            "No voices found"
-        else
-            "${voices.size} voices loaded"
-
-)
-
+        _uiState.value = _uiState.value.copy(
+            selectedVoiceId = selected.id,
+            selectedVoiceName = selected.name
+        )
+    }
 }
-
 
 fun generateVoice() {
 
