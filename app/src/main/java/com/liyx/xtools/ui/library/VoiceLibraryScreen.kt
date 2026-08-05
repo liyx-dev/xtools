@@ -78,7 +78,7 @@ fun VoiceLibraryScreen(
 
                     voices = state.availableVoices,
 
-                    selectedVoice = state.selectedVoice,
+                    selectedVoice = state.selectedVoiceId,
 
                     favorites = state.favoriteVoices,
 

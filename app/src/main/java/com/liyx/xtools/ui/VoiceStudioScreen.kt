@@ -392,7 +392,7 @@ item {
 
             Text(
 
-                text = state.selectedVoice,
+                text =state.selectedVoiceName,
 
                 style = MaterialTheme.typography.titleMedium
 
@@ -489,7 +489,7 @@ item {
 
                 pitch = state.pitch,
 
-                selectedVoice = state.selectedVoice,
+               selectedVoice = state.selectedVoiceName,
 
                 onSpeedChanged = {
 
@@ -605,7 +605,7 @@ item {
 
                 progress = state.progress,
 
-                currentVoice = state.selectedVoice,
+                currentVoice = state.selectedVoiceName,
 
                 characterCount = state.characterCount,
 
