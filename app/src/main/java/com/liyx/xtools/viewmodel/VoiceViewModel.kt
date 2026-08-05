@@ -185,17 +185,9 @@ fun updateVoice(voiceId: String) {
 
 loadVoices()
 
-debug("Voice selected: ${selected.name}")
-
-    _uiState.value = _uiState.value.copy(
-
-        selectedVoice = selected.name
-
-    )
-
-    debug("Voice selected: ${selected.name}")
-
 }
+
+
 
 
     fun updateSpeed(
@@ -391,7 +383,7 @@ if (providerManager.getSelectedVoice() == null && voices.isNotEmpty()) {
 
         availableVoices = voices,
 
-      selectedVoice = providerManager.getSelectedVoiceName()
+      selectedVoice = providerManager.getSelectedVoiceName(),
  
 
         providerReady = voices.isNotEmpty(),

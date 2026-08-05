@@ -65,6 +65,7 @@ fun getAllVoices(): List<VoiceInfo> {
 
 }
 
+
 fun setSelectedVoice(id: String) {
 
     val voice = getAllVoices().firstOrNull {
@@ -77,9 +78,12 @@ fun setSelectedVoice(id: String) {
 
         selectedVoice = voice
 
+        setCurrentProvider(voice.provider)
+
     }
 
 }
+
 
 fun getSelectedVoice(): VoiceInfo? {
 
@@ -104,6 +108,13 @@ fun getSelectedVoiceName(): String {
     return getSelectedVoice()?.name ?: "No Voice Selected"
 
 }
+
+fun getSelectedVoiceInfo(): VoiceInfo? {
+
+    return selectedVoice
+
+}
+
 
 
 

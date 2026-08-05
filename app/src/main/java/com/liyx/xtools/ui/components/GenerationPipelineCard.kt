@@ -80,41 +80,40 @@ fun GenerationPipelineCard(
 
             Spacer(modifier = Modifier.height(22.dp))
 
-            Row(
+Row(
+    modifier = Modifier.fillMaxWidth()
+) {
 
-                modifier = Modifier.fillMaxWidth(),
+    Box(
+        modifier = Modifier.weight(2f)
+    ) {
+        PipelineInfo(
+            "Voice",
+            currentVoice
+        )
+    }
 
-                horizontalArrangement = Arrangement.SpaceBetween
+    Box(
+        modifier = Modifier.weight(1f)
+    ) {
+        PipelineInfo(
+            "Characters",
+            characterCount.toString()
+        )
+    }
 
-            ) {
+    Box(
+        modifier = Modifier.weight(1f)
+    ) {
+        PipelineInfo(
+            "Duration",
+            "${estimatedDuration / 1000}s"
+        )
+    }
 
-                PipelineInfo(
+}
 
-                    "Voice",
-
-                    currentVoice
-
-                )
-
-                PipelineInfo(
-
-                    "Characters",
-
-                    characterCount.toString()
-
-                )
-
-                PipelineInfo(
-
-                    "Duration",
-
-                    "${estimatedDuration / 1000}s"
-
-                )
-
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
+           Spacer(modifier = Modifier.height(24.dp))
 
             LinearProgressIndicator(
 
@@ -221,17 +220,14 @@ private fun PipelineInfo(
 
     ) {
 
-        Text(
-
-            text = value,
-
-            style = MaterialTheme.typography.titleMedium,
-
-            fontWeight = FontWeight.Bold,
-
-            color = MaterialTheme.colorScheme.primary
-
-        )
+     Text(
+    text = value,
+    style = MaterialTheme.typography.titleMedium,
+    fontWeight = FontWeight.Bold,
+    color = MaterialTheme.colorScheme.primary,
+    maxLines = 1,
+    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+)
 
         Text(
 

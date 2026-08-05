@@ -67,17 +67,13 @@ fun VoiceSettingsCard(
 
                     )
 
-                    Text(
-
-                        selectedVoice,
-
-                        style = MaterialTheme.typography.bodyMedium,
-
-                        color = MaterialTheme.colorScheme.primary
-
-                    )
-
-                }
+                Text(
+    text = selectedVoice,
+    style = MaterialTheme.typography.bodyMedium,
+    color = MaterialTheme.colorScheme.primary,
+    maxLines = 1,
+    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+)
 
                 FilledIconButton(
 
