@@ -28,6 +28,7 @@ import kotlinx.coroutines.withContext
 import com.liyx.xtools.core.voice.VoiceConfig
 import com.liyx.xtools.core.providers.VoiceProviderManager
 import com.liyx.xtools.core.models.VoiceItem
+import kotlinx.coroutines.delay
 
 class VoiceViewModel(
 
@@ -346,6 +347,19 @@ private fun estimateChunks(
 }
 
 private fun loadVoices() {
+if (providerManager.getAllVoices().isEmpty()) {
+
+    viewModelScope.launch {
+
+        kotlinx.coroutines.delay(800)
+
+        loadVoices()
+
+    }
+
+    return
+
+}
 
     val voices = providerManager
         .getAllVoices()

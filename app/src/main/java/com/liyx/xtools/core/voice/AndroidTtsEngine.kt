@@ -18,6 +18,9 @@ class AndroidTtsEngine(
 
     private var tts: TextToSpeech? = null
     private var initialized = false
+fun isInitialized(): Boolean {
+    return initialized
+}
     private var speechRate = 1.0f
     private var speechPitch = 1.0f
     private var selectedVoice: String? = null
@@ -118,7 +121,13 @@ class AndroidTtsEngine(
 
    override fun getAvailableVoices(): List<VoiceInfo> {
 
-    if (!initialized) return emptyList()
+    if (!initialized) {
+
+        initialize()
+
+        return emptyList()
+
+    }
 
     return tts?.voices
         ?.sortedBy { it.locale.displayName }
