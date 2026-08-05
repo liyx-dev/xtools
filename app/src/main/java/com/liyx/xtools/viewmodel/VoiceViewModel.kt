@@ -157,32 +157,45 @@ private fun debug(message: String) {
     )
 
 }
-        fun updateVoice(voice: String) {
 
-    if (voiceConfig.voiceId == voice) return
+
+fun updateVoice(voiceId: String) {
+
+    providerManager.setSelectedVoice(voiceId)
+
+    val selected = providerManager.getSelectedVoice()
+
+    if (selected == null) {
+
+        debug("Voice not found")
+
+        return
+
+    }
 
     voiceConfig = voiceConfig.copy(
 
-        voiceId = voice
+        voiceId = selected.id
 
     )
 
     voiceEngine?.applyConfig(
+    voiceConfig
+)
 
-        voiceConfig
+loadVoices()
 
-    )
+debug("Voice selected: ${selected.name}")
 
     _uiState.value = _uiState.value.copy(
 
-        selectedVoice = voice
+        selectedVoice = selected.name
 
     )
 
-    debug("Voice changed to $voice")
+    debug("Voice selected: ${selected.name}")
 
 }
-
 
 
     fun updateSpeed(
@@ -346,6 +359,7 @@ private fun loadVoices() {
         .getAllVoices()
         .map {
 
+
             VoiceItem(
 
                 id = it.id,
@@ -364,14 +378,22 @@ private fun loadVoices() {
 
         }
 
+if (providerManager.getSelectedVoice() == null && voices.isNotEmpty()) {
+
+    providerManager.setSelectedVoice(
+
+        voices.first().id
+
+    )
+
+}
     _uiState.value = _uiState.value.copy(
 
         availableVoices = voices,
 
-      selectedVoice =
-    if (_uiState.value.selectedVoice.isBlank())
-        voices.firstOrNull()?.id ?: ""
-    else
+      selectedVoice = providerManager.getSelectedVoiceName()
+ 
+   
         _uiState.value.selectedVoice,
 
         providerReady = voices.isNotEmpty(),

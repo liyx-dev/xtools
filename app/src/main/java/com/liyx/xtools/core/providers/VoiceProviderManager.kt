@@ -10,6 +10,8 @@ class VoiceProviderManager(
 ) {
 
     private var currentProviderId = "android"
+private var selectedVoice: VoiceInfo? = null
+
 
     fun setCurrentProvider(
 
@@ -62,6 +64,47 @@ fun getAllVoices(): List<VoiceInfo> {
         }
 
 }
+
+fun setSelectedVoice(id: String) {
+
+    val voice = getAllVoices().firstOrNull {
+
+        it.id == id
+
+    }
+
+    if (voice != null) {
+
+        selectedVoice = voice
+
+    }
+
+}
+
+fun getSelectedVoice(): VoiceInfo? {
+
+    if (selectedVoice == null) {
+
+        selectedVoice = getAllVoices().firstOrNull()
+
+    }
+
+    return selectedVoice
+
+}
+
+fun getSelectedVoiceId(): String {
+
+    return getSelectedVoice()?.id ?: ""
+
+}
+
+fun getSelectedVoiceName(): String {
+
+    return getSelectedVoice()?.name ?: "No Voice Selected"
+
+}
+
 
 
 }
