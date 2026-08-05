@@ -6,22 +6,25 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.liyx.xtools.viewmodel.VoiceViewModel
-
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.liyx.xtools.AppContainer
 import com.liyx.xtools.design.components.TopBar
 import com.liyx.xtools.ui.components.VoiceSelectorCard
-
+import com.liyx.xtools.viewmodel.VoiceViewModel
+import com.liyx.xtools.viewmodel.VoiceViewModelFactory
 
 @Composable
 fun VoiceLibraryScreen(
 
-    viewModel: VoiceViewModel,
+    appContainer: AppContainer,
 
     onBack: () -> Unit
 
-)
+) {
 
- {
+    val viewModel: VoiceViewModel = viewModel(
+        factory = VoiceViewModelFactory(appContainer)
+    )
 
     val state by viewModel.uiState.collectAsState()
 

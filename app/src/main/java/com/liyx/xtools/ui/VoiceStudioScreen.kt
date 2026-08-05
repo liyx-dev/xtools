@@ -20,7 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.liyx.xtools.ui.components.ScriptAnalysisCard
 import com.liyx.xtools.design.components.PrimaryButton
 import com.liyx.xtools.design.components.TopBar
@@ -36,6 +36,8 @@ import com.liyx.xtools.ui.components.VoiceSettingsCard
 import com.liyx.xtools.viewmodel.VoiceViewModel
 import com.liyx.xtools.ui.components.VoiceSelectorCard
 
+import com.liyx.xtools.AppContainer
+import com.liyx.xtools.viewmodel.VoiceViewModelFactory
 import androidx.compose.material3.Text
 import com.liyx.xtools.core.utils.DebugLogger
 
@@ -50,13 +52,12 @@ import com.liyx.xtools.design.components.SecondaryButton
 @Composable
 fun VoiceStudioScreen(
 
-    viewModel: VoiceViewModel,
+    appContainer: AppContainer,
 
     onBack: () -> Unit,
 
     onOpenLibrary: () -> Unit,
-
-    onOpenVoiceLibrary: () -> Unit
+onOpenVoiceLibrary: () -> Unit
 
 )
 
@@ -68,11 +69,13 @@ fun VoiceStudioScreen(
         mutableStateOf(DebugLogger.read(context))
     }
 
+    val viewModel: VoiceViewModel = viewModel(
+        factory = VoiceViewModelFactory(
+            appContainer
+        )
+    )
 
     val state by viewModel.uiState.collectAsState()
-LaunchedEffect(Unit) {
-    viewModel.refreshSelectedVoice()
-}
 
     Scaffold(
         topBar = {

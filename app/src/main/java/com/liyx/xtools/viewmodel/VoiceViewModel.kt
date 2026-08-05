@@ -164,18 +164,31 @@ fun updateVoice(voiceId: String) {
     providerManager.setSelectedVoice(voiceId)
 
     val selected = providerManager.getSelectedVoice()
-        ?: return
+
+    if (selected == null) {
+
+        debug("Voice not found")
+
+        return
+
+    }
 
     voiceConfig = voiceConfig.copy(
+
         voiceId = selected.id
+
     )
 
-    voiceEngine?.applyConfig(voiceConfig)
+    voiceEngine?.applyConfig(
+    voiceConfig
+)
 
-    _uiState.value = _uiState.value.copy(
-        selectedVoice = selected.name
-    )
+loadVoices()
+
 }
+
+
+
 
     fun updateSpeed(
 
@@ -385,14 +398,6 @@ if (providerManager.getSelectedVoice() == null && voices.isNotEmpty()) {
 
 }
 
-
-fun refreshSelectedVoice() {
-
-    _uiState.value = _uiState.value.copy(
-        selectedVoice = providerManager.getSelectedVoiceName()
-    )
-
-}
 
 fun generateVoice() {
 
