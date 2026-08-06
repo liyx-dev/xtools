@@ -9,6 +9,7 @@ import com.liyx.xtools.core.providers.PiperRuntime
 import com.liyx.xtools.core.providers.PiperRuntimeManager
 import com.liyx.xtools.core.providers.PiperRuntimeValidator
 
+
 class PiperEngine(
 
     private val runtime: PiperRuntime = PiperRuntime(
@@ -35,6 +36,7 @@ class PiperEngine(
             binaryDetector,
             modelDetector
         )
+
 
     private val commandBuilder =
         PiperCommandBuilder(runtime)
