@@ -8,61 +8,30 @@ data class PiperModel(
 
     val language: String,
 
-    val downloadUrl: String,
+    val modelUrl: String,
+val configUrl: String,
 
     val downloaded: Boolean
 
 )
 
 
-class PiperModelManager {
+class PiperModelManager(
 
+    private val catalog: PiperCatalog = PiperCatalog()
 
-    private val models = listOf(
+) {
 
-    PiperModel(
-        id = "en_US-lessac-medium",
-        name = "English • Lessac",
-        language = "English",
-        downloadUrl = "",
-        downloaded = false
-    ),
-
-    PiperModel(
-        id = "en_US-amy-medium",
-        name = "English • Amy",
-        language = "English",
-        downloadUrl = "",
-        downloaded = false
-    ),
-
-    PiperModel(
-        id = "en_GB-alan-medium",
-        name = "English • Alan UK",
-        language = "English UK",
-        downloadUrl = "",
-        downloaded = false
-    ),
-
-    PiperModel(
-        id = "fr_FR-siwis-medium",
-        name = "French • Siwis",
-        language = "French",
-        downloadUrl = "",
-        downloaded = false
-    )
-
-)
   
     fun getModels(): List<PiperModel> {
 
-    return models
+    return catalog.getModels()
 
 }
 
     fun downloadedModels(): List<PiperModel> {
 
-    return models.filter {
+    return getModels().filter  {
 
         it.downloaded
 
@@ -72,7 +41,7 @@ class PiperModelManager {
 
 fun downloadableModels(): List<PiperModel> {
 
-   return models.filter {
+   return getModels().filter  {
 
         it.downloadUrl.isNotBlank()
 
@@ -87,7 +56,7 @@ fun downloadableModels(): List<PiperModel> {
 
     ): PiperModel? {
 
-        return models.firstOrNull {
+        return getModels().firstOrNull  {
 
             it.id == id
 
@@ -101,7 +70,7 @@ fun downloadableModels(): List<PiperModel> {
 
     ): PiperModel? {
 
-        return models.firstOrNull {
+        return getModels().firstOrNull  {
 
             it.name == name
 

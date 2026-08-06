@@ -22,42 +22,74 @@ class PiperDownloadManager {
     /**
      * Starts downloading a Piper model.
      *
-     * NOTE:
-     * Real networking and file downloading
-     * will be implemented in the next phase.
      */
-    fun downloadModel(
+    
+fun downloadModel(
+    model: PiperModel,
+    runtime: PiperRuntime
+): PiperDownloadStatus {
 
-        model: PiperModel
+    if (model.downloaded) {
+        return PiperDownloadStatus.ALREADY_DOWNLOADED
+    }
 
-    ): PiperDownloadStatus {
+    activeDownload = model
 
-        // Already installed.
-        if (model.downloaded) {
+    return try {
 
-            return PiperDownloadStatus.ALREADY_DOWNLOADED
+        val modelsDir = java.io.File(runtime.modelsDirectory)
+        modelsDir.mkdirs()
+
+        val modelFile =
+            java.io.File(modelsDir, "${model.id}.onnx")
+
+        val configFile =
+            java.io.File(modelsDir, "${model.id}.onnx.json")
+
+        downloadFile(
+    model.modelUrl,
+    modelFile
+)
+
+downloadFile(
+    model.configUrl,
+    configFile
+)
+
+
+        activeDownload = null
+
+        PiperDownloadStatus.SUCCESS
+
+    } catch (e: Exception) {
+
+        activeDownload = null
+
+        PiperDownloadStatus.FAILED
+    }
+}
+
+private fun downloadFile(
+    url: String,
+    destination: java.io.File
+) {
+
+    val connection =
+        java.net.URL(url).openConnection()
+
+    connection.getInputStream().use { input ->
+
+        destination.outputStream().use { output ->
+
+            input.copyTo(output)
 
         }
 
-        // Mark this model as the current download.
-        activeDownload = model
-
-        /*
-         * TODO
-         *
-         * Download the model.
-         * Verify the files.
-         * Save into the models directory.
-         * Update installation status.
-         */
-
-        // Download finished (or failed).
-        activeDownload = null
-
-        return PiperDownloadStatus.FAILED
-
     }
 
+}
+
+      
     /**
      * Returns the model currently being downloaded,
      * or null if no download is active.
