@@ -12,7 +12,7 @@ class PiperVoiceProvider : VoiceProvider {
     override val isOffline = true
 
     override val engine = PiperEngine()
-
+private val modelManager = PiperModelManager()
     override fun isAvailable(): Boolean {
     return true
 }
@@ -20,9 +20,7 @@ class PiperVoiceProvider : VoiceProvider {
 
 override fun getVoices(): List<VoiceInfo> {
 
-    val manager = PiperModelManager()
-
-    return manager.getModels().map {
+    return modelManager.getModels().map {
 
         VoiceInfo(
 
@@ -34,7 +32,11 @@ override fun getVoices(): List<VoiceInfo> {
 
             provider = id,
 
-            quality = "High",
+            networkRequired = false,
+
+            quality = "Studio",
+
+            gender = null,
 
             isOffline = true
 
@@ -43,6 +45,6 @@ override fun getVoices(): List<VoiceInfo> {
     }
 
 }
-
+          
 
 }
