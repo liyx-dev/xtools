@@ -13,18 +13,36 @@ class PiperVoiceProvider : VoiceProvider {
 
     override val engine = PiperEngine()
 
-    override fun isAvailable():
+    override fun isAvailable(): Boolean {
+    return true
+}
 
- Boolean {
-
-        return false
-
-    }
 
 override fun getVoices(): List<VoiceInfo> {
 
-    return emptyList()
+    val manager = PiperModelManager()
+
+    return manager.getModels().map {
+
+        VoiceInfo(
+
+            id = it.id,
+
+            name = it.name,
+
+            locale = it.language,
+
+            provider = id,
+
+            quality = "High",
+
+            isOffline = true
+
+        )
+
+    }
 
 }
+
 
 }

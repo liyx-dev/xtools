@@ -18,24 +18,43 @@ data class PiperModel(
 
 class PiperModelManager {
 
+
     private val models = listOf(
 
-       PiperModel(
+    PiperModel(
+        id = "en_US-lessac-medium",
+        name = "English • Lessac",
+        language = "English",
+        downloadUrl = "",
+        downloaded = false
+    ),
 
-    id = "en_US-lessac-medium",
+    PiperModel(
+        id = "en_US-amy-medium",
+        name = "English • Amy",
+        language = "English",
+        downloadUrl = "",
+        downloaded = false
+    ),
 
-    name = "English (Lessac)",
+    PiperModel(
+        id = "en_GB-alan-medium",
+        name = "English • Alan UK",
+        language = "English UK",
+        downloadUrl = "",
+        downloaded = false
+    ),
 
-    language = "English",
-
-    downloadUrl = "",
-
-    downloaded = false
-
-)
-
+    PiperModel(
+        id = "fr_FR-siwis-medium",
+        name = "French • Siwis",
+        language = "French",
+        downloadUrl = "",
+        downloaded = false
     )
 
+)
+  
     fun getModels(): List<PiperModel> {
 
         return models
