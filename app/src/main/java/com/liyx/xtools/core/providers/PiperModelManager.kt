@@ -16,7 +16,11 @@ data class PiperModel(
 
 
 
-class PiperModelManager {
+class PiperModelManager(
+
+    private val detector: PiperModelDetector
+
+) {
 
 
     private val models = listOf(
@@ -57,23 +61,31 @@ class PiperModelManager {
   
     fun getModels(): List<PiperModel> {
 
-        return models
+    return models.map { model ->
+
+        model.copy(
+
+            downloaded = detector.isInstalled(model)
+
+        )
 
     }
+
+}
 
     fun downloadedModels(): List<PiperModel> {
 
-        return models.filter {
+    return getModels().filter {
 
-            it.downloaded
-
-        }
+        it.downloaded
 
     }
 
+}
+
 fun downloadableModels(): List<PiperModel> {
 
-    return models.filter {
+   return getModels().filter {
 
         it.downloadUrl.isNotBlank()
 
@@ -81,13 +93,14 @@ fun downloadableModels(): List<PiperModel> {
 
 }
 
+
     fun getModelById(
 
         id: String
 
     ): PiperModel? {
 
-        return models.firstOrNull {
+        return getModels().firstOrNull {
 
             it.id == id
 
@@ -101,7 +114,7 @@ fun downloadableModels(): List<PiperModel> {
 
     ): PiperModel? {
 
-        return models.firstOrNull {
+        return getModels().firstOrNull {
 
             it.name == name
 

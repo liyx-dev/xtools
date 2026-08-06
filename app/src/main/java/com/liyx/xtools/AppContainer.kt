@@ -53,7 +53,7 @@ class AppContainer(
 
             AndroidVoiceProvider(context),
 
-            PiperVoiceProvider(),
+            PiperVoiceProvider(context),
 
             KokoroVoiceProvider()
 

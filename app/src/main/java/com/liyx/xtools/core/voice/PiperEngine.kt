@@ -43,7 +43,10 @@ class PiperEngine(
         PiperProcessRunner()
 
     private val modelManager =
-        PiperModelManager()
+    PiperModelManager(
+        modelDetector
+    )
+
 
     private var selectedVoice: String? = null
 
