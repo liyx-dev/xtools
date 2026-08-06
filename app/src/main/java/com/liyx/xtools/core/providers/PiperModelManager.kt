@@ -41,9 +41,9 @@ class PiperModelManager(
 
 fun downloadableModels(): List<PiperModel> {
 
-   return getModels().filter  {
+    return getModels().filter {
 
-        it.downloadUrl.isNotBlank()
+        it.modelUrl.isNotBlank()
 
     }
 
