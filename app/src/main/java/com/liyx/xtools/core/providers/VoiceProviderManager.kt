@@ -11,7 +11,7 @@ class VoiceProviderManager(
 
     private var currentProviderId = "android"
 private var selectedVoice: VoiceInfo? = null
-
+private var pendingVoiceId: String? = null
 
     fun setCurrentProvider(
 
@@ -66,7 +66,10 @@ fun getAllVoices(): List<VoiceInfo> {
 }
 
 
+
 fun setSelectedVoice(id: String) {
+
+    pendingVoiceId = id
 
     val voice = getAllVoices().firstOrNull {
 
@@ -80,12 +83,35 @@ fun setSelectedVoice(id: String) {
 
         setCurrentProvider(voice.provider)
 
+        pendingVoiceId = null
+
     }
 
 }
 
 
+
 fun getSelectedVoice(): VoiceInfo? {
+
+    if (selectedVoice == null && pendingVoiceId != null) {
+
+        val voice = getAllVoices().firstOrNull {
+
+            it.id == pendingVoiceId
+
+        }
+
+        if (voice != null) {
+
+            selectedVoice = voice
+
+            setCurrentProvider(voice.provider)
+
+            pendingVoiceId = null
+
+        }
+
+    }
 
     if (selectedVoice == null) {
 
@@ -96,6 +122,8 @@ fun getSelectedVoice(): VoiceInfo? {
     return selectedVoice
 
 }
+
+
 
 fun getSelectedVoiceId(): String {
 
