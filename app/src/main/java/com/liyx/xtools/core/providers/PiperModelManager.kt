@@ -1,62 +1,50 @@
 package com.liyx.xtools.core.providers
 
-data class PiperModel(
-
-    val id: String,
-
-    val name: String,
-
-    val language: String,
-
-    val modelUrl: String,
-val configUrl: String,
-
-    val downloaded: Boolean
-
-)
-
-
 class PiperModelManager(
 
-    private val catalog: PiperCatalog = PiperCatalog()
+    private val detector: PiperModelDetector
 
 ) {
 
-  
+    private val catalog = PiperCatalog()
+
     fun getModels(): List<PiperModel> {
 
-    return catalog.getModels()
+        return catalog.getModels().map { model ->
 
-}
+            model.copy(
+
+                downloaded = detector.isInstalled(model)
+
+            )
+
+        }
+
+    }
 
     fun downloadedModels(): List<PiperModel> {
 
-    return getModels().filter  {
+        return getModels().filter {
 
-        it.downloaded
+            it.downloaded
 
-    }
-
-}
-
-fun downloadableModels(): List<PiperModel> {
-
-    return getModels().filter {
-
-        it.modelUrl.isNotBlank()
+        }
 
     }
 
-}
+    fun downloadableModels(): List<PiperModel> {
 
+        return getModels().filter {
 
-    fun getModelById(
+            it.downloadUrl.isNotBlank()
 
-        id: String
+        }
 
-    ): PiperModel? {
+    }
 
-        return getModels().firstOrNull  {
+    fun getModelById(id: String): PiperModel? {
+
+        return getModels().firstOrNull {
 
             it.id == id
 
@@ -64,17 +52,25 @@ fun downloadableModels(): List<PiperModel> {
 
     }
 
-    fun getModelByName(
+    fun getModelByName(name: String): PiperModel? {
 
-        name: String
-
-    ): PiperModel? {
-
-        return getModels().firstOrNull  {
+        return getModels().firstOrNull {
 
             it.name == name
 
         }
+
+    }
+
+    fun isInstalled(id: String): Boolean {
+
+        return getModelById(id)?.downloaded == true
+
+    }
+
+    fun refresh(): List<PiperModel> {
+
+        return getModels()
 
     }
 

@@ -23,7 +23,11 @@ class PiperVoiceProvider(
 
     override val engine = PiperEngine(runtime)
 
-    private val modelManager = PiperModelManager()
+    private val modelDetector =
+    PiperModelDetector(runtime)
+
+private val modelManager =
+    PiperModelManager(modelDetector)
 
     override fun isAvailable(): Boolean {
         return true
