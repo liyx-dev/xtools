@@ -16,11 +16,21 @@ class LiyXSessionManager(
 
     ): OrtSession? {
 
-        return sessions.getOrPut(modelPath) {
+        sessions[modelPath]?.let {
 
-            loader.loadModel(modelPath)
+            return it
 
-        } ?: sessions[modelPath]
+        }
+
+        val session = loader.loadModel(modelPath)
+
+        if (session != null) {
+
+            sessions[modelPath] = session
+
+        }
+
+        return session
 
     }
 
@@ -57,3 +67,4 @@ class LiyXSessionManager(
     }
 
 }
+        
