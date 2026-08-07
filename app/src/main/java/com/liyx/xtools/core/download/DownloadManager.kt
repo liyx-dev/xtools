@@ -1,28 +1,45 @@
 package com.liyx.xtools.core.download
 
+import java.io.File
+import java.net.URL
+
 class DownloadManager : Downloader {
 
     override fun download(
-
         request: DownloadRequest
-
     ): DownloadResult {
 
-        /*
-         * Real HTTP downloading
-         * will be implemented
-         * in the next phase.
-         */
+        return try {
 
-        return DownloadResult(
+            val destination = File(request.outputFile)
 
-            success = false,
+            destination.parentFile?.mkdirs()
 
-            message =
+            URL(request.url)
+                .openStream()
+                .use { input ->
 
-                "Download engine not implemented."
+                    destination.outputStream().use { output ->
 
-        )
+                        input.copyTo(output)
+
+                    }
+
+                }
+
+            DownloadResult(
+                success = true,
+                message = "Download completed."
+            )
+
+        } catch (e: Exception) {
+
+            DownloadResult(
+                success = false,
+                message = e.message ?: "Download failed."
+            )
+
+        }
 
     }
 
