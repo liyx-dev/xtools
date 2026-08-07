@@ -8,7 +8,7 @@ class LiyXInferenceEngine {
         OrtEnvironment.getEnvironment()
     }
 
-    fun environment(): OrtEnvironment = environment
-
-    fun version(): String = OrtEnvironment.getVersion()
+    fun environment(): OrtEnvironment {
+        return environment
+    }
 }
