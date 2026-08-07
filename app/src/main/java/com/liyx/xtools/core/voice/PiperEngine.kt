@@ -14,6 +14,8 @@ import com.liyx.xtools.core.inference.LiyXModelLoader
 import com.liyx.xtools.core.inference.LiyXModelVerifier
 import com.liyx.xtools.core.inference.LiyXSessionManager
 import com.liyx.xtools.core.providers.PiperSessionProvider
+import com.liyx.xtools.core.providers.PiperInferenceEngine
+
 
 class PiperEngine(
 
@@ -67,6 +69,9 @@ private val sessionProvider =
         modelVerifier,
         sessionManager
     )
+
+private val piperInferenceEngine =
+    PiperInferenceEngine(sessionProvider)
 
     private val modelManager =
     PiperModelManager(modelDetector)
