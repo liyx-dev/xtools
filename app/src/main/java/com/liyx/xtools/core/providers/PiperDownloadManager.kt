@@ -1,112 +1,78 @@
 package com.liyx.xtools.core.providers
 
-enum class PiperDownloadStatus {
+import com.liyx.xtools.core.download.DownloadManager
+import com.liyx.xtools.core.download.DownloadRequest
+import java.io.File
 
-    SUCCESS,
+class PiperDownloadManager(
 
-    ALREADY_DOWNLOADED,
+    private val runtime: PiperRuntime
 
-    FAILED
-
-}
-
-class PiperDownloadManager {
-
-    /**
-     * The model currently being downloaded.
-     * This prepares Xtools for future download
-     * progress tracking and download queues.
-     */
-    private var activeDownload: PiperModel? = null
-
-    /**
-     * Starts downloading a Piper model.
-     *
-     */
-    
-fun downloadModel(
-    model: PiperModel,
-    runtime: PiperRuntime
-): PiperDownloadStatus {
-
-    if (model.downloaded) {
-        return PiperDownloadStatus.ALREADY_DOWNLOADED
-    }
-
-    activeDownload = model
-
-    return try {
-
-        val modelsDir = java.io.File(runtime.modelsDirectory)
-        modelsDir.mkdirs()
-
-        val modelFile =
-            java.io.File(modelsDir, "${model.id}.onnx")
-
-        val configFile =
-            java.io.File(modelsDir, "${model.id}.onnx.json")
-
-        downloadFile(
-    model.modelUrl,
-    modelFile
-)
-
-downloadFile(
-    model.configUrl,
-    configFile
-)
-
-
-        activeDownload = null
-
-        PiperDownloadStatus.SUCCESS
-
-    } catch (e: Exception) {
-
-        activeDownload = null
-
-        PiperDownloadStatus.FAILED
-    }
-}
-
-private fun downloadFile(
-    url: String,
-    destination: java.io.File
 ) {
 
-    val connection =
-        java.net.URL(url).openConnection()
+    private val downloader = DownloadManager()
 
-    connection.getInputStream().use { input ->
+    fun download(
 
-        destination.outputStream().use { output ->
+        model: PiperModel
 
-            input.copyTo(output)
+    ): Boolean {
+
+        val modelsDir = File(runtime.modelsDirectory)
+
+        if (!modelsDir.exists()) {
+
+            modelsDir.mkdirs()
 
         }
 
-    }
+        val modelFile = File(
 
-}
+            modelsDir,
 
-      
-    /**
-     * Returns the model currently being downloaded,
-     * or null if no download is active.
-     */
-    fun activeDownload(): PiperModel? {
+            "${model.id}.onnx"
 
-        return activeDownload
+        )
 
-    }
+        val configFile = File(
 
-    /**
-     * Indicates whether a download
-     * is currently in progress.
-     */
-    fun isDownloading(): Boolean {
+            modelsDir,
 
-        return activeDownload != null
+            "${model.id}.onnx.json"
+
+        )
+
+        val modelResult = downloader.download(
+
+            DownloadRequest(
+
+                url = model.modelUrl,
+
+                outputFile = modelFile.absolutePath
+
+            )
+
+        )
+
+        if (!modelResult.success) {
+
+            return false
+
+        }
+
+        val configResult = downloader.download(
+
+            DownloadRequest(
+
+                url = model.configUrl,
+
+                outputFile = configFile.absolutePath
+
+            )
+
+        )
+
+        return configResult.success
 
     }
 
