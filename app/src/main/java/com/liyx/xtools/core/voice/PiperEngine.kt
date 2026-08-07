@@ -9,6 +9,10 @@ import com.liyx.xtools.core.providers.PiperRuntime
 import com.liyx.xtools.core.providers.PiperRuntimeManager
 import com.liyx.xtools.core.providers.PiperRuntimeValidator
 
+import com.liyx.xtools.core.inference.LiyXInferenceEngine
+import com.liyx.xtools.core.inference.LiyXModelLoader
+import com.liyx.xtools.core.inference.LiyXModelVerifier
+import com.liyx.xtools.core.inference.LiyXSessionManager
 
 class PiperEngine(
 
@@ -43,6 +47,19 @@ class PiperEngine(
 
     private val processRunner =
         PiperProcessRunner()
+
+private val inferenceEngine =
+    LiyXInferenceEngine()
+
+private val modelLoader =
+    LiyXModelLoader(inferenceEngine)
+
+private val modelVerifier =
+    LiyXModelVerifier()
+
+private val sessionManager =
+    LiyXSessionManager(modelLoader)
+
 
     private val modelManager =
     PiperModelManager(modelDetector)
