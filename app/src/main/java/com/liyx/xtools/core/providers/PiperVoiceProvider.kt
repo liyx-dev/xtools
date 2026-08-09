@@ -39,23 +39,24 @@ private val modelManager =
         return true
     }
 
-    override fun getVoices(): List<VoiceInfo> {
+   override fun getVoices(): List<VoiceInfo> {
 
-        return modelManager.getModels().map {
+    return modelManager.getModels().map {
 
-            VoiceInfo(
-                id = it.id,
-                name = it.name,
-                locale = it.language,
-                provider = id,
-                networkRequired = false,
-                quality = "Studio",
-                gender = null,
-                isOffline = true
-            )
-
-        }
+        VoiceInfo(
+            id = it.id,
+            name = it.name,
+            locale = it.language,
+            provider = id,
+            networkRequired = false,
+            quality = "Studio",
+            gender = null,
+            isOffline = true,
+            isDownloaded = it.downloaded
+        )
 
     }
+
+}
 
 }
