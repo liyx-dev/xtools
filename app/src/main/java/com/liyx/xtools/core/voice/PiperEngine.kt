@@ -15,7 +15,7 @@ import com.liyx.xtools.core.inference.LiyXModelVerifier
 import com.liyx.xtools.core.inference.LiyXSessionManager
 import com.liyx.xtools.core.providers.PiperSessionProvider
 import com.liyx.xtools.core.providers.PiperInferenceEngine
-
+import com.liyx.xtools.core.providers.PiperDownloadManager
 
 class PiperEngine(
 
@@ -73,8 +73,14 @@ private val sessionProvider =
 private val piperInferenceEngine =
     PiperInferenceEngine(sessionProvider)
 
-    private val modelManager =
-    PiperModelManager(modelDetector)
+   private val downloader =
+    PiperDownloadManager(runtime)
+
+private val modelManager =
+    PiperModelManager(
+        modelDetector,
+        downloader
+    )
 
     private var selectedVoice: String? = null
 
