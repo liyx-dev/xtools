@@ -16,6 +16,8 @@ data class VoiceInfo(
 
     val gender: String? = null,
 
-    val isOffline: Boolean = true
+    val isOffline: Boolean = true,
+
+    val isInstalled: Boolean = false
 
 )
