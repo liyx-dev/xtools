@@ -26,8 +26,14 @@ class PiperVoiceProvider(
     private val modelDetector =
     PiperModelDetector(runtime)
 
+private val downloader =
+    PiperDownloadManager(runtime)
+
 private val modelManager =
-    PiperModelManager(modelDetector)
+    PiperModelManager(
+        modelDetector,
+        downloader
+    )
 
     override fun isAvailable(): Boolean {
         return true

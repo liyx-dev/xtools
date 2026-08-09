@@ -2,7 +2,8 @@ package com.liyx.xtools.core.providers
 
 class PiperModelManager(
 
-    private val detector: PiperModelDetector
+    private val detector: PiperModelDetector,
+    private val downloader: PiperDownloadManager
 
 ) {
 
@@ -34,17 +35,20 @@ class PiperModelManager(
 
     fun downloadableModels(): List<PiperModel> {
 
-    return getModels().filter {
+        return getModels().filter {
 
-        it.modelUrl.isNotBlank() &&
-        it.configUrl.isNotBlank()
+            it.modelUrl.isNotBlank() &&
+            it.configUrl.isNotBlank()
+
+        }
 
     }
 
-}
+    fun getModelById(
 
+        id: String
 
-    fun getModelById(id: String): PiperModel? {
+    ): PiperModel? {
 
         return getModels().firstOrNull {
 
@@ -54,7 +58,11 @@ class PiperModelManager(
 
     }
 
-    fun getModelByName(name: String): PiperModel? {
+    fun getModelByName(
+
+        name: String
+
+    ): PiperModel? {
 
         return getModels().firstOrNull {
 
@@ -64,9 +72,33 @@ class PiperModelManager(
 
     }
 
-    fun isInstalled(id: String): Boolean {
+    fun isInstalled(
+
+        id: String
+
+    ): Boolean {
 
         return getModelById(id)?.downloaded == true
+
+    }
+
+    fun download(
+
+        id: String
+
+    ): Boolean {
+
+        val model = getModelById(id)
+
+            ?: return false
+
+        if (model.downloaded) {
+
+            return true
+
+        }
+
+        return downloader.download(model)
 
     }
 
