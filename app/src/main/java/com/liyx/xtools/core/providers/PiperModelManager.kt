@@ -14,9 +14,7 @@ class PiperModelManager(
         return catalog.getModels().map { model ->
 
             model.copy(
-
                 downloaded = detector.isInstalled(model)
-
             )
 
         }
@@ -26,9 +24,7 @@ class PiperModelManager(
     fun downloadedModels(): List<PiperModel> {
 
         return getModels().filter {
-
             it.downloaded
-
         }
 
     }
@@ -37,6 +33,7 @@ class PiperModelManager(
 
         return getModels().filter {
 
+            !it.downloaded &&
             it.modelUrl.isNotBlank() &&
             it.configUrl.isNotBlank()
 
@@ -44,58 +41,35 @@ class PiperModelManager(
 
     }
 
-    fun getModelById(
-
-        id: String
-
-    ): PiperModel? {
+    fun getModelById(id: String): PiperModel? {
 
         return getModels().firstOrNull {
-
             it.id == id
-
         }
 
     }
 
-    fun getModelByName(
-
-        name: String
-
-    ): PiperModel? {
+    fun getModelByName(name: String): PiperModel? {
 
         return getModels().firstOrNull {
-
             it.name == name
-
         }
 
     }
 
-    fun isInstalled(
-
-        id: String
-
-    ): Boolean {
+    fun isInstalled(id: String): Boolean {
 
         return getModelById(id)?.downloaded == true
 
     }
 
-    fun download(
-
-        id: String
-
-    ): Boolean {
+    fun download(id: String): Boolean {
 
         val model = getModelById(id)
-
             ?: return false
 
         if (model.downloaded) {
-
             return true
-
         }
 
         return downloader.download(model)
