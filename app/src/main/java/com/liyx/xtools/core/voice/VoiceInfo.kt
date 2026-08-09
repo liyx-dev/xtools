@@ -18,6 +18,6 @@ data class VoiceInfo(
 
     val isOffline: Boolean = true,
 
-    val isDownloaded: Boolean = true
+    val isInstalled: Boolean = true
 
 )
