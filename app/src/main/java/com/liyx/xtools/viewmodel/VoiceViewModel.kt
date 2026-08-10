@@ -176,7 +176,7 @@ voiceConfig = voiceConfig.copy(
     voiceId = selected.id
 )
 
-voiceEngine?.applyConfig(voiceConfig)
+providerManager.getCurrentEngine()?.applyConfig(voiceConfig)
 
 _uiState.value = _uiState.value.copy(
     selectedVoiceId = selected.id,
@@ -475,23 +475,62 @@ viewModelScope.launch {
                 audioStorageManager?.getOutputDirectory(job.title)
                     ?: return@withContext null
 
-            Pair(
+         val currentEngine =
+    providerManager.getCurrentEngine()
 
-                job,
+if (currentEngine == null) {
+    debug("No active voice engine available")
+    return@withContext null
+}
 
-                voicePipeline?.process(
+currentEngine.applyConfig(voiceConfig)
 
-                    job,
+Pair(
 
-                    outputDirectory
+    job,
+
+    VoicePipeline(
+
+        voiceEngine = currentEngine,
+
+        audioMerger = audioMerger ?: return@withContext null,
+
+        onChunkCompleted = { updatedJob ->
+
+            _uiState.value =
+                _uiState.value.copy(
+
+                    progress = updatedJob.progress,
+
+                    currentChunk =
+                        updatedJob.completedChunks(),
+
+                    totalChunks =
+                        updatedJob.totalChunks(),
+
+                    processedCharacters =
+                        updatedJob.processedCharacters,
+
+                    remainingCharacters =
+                        updatedJob.totalCharacters -
+                            updatedJob.processedCharacters
 
                 )
 
-            )
-
         }
 
-        if (result != null) {
+    ).process(
+
+        job,
+
+        outputDirectory
+
+    )
+
+)
+
+ 
+       if (result != null) {
 
             val (job, output) = result
 
