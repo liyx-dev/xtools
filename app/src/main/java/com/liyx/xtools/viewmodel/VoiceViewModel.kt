@@ -427,171 +427,226 @@ fun refreshSelectedVoice() {
     }
 }
 
+
 fun generateVoice() {
 
     val current = _uiState.value
 
-    if (current.text.isBlank()) return
+    if (current.text.isBlank()) {
+        debug("Cannot generate: text is empty")
+        return
+    }
+
+    if (_uiState.value.isGenerating) {
+        debug("Generation already in progress")
+        return
+    }
 
     setGenerating(true)
 
-viewModelScope.launch {
+    viewModelScope.launch {
 
-    try {
+        try {
 
-        val result = withContext(Dispatchers.IO) {
+            val result = withContext(Dispatchers.IO) {
 
-            val job = voiceManager?.createJob(
+                val job = voiceManager?.createJob(
+                    title = current.title.ifBlank {
+                        "Untitled Project"
+                    },
+                    rawText = current.text
+                )
 
-                title = current.title.ifBlank {
-                    "Untitled Project"
-                },
+                if (job == null) {
+                    debug("Failed to create VoiceJob")
+                    return@withContext null
+                }
 
-                rawText = current.text
+                _uiState.value = _uiState.value.copy(
+                    currentJobTitle = job.title,
+                    totalChunks = job.totalChunks(),
+                    currentChunk = 0,
+                    processedCharacters = 0,
+                    remainingCharacters = job.totalCharacters,
+                    progress = 0f
+                )
 
-            )
+                val outputDirectory =
+                    audioStorageManager?.getOutputDirectory(job.title)
 
-            if (job == null) {
-                return@withContext null
+                if (outputDirectory == null) {
+                    debug("Output directory unavailable")
+                    return@withContext null
+                }
+
+                val currentEngine =
+                    providerManager.getCurrentEngine()
+
+                if (currentEngine == null) {
+                    debug("No active voice engine available")
+                    return@withContext null
+                }
+
+                debug(
+                    "Using voice provider: " +
+                        providerManager.getCurrentProviderId()
+                )
+
+                debug(
+                    "Using voice: " +
+                        providerManager.getSelectedVoiceName()
+                )
+
+                currentEngine.applyConfig(voiceConfig)
+
+                val pipeline = VoicePipeline(
+
+                    voiceEngine = currentEngine,
+
+                    audioMerger =
+                        audioMerger
+                            ?: return@withContext null,
+
+                    onChunkCompleted = { updatedJob ->
+
+                        _uiState.value =
+                            _uiState.value.copy(
+
+                                progress =
+                                    updatedJob.progress,
+
+                                currentChunk =
+                                    updatedJob.completedChunks(),
+
+                                totalChunks =
+                                    updatedJob.totalChunks(),
+
+                                processedCharacters =
+                                    updatedJob.processedCharacters,
+
+                                remainingCharacters =
+                                    updatedJob.totalCharacters -
+                                        updatedJob.processedCharacters
+
+                            )
+                    },
+
+                    logger = { message ->
+                        debug(message)
+                    }
+
+                )
+
+                val output = pipeline.process(
+                    job,
+                    outputDirectory
+                )
+
+                Pair(job, output)
+            }
+
+            if (result == null) {
+
+                debug("Voice generation failed")
+
+                return@launch
+            }
+
+            val (job, output) = result
+
+            if (output == null) {
+
+                debug("Voice pipeline returned no audio")
+
+                return@launch
+            }
+
+            val outputFile = java.io.File(output)
+
+            if (!outputFile.exists() ||
+                outputFile.length() <= 0L
+            ) {
+
+                debug(
+                    "Generated audio file is missing or empty"
+                )
+
+                return@launch
             }
 
             _uiState.value = _uiState.value.copy(
 
-                currentJobTitle = job.title,
+                generatedAudio = output,
 
-                totalChunks = job.totalChunks(),
+                canPlay = true,
 
-                currentChunk = 0,
+                canShare = true,
 
-                processedCharacters = 0,
+                canExport = true,
 
-                remainingCharacters = job.totalCharacters,
+                progress = 1f,
 
-                progress = 0f
+                currentChunk =
+                    job.totalChunks(),
+
+                processedCharacters =
+                    job.totalCharacters,
+
+                remainingCharacters = 0
 
             )
 
-            val outputDirectory =
-                audioStorageManager?.getOutputDirectory(job.title)
-                    ?: return@withContext null
+            audioLibraryManager?.add(
 
-         val currentEngine =
-    providerManager.getCurrentEngine()
+                AudioRecording(
 
-if (currentEngine == null) {
-    debug("No active voice engine available")
-    return@withContext null
-}
+                    id =
+                        UUID.randomUUID().toString(),
 
-currentEngine.applyConfig(voiceConfig)
+                    title =
+                        job.title,
 
-Pair(
+                    filePath =
+                        output,
 
-    job,
+                    duration =
+                        current.estimatedDurationMs,
 
-    VoicePipeline(
-
-        voiceEngine = currentEngine,
-
-        audioMerger = audioMerger ?: return@withContext null,
-
-        onChunkCompleted = { updatedJob ->
-
-            _uiState.value =
-                _uiState.value.copy(
-
-                    progress = updatedJob.progress,
-
-                    currentChunk =
-                        updatedJob.completedChunks(),
-
-                    totalChunks =
-                        updatedJob.totalChunks(),
-
-                    processedCharacters =
-                        updatedJob.processedCharacters,
-
-                    remainingCharacters =
-                        updatedJob.totalCharacters -
-                            updatedJob.processedCharacters
+                    createdAt =
+                        System.currentTimeMillis()
 
                 )
+
+            )
+
+            debug(
+                "VOICE GENERATION COMPLETED"
+            )
+
+            debug(
+                "Audio file: $output"
+            )
+
+            debug(
+                "Audio size: ${outputFile.length()} bytes"
+            )
+
+        } catch (e: Exception) {
+
+            debug(
+                "Voice generation error:\n" +
+                    e.stackTraceToString()
+            )
+
+        } finally {
+
+            setGenerating(false)
 
         }
-
-    ).process(
-
-        job,
-
-        outputDirectory
-
-    )
-
-)
-
- 
-       if (result != null) {
-
-            val (job, output) = result
-
-            if (output != null) {
-
-                _uiState.value = _uiState.value.copy(
-
-                    generatedAudio = output,
-
-                    canPlay = true,
-
-                    canShare = true,
-
-                    canExport = true,
-
-                    progress = 1f,
-
-                    currentChunk = job.totalChunks(),
-
-                    processedCharacters = job.totalCharacters,
-
-                    remainingCharacters = 0
-
-                )
-
-                audioLibraryManager?.add(
-
-                    AudioRecording(
-
-                        id = UUID.randomUUID().toString(),
-
-                        title = job.title,
-
-                        filePath = output,
-
-                        duration = current.estimatedDurationMs,
-
-                        createdAt = System.currentTimeMillis()
-
-                    )
-
-                )
-
-            }
-
-        }
-
-    } catch (e: Exception) {
-
-        debug(e.stackTraceToString())
-
-    } finally {
-
-    setGenerating(false)
-
+    }
 }
 
-}   // closes launch
 
-}   // closes generateVoice()
-     
 fun playGeneratedAudio() {
 
     val file = _uiState.value.generatedAudio ?: return
