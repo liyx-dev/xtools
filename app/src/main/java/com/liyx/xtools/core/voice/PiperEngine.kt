@@ -176,7 +176,7 @@ override fun applyConfig(
 
         )
 
-        return processRunner.run(command)
+        return processRunner.run(command, text)
 
     }
 

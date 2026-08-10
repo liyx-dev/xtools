@@ -29,11 +29,9 @@ class PiperCommandBuilder(
             runtime.binaryPath,
 
             "--model",
-
             modelPath,
 
             "--output_file",
-
             outputFile
 
         )
