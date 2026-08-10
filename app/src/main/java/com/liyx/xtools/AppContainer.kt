@@ -20,6 +20,7 @@ import com.liyx.xtools.core.voice.VoicePipeline
 import com.liyx.xtools.core.media.AudioMerger
 
 import com.liyx.xtools.core.player.AudioPlayer
+
 import com.liyx.xtools.core.player.AudioLibraryManager
 import com.liyx.xtools.core.export.AndroidShareManager
 import com.liyx.xtools.core.media.AudioExporter
@@ -27,6 +28,11 @@ import com.liyx.xtools.core.media.AndroidAudioExporter
 import com.liyx.xtools.core.media.MediaEngine
 import com.liyx.xtools.core.utils.DebugLogger
 import com.liyx.xtools.core.providers.VoicePreference
+
+import com.liyx.xtools.core.providers.PiperModelDetector
+import com.liyx.xtools.core.providers.PiperDownloadManager
+import com.liyx.xtools.core.providers.PiperModelManager
+import com.liyx.xtools.core.providers.PiperRuntime
 
 class AppContainer(
 
@@ -66,6 +72,18 @@ class AppContainer(
 )
 
 val voicePreference = VoicePreference(context)
+
+private val piperRuntime = PiperRuntime(
+    binaryPath = context.filesDir.absolutePath + "/piper/bin/piper",
+    modelsDirectory = context.filesDir.absolutePath + "/piper/models",
+    cacheDirectory = context.cacheDir.absolutePath + "/piper/cache",
+    tempDirectory = context.cacheDir.absolutePath + "/piper/temp"
+)
+
+val piperModelManager = PiperModelManager(
+    PiperModelDetector(piperRuntime),
+    PiperDownloadManager(piperRuntime)
+)
 
 init {
 

@@ -8,4 +8,6 @@ sealed class Screen(val route: String) {
 
     data object AudioLibrary : Screen("audio_library")
 data object VoiceLibrary : Screen("voice_library")
+
+data object PiperModelStore : Screen("piper_model_store")
 }

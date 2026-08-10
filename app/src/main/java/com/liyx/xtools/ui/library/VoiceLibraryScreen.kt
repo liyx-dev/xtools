@@ -18,7 +18,8 @@ fun VoiceLibraryScreen(
 
     appContainer: AppContainer,
 
-    onBack: () -> Unit
+    onBack: () -> Unit,
+onOpenModelStore: () -> Unit
 
 ) {
 
@@ -59,6 +60,22 @@ fun VoiceLibraryScreen(
             verticalArrangement = Arrangement.spacedBy(20.dp)
 
         ) {
+
+item {
+
+    Button(
+
+        onClick = onOpenModelStore,
+
+        modifier = Modifier.fillMaxWidth()
+
+    ) {
+
+        Text("🛍 Piper Model Store")
+
+    }
+
+}
 
             item {
 

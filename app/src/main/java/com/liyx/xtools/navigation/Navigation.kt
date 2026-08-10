@@ -14,6 +14,8 @@ import com.liyx.xtools.viewmodel.AudioLibraryViewModel
 import com.liyx.xtools.viewmodel.AudioLibraryViewModelFactory
 import com.liyx.xtools.ui.library.VoiceLibraryScreen
 
+import com.liyx.xtools.ui.library.PiperModelStoreScreen
+
 @Composable
 fun XtoolsNavigation(
 
@@ -111,11 +113,36 @@ composable(Screen.VoiceLibrary.route) {
 
             navController.popBackStack()
 
+        },
+
+        onOpenModelStore = {
+
+            navController.navigate(
+                Screen.PiperModelStore.route
+            )
+
         }
 
     )
 
 }
+
+composable(Screen.PiperModelStore.route) {
+
+    PiperModelStoreScreen(
+
+        appContainer = appContainer,
+
+        onBack = {
+
+            navController.popBackStack()
+
+        }
+
+    )
+
+}
+
 
 
 
