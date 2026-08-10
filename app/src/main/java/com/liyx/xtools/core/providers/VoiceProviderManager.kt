@@ -10,23 +10,28 @@ class VoiceProviderManager(
 ) {
 
     private var currentProviderId = "android"
-private var selectedVoice: VoiceInfo? = null
-private var pendingVoiceId: String? = null
+
+    private var selectedVoice: VoiceInfo? = null
+
+    private var pendingVoiceId: String? = null
+
 
     fun setCurrentProvider(
-
         id: String
-
     ): Boolean {
 
         val provider = registry.getProvider(id)
             ?: return false
 
+        if (!provider.isAvailable()) {
+            return false
+        }
+
         currentProviderId = provider.id
 
         return true
-
     }
+
 
     fun getCurrentProvider(): VoiceProvider? {
 
@@ -34,11 +39,13 @@ private var pendingVoiceId: String? = null
 
     }
 
+
     fun getCurrentProviderId(): String {
 
         return currentProviderId
 
     }
+
 
     fun getCurrentEngine(): VoiceEngine? {
 
@@ -46,104 +53,118 @@ private var pendingVoiceId: String? = null
 
     }
 
+
     fun getAvailableProviders(): List<VoiceProvider> {
 
         return registry.availableProviders()
 
     }
-fun getAllVoices(): List<VoiceInfo> {
-
-    return registry
-
-        .availableProviders()
-
-        .flatMap {
-
-            it.getVoices()
-
-        }
-
-}
 
 
+    fun getAllVoices(): List<VoiceInfo> {
 
-fun setSelectedVoice(id: String) {
-
-    pendingVoiceId = id
-
-    val voice = getAllVoices().firstOrNull {
-
-        it.id == id
+        return registry
+            .availableProviders()
+            .flatMap { provider ->
+                provider.getVoices()
+            }
 
     }
 
-    if (voice != null) {
+
+    fun setSelectedVoice(id: String) {
+
+        pendingVoiceId = id
+
+        val voice = getAllVoices()
+            .firstOrNull { it.id == id }
+
+        if (voice == null) {
+            return
+        }
+
+        val providerChanged =
+            currentProviderId != voice.provider
 
         selectedVoice = voice
 
-        setCurrentProvider(voice.provider)
+        if (providerChanged) {
+            setCurrentProvider(voice.provider)
+        }
 
         pendingVoiceId = null
 
     }
 
-}
 
+    fun getSelectedVoice(): VoiceInfo? {
 
+        if (
+            selectedVoice == null &&
+            pendingVoiceId != null
+        ) {
 
-fun getSelectedVoice(): VoiceInfo? {
+            val voice = getAllVoices()
+                .firstOrNull {
+                    it.id == pendingVoiceId
+                }
 
-    if (selectedVoice == null && pendingVoiceId != null) {
+            if (voice != null) {
 
-        val voice = getAllVoices().firstOrNull {
+                selectedVoice = voice
 
-            it.id == pendingVoiceId
+                setCurrentProvider(
+                    voice.provider
+                )
+
+                pendingVoiceId = null
+
+            }
 
         }
 
-        if (voice != null) {
 
-            selectedVoice = voice
+        if (selectedVoice == null) {
 
-            setCurrentProvider(voice.provider)
+            val firstVoice =
+                getAllVoices().firstOrNull()
 
-            pendingVoiceId = null
+            if (firstVoice != null) {
+
+                selectedVoice = firstVoice
+
+                setCurrentProvider(
+                    firstVoice.provider
+                )
+
+            }
 
         }
 
-    }
-
-    if (selectedVoice == null) {
-
-        selectedVoice = getAllVoices().firstOrNull()
+        return selectedVoice
 
     }
 
-    return selectedVoice
 
-}
+    fun getSelectedVoiceId(): String {
 
+        return getSelectedVoice()?.id ?: ""
 
-
-fun getSelectedVoiceId(): String {
-
-    return getSelectedVoice()?.id ?: ""
-
-}
-
-fun getSelectedVoiceName(): String {
-
-    return getSelectedVoice()?.name ?: "No Voice Selected"
-
-}
-
-fun getSelectedVoiceInfo(): VoiceInfo? {
-
-    return selectedVoice
-
-}
+    }
 
 
+    fun getSelectedVoiceName(): String {
 
+        return getSelectedVoice()?.name
+            ?: "No Voice Selected"
+
+    }
+
+
+    fun getSelectedVoiceInfo(): VoiceInfo? {
+
+        return selectedVoice
+
+    }
 
 }

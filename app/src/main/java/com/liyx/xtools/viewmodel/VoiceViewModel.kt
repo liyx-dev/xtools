@@ -202,11 +202,11 @@ if (voiceConfig.speed == speed) return
 
     )
 
-    voiceEngine?.applyConfig(
+    
 
-        voiceConfig
-
-    )
+    providerManager.getCurrentEngine()?.applyConfig(
+    voiceConfig
+)
 
     _uiState.value = _uiState.value.copy(
 
@@ -229,11 +229,9 @@ if (voiceConfig.pitch == pitch) return
 
     )
 
-    voiceEngine?.applyConfig(
-
-        voiceConfig
-
-    )
+    providerManager.getCurrentEngine()?.applyConfig(
+    voiceConfig
+)
 
     _uiState.value = _uiState.value.copy(
 
