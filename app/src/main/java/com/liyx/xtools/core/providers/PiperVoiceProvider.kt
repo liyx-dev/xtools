@@ -5,7 +5,8 @@ import com.liyx.xtools.core.voice.PiperEngine
 import com.liyx.xtools.core.voice.VoiceInfo
 
 class PiperVoiceProvider(
-    context: Context
+    context: Context,
+    logger: (String) -> Unit = {}
 ) : VoiceProvider {
 
     override val id = "piper"
@@ -21,7 +22,11 @@ class PiperVoiceProvider(
         tempDirectory = context.cacheDir.absolutePath + "/piper/temp"
     )
 
-    override val engine = PiperEngine(runtime)
+    override val engine =
+    PiperEngine(
+        runtime = runtime,
+        logger = logger
+    )
 
     private val modelDetector =
     PiperModelDetector(runtime)

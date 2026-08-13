@@ -59,7 +59,17 @@ class AppContainer(
 
             AndroidVoiceProvider(context),
 
-            PiperVoiceProvider(context),
+            PiperVoiceProvider(
+    context,
+    logger = { message ->
+
+        DebugLogger.log(
+            context,
+            message
+        )
+
+    }
+),
 
             KokoroVoiceProvider()
 

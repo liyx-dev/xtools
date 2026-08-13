@@ -1,13 +1,10 @@
 package com.liyx.xtools.core.providers
 
-import android.util.Log
 import java.io.File
 
-class PiperProcessRunner {
-
-    companion object {
-        private const val TAG = "XTOOLS_PIPER"
-    }
+class PiperProcessRunner(
+    private val logger: (String) -> Unit = {}
+) {
 
     fun run(
         command: List<String>,
@@ -16,79 +13,107 @@ class PiperProcessRunner {
 
         return try {
 
-            Log.d(TAG, "========== PIPER START ==========")
-            Log.d(TAG, "Command: ${command.joinToString(" ")}")
-            Log.d(TAG, "Text length: ${text.length}")
+            logger("=================================")
+            logger("PIPER PROCESS START")
+            logger("=================================")
 
-            val outputFile = command
-                .windowed(2)
-                .firstOrNull {
-                    it[0] == "--output_file"
+            logger("Piper command:")
+            logger(command.joinToString(" "))
+
+            logger("Piper text length = ${text.length}")
+
+            val outputPath =
+                command
+                    .windowed(2)
+                    .firstOrNull {
+                        it[0] == "--output_file"
+                    }
+                    ?.getOrNull(1)
+
+            if (outputPath != null) {
+                logger("Piper output file = $outputPath")
+
+                val parent =
+                    File(outputPath).parentFile
+
+                if (parent != null) {
+                    parent.mkdirs()
+                    logger(
+                        "Output directory exists = ${parent.exists()}"
+                    )
                 }
-                ?.get(1)
-
-            Log.d(TAG, "Expected output: $outputFile")
-
-            if (outputFile != null) {
-                val file = File(outputFile)
-                Log.d(TAG, "Output parent: ${file.parent}")
             }
 
             val process = ProcessBuilder(command)
                 .redirectErrorStream(true)
                 .start()
 
-            Log.d(TAG, "Piper process started")
+            logger("Piper process started successfully")
 
             process.outputStream
                 .bufferedWriter()
                 .use { writer ->
+
                     writer.write(text)
+                    writer.newLine()
                     writer.flush()
                 }
 
-            Log.d(TAG, "Text sent to Piper")
+            logger("Piper input sent")
 
-            val output = process.inputStream
-                .bufferedReader()
-                .readText()
-
-            if (output.isNotBlank()) {
-                Log.d(TAG, "Piper output: $output")
-            } else {
-                Log.d(TAG, "Piper produced no console output")
-            }
+            val processOutput =
+                process.inputStream
+                    .bufferedReader()
+                    .use { reader ->
+                        reader.readText()
+                    }
 
             val exitCode = process.waitFor()
 
-            Log.d(TAG, "Piper exit code: $exitCode")
+            if (processOutput.isNotBlank()) {
 
-            if (outputFile != null) {
+                logger("Piper console output:")
+                logger(processOutput.trim())
 
-                val file = File(outputFile)
+            } else {
 
-                Log.d(
-                    TAG,
-                    "Output exists: ${file.exists()}"
+                logger("Piper console output: <empty>")
+
+            }
+
+            logger("Piper exit code = $exitCode")
+
+            if (outputPath != null) {
+
+                val outputFile =
+                    File(outputPath)
+
+                logger(
+                    "Piper output exists = ${outputFile.exists()}"
                 )
 
-                Log.d(
-                    TAG,
-                    "Output size: ${file.length()} bytes"
+                logger(
+                    "Piper output size = ${outputFile.length()} bytes"
                 )
             }
 
-            Log.d(TAG, "========== PIPER END ==========")
+            if (exitCode != 0) {
 
-            exitCode == 0
+                logger(
+                    "PIPER FAILED: exit code $exitCode"
+                )
+
+                return false
+            }
+
+            logger("PIPER PROCESS SUCCESS")
+
+            true
 
         } catch (e: Exception) {
 
-            Log.e(
-                TAG,
-                "Piper execution exception",
-                e
-            )
+            logger("PIPER PROCESS EXCEPTION")
+            logger(e.stackTraceToString())
 
             false
         }

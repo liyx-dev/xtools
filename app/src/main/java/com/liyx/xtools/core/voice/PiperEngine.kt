@@ -16,15 +16,21 @@ import com.liyx.xtools.core.inference.LiyXSessionManager
 import com.liyx.xtools.core.providers.PiperSessionProvider
 import com.liyx.xtools.core.providers.PiperInferenceEngine
 import com.liyx.xtools.core.providers.PiperDownloadManager
+import android.content.Context
+import com.liyx.xtools.core.utils.DebugLogger
+
 
 class PiperEngine(
+
+    private val context: Context,
 
     private val runtime: PiperRuntime = PiperRuntime(
         binaryPath = "",
         modelsDirectory = "",
         cacheDirectory = "",
         tempDirectory = ""
-    )
+    ),
+private val logger: (String) -> Unit = {}
 
 ) : VoiceEngine {
 
@@ -49,7 +55,7 @@ class PiperEngine(
         PiperCommandBuilder(runtime)
 
     private val processRunner =
-        PiperProcessRunner()
+    PiperProcessRunner(logger)
 
 private val inferenceEngine =
     LiyXInferenceEngine()
@@ -136,51 +142,113 @@ override fun applyConfig(
 
     }
 
-    override fun generateToFile(
 
-        text: String,
 
-        outputPath: String
+override fun generateToFile(
 
-    ): Boolean {
+    text: String,
 
-        runtimeManager.prepareRuntime()
+    outputPath: String
 
-        val model =
+): Boolean {
 
-            selectedVoice
-                ?.let {
+    logger("PiperEngine.generateToFile() called")
 
-                    modelManager.getModelById(it)
-                        ?: modelManager.getModelByName(it)
+    logger("Piper text length = ${text.length}")
 
-                }
+    logger("Piper requested output = $outputPath")
 
-                ?: modelManager
-                    .downloadedModels()
-                    .firstOrNull()
+    runtimeManager.prepareRuntime()
 
-                ?: return false
+    logger(
+        "Piper binary = ${runtime.binaryPath}"
+    )
 
-        if (!validator.validate(model)) {
+    logger(
+        "Piper models directory = ${runtime.modelsDirectory}"
+    )
 
-            return false
+    logger(
+        "Piper binary exists = " +
+            binaryDetector.exists()
+    )
 
-        }
+    logger(
+        "Piper binary executable = " +
+            binaryDetector.isExecutable()
+    )
 
-        val command = commandBuilder.build(
+    val model =
 
-            model,
+        selectedVoice
+            ?.let {
 
-            outputPath
+                logger(
+                    "Looking for selected Piper voice = $it"
+                )
 
+                modelManager.getModelById(it)
+                    ?: modelManager.getModelByName(it)
+
+            }
+
+            ?: modelManager
+                .downloadedModels()
+                .firstOrNull()
+
+            ?: run {
+
+                logger(
+                    "PIPER ERROR: No downloaded model found"
+                )
+
+                return false
+            }
+
+    logger(
+        "Piper model selected = ${model.id}"
+    )
+
+    logger(
+        "Piper model name = ${model.name}"
+    )
+
+    logger(
+        "Piper model installed = " +
+            modelDetector.isInstalled(model)
+    )
+
+    if (!validator.validate(model)) {
+
+        logger(
+            "PIPER ERROR: Runtime validation failed"
         )
 
-        
-return processRunner.run(command, text)
-
+        return false
     }
 
+    logger(
+        "Piper runtime validation PASSED"
+    )
+
+    val command =
+        commandBuilder.build(
+            model,
+            outputPath
+        )
+
+    logger(
+        "Piper command prepared"
+    )
+
+    return processRunner.run(
+        command,
+        text
+    )
+}
+
+      
+           
     override fun stop() {
 
         // Process cancellation will be added later.
