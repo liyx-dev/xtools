@@ -24,9 +24,11 @@ class PiperVoiceProvider(
 
     override val engine =
     PiperEngine(
+        context = context,
         runtime = runtime,
         logger = logger
     )
+
 
     private val modelDetector =
     PiperModelDetector(runtime)
